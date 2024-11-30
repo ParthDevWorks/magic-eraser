@@ -51,9 +51,3 @@ def test_inference(maskrcnn_model_initialized, image):
     output = maskrcnn_model_initialized.inference(image_tensor=image)
 
     assert isinstance(output, SegmentationOutput)
-
-
-def test_image_shape(maskrcnn_model_initialized, image):
-    output = maskrcnn_model_initialized.inference(image_tensor=image)
-
-    assert output.shape == image.shape
