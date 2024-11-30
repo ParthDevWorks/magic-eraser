@@ -1,0 +1,6 @@
+{
+    "segmentation_model": true,
+    "segmentation_model_id": "mask_rcnn",
+    "inpainting_model": true,
+    "inpainting_model_id": "lama_onnx"
+}
