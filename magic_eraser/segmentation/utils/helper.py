@@ -3,6 +3,8 @@ from magic_eraser.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
 
+HUMAN_LABEL_VALUES = ["person"]
+
 
 def get_segmentation_masks(
     og_image: torch.Tensor,
@@ -33,3 +35,24 @@ def get_segmentation_masks(
         segmentation_masks |= mask
 
     return segmentation_masks
+
+
+def filter_humans_mask(segmentation_output: SegmentationOutput) -> SegmentationOutput:
+
+    human_label_index = []
+
+    for index, label in enumerate(segmentation_output.labels):
+        if label in HUMAN_LABEL_VALUES:
+            human_label_index.append(index)
+
+    bbox = segmentation_output.bounding_box[human_label_index]
+    labels = [segmentation_output.labels[i] for i in human_label_index]
+    scores = segmentation_output.confidence_scores[human_label_index]
+    prediction_masks = segmentation_output.prediction_masks[human_label_index]
+
+    return SegmentationOutput(
+        bounding_box=bbox,
+        labels=labels,
+        confidence_scores=scores,
+        prediction_masks=prediction_masks,
+    )

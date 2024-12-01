@@ -66,7 +66,7 @@ def save_image(tensor: torch.Tensor, output_path: str, format: str = "PNG") -> N
     print(f"Image saved at: {output_path}")
 
 
-def dilate_boolean_tensors(image: torch.Tensor, iterations: int = 15) -> torch.Tensor:
+def dilate_boolean_tensors(image: torch.Tensor, iterations: int = 20) -> torch.Tensor:
     """
     Expands (dilates) the True values in the first channel of a multi-channel boolean mask
     using a custom kernel with immediate neighbors only (up, down, left, right) for a specified number of iterations.

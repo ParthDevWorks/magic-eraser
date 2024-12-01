@@ -3,10 +3,11 @@ from magic_eraser.config.config import Config
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
 from magic_eraser.utils.image import dilate_boolean_tensors
-from magic_eraser.segmentation.utils.helper import get_segmentation_masks
+from magic_eraser.segmentation.utils.helper import (
+    get_segmentation_masks,
+    filter_humans_mask,
+)
 from magic_eraser.inpainting.base import InpaintingModel
-
-HUMAN_LABEL_VALUES = ["person"]
 
 
 def perform_segmentation(
@@ -94,13 +95,7 @@ def remove_humans(image_tensor: torch.Tensor, eraser_config: Config) -> torch.Te
 
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
-    segmentation_output_with_humans_only = filter_humans_mask(segmentation_output)
-
-    segmentation_masks = get_segmentation_masks(
-        og_image=image_tensor, segmentation_output=segmentation_output_with_humans_only
-    )
-
-    dilated_segmented_mask = dilate_boolean_tensors(segmentation_masks)
+    dilated_segmented_mask = post_process_humans_mask(image_tensor, segmentation_output)
 
     inpainted_image = perform_inpainting(
         image_tensor, dilated_segmented_mask, inpainting_model
@@ -109,22 +104,28 @@ def remove_humans(image_tensor: torch.Tensor, eraser_config: Config) -> torch.Te
     return inpainted_image
 
 
-def filter_humans_mask(segmentation_output: SegmentationOutput) -> SegmentationOutput:
+def post_process_humans_mask(
+    image_tensor: torch.Tensor, segmentation_output: SegmentationOutput
+) -> torch.Tensor:
+    """
+    Post-processes the segmentation output to obtain masks for the human regions only.
 
-    human_label_index = []
+    This function filters out the human regions from the segmentation output and dilates the resulting masks.
 
-    for index, label in enumerate(segmentation_output.labels):
-        if label in HUMAN_LABEL_VALUES:
-            human_label_index.append(index)
+    Args:
+        image_tensor (torch.Tensor): Original image tensor.
+        segmentation_output (SegmentationOutput): Segmentation output containing mask regions.
 
-    bbox = segmentation_output.bounding_box[human_label_index]
-    labels = human_label_index
-    scores = segmentation_output.confidence_scores[human_label_index]
-    prediction_masks = segmentation_output.prediction_masks[human_label_index]
+    Returns:
+        torch.Tensor: Dilated masks for the human regions only.
 
-    return SegmentationOutput(
-        bounding_box=bbox,
-        labels=labels,
-        confidence_scores=scores,
-        prediction_masks=prediction_masks,
+    """
+    segmentation_output_with_humans_only = filter_humans_mask(segmentation_output)
+
+    segmentation_masks = get_segmentation_masks(
+        og_image=image_tensor, segmentation_output=segmentation_output_with_humans_only
     )
+
+    dilated_segmented_mask = dilate_boolean_tensors(segmentation_masks)
+
+    return dilated_segmented_mask
