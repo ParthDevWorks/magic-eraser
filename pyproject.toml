@@ -18,6 +18,10 @@ onnxruntime = "^1.20.0"
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
 pytest = "^8.2.1"
+pdoc = "^15.0.1"
+
+[tool.poetry.scripts]
+generate-docs = "scripts.generate_docs:main"
 
 [build-system]
 requires = ["poetry-core"]
