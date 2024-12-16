@@ -12,7 +12,6 @@ def plot_image(
     inpainted_image: torch.Tensor = None,
 ):
     """This function is use to plot image before segmentation and after segmentation.
-    Bounding Box can be plotted for debugging purpose.
 
     Args:
         image (torch.Tensor): Original Image tensors
