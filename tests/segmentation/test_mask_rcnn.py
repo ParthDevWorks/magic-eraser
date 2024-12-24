@@ -1,7 +1,6 @@
 import os
 
 import pytest
-import torch
 
 import magic_eraser
 from magic_eraser.utils.image import load_image
@@ -21,8 +20,8 @@ def test_correct_factory_initialized(maskrcnn_model_initialized):
     assert maskrcnn_model_initialized.get_model_id() == "mask_rcnn"
 
 
-def test_correct_factory_uninitialized(model_uninitialized):
-    assert model_uninitialized.get_model_id() == "mask_rcnn"
+def test_correct_factory_uninitialized(maskrcnn_model_uninitialized):
+    assert maskrcnn_model_uninitialized.get_model_id() == "mask_rcnn"
 
 
 def test_incorrect_factory():
@@ -34,9 +33,9 @@ def test_check_initialization(maskrcnn_model_initialized):
     assert isinstance(maskrcnn_model_initialized, MaskRcnn)
 
 
-def test_check_incorrect_initialization(model_uninitialized, image):
+def test_check_incorrect_initialization(maskrcnn_model_uninitialized, image):
     with pytest.raises(ValueError):
-        model_uninitialized.inference(image_tensor=image)
+        maskrcnn_model_uninitialized.inference(image_tensor=image)
 
 
 def test_shutdown(image):
