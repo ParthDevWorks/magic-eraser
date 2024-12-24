@@ -110,3 +110,34 @@ def dilate_boolean_tensors(image: torch.Tensor, iterations: int = 20) -> torch.T
     dilated_mask = dilated_first_channel.unsqueeze(0).expand_as(image)
 
     return dilated_mask
+
+
+def apply_color_splash(og_image: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+    """
+    Applies color splash effect to an image based on a given mask.
+
+    This function takes an original image tensor and a mask tensor, applies a color splash effect
+    by combining the original image colors with a grayscale representation of the image
+    where the mask indicates areas to be kept in full color.
+
+    Args:
+        og_image (torch.Tensor): The original image tensor with shape (C, H, W), where C is the number of channels.
+        mask (torch.Tensor): The mask tensor with shape (C, H, W), indicating areas to be kept in full color.
+
+    Returns:
+        torch.Tensor: The resulting color-splashed image tensor with the same shape as the input.
+
+    Notes:
+        - If the mask dtype is not float32, it is converted to float32 for consistent operations.
+    """
+
+    # Convert image to grayscale
+    grayscale_image = og_image.mean(dim=0, keepdim=True)  # Shape: (1, H, W)
+    og_grayscale_image = grayscale_image.repeat(3, 1, 1)  # Convert to (C=3, H, W)
+
+    if mask.dtype != "float32":
+        mask = mask.float()
+
+    # Apply mask to combine grayscale and color
+    color_splash_image = mask * og_image + (1 - mask) * og_grayscale_image
+    return color_splash_image
