@@ -105,6 +105,19 @@ def remove_humans(
 def color_splash_humans(
     image_tensor: torch.Tensor, eraser_config: ModelInitializer
 ) -> torch.Tensor:
+    """
+    Applies a color splash effect to human regions in an input image tensor.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor to process.
+        eraser_config (ModelInitializer): Configuration object containing settings for the segmentation model.
+
+    Returns:
+        torch.Tensor: The processed image tensor with a color splash effect applied to human regions.
+
+    Raises:
+        AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
+    """
 
     segmentation_model = eraser_config.get_segmentation_model()
 
