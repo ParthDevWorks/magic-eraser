@@ -64,7 +64,7 @@
                         <label class="view-source-button" for="mod-image-view-source"><span>View Source</span></label>
 
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">import</span> <span class="nn">torch</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span> <span class="nn">magic_eraser.config.config</span> <span class="kn">import</span> <span class="n">Config</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span> <span class="nn">magic_eraser.model_initialization.initialize</span> <span class="kn">import</span> <span class="n">ModelInitializer</span>
 </span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a><span class="kn">from</span> <span class="nn">magic_eraser.segmentation.base</span> <span class="kn">import</span> <span class="n">SegmentationModel</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="kn">from</span> <span class="nn">magic_eraser.segmentation.utils.segmentation_output</span> <span class="kn">import</span> <span class="n">SegmentationOutput</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="kn">from</span> <span class="nn">magic_eraser.utils.image</span> <span class="kn">import</span> <span class="n">dilate_boolean_tensors</span>
@@ -125,75 +125,77 @@
 </span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>    <span class="k">return</span> <span class="n">inpainted_image</span>
 </span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>
 </span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="k">def</span> <span class="nf">remove_humans</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">eraser_config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">    Removes humans from an input image tensor using a combination of segmentation and inpainting models.</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">    This function performs two main steps:</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">    1. Segments the human regions in the input image using a pre-trained segmentation model.</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">    2. Inpaints the segmented human regions using a pre-trained inpainting model.</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">    Args:</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">        image_tensor (torch.Tensor): The input image tensor to process.</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">        eraser_config (Config): A configuration object containing settings for both segmentation and inpainting models.</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">    Returns:</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">        torch.Tensor: The processed image tensor with humans removed from the original input.</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">    Raises:</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">        AssertionError: If either the segmentation or inpainting model is not properly configured in the Config object.</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">    Notes:</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">        - This function assumes that the Config object has been properly initialized with valid model paths and parameters.</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">        - The function uses the models specified in the Config object for both segmentation and inpainting tasks.</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">        - The output tensor will have the same shape as the input tensor, but with the human regions replaced by inpainted content.</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="k">def</span> <span class="nf">remove_humans</span><span class="p">(</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>    <span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">eraser_config</span><span class="p">:</span> <span class="n">ModelInitializer</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">    Removes humans from an input image tensor using a combination of segmentation and inpainting models.</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">    This function performs two main steps:</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">    1. Segments the human regions in the input image using a pre-trained segmentation model.</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">    2. Inpaints the segmented human regions using a pre-trained inpainting model.</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">    Args:</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">        image_tensor (torch.Tensor): The input image tensor to process.</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">        eraser_config (ModelInitializer): A configuration object containing settings for both segmentation and inpainting models.</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">    Returns:</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        torch.Tensor: The processed image tensor with humans removed from the original input.</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">    Raises:</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        AssertionError: If either the segmentation or inpainting model is not properly configured in the ModelInitializer object.</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">    Notes:</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">        - This function assumes that the ModelInitializer object has been properly initialized with valid model paths and parameters.</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">        - The function uses the models specified in the ModelInitializer object for both segmentation and inpainting tasks.</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">        - The output tensor will have the same shape as the input tensor, but with the human regions replaced by inpainted content.</span>
 </span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>    <span class="n">segmentation_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_segmentation_model</span><span class="p">()</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>    <span class="k">if</span> <span class="n">segmentation_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Segmentation model is not properly configured.&quot;</span><span class="p">)</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>    <span class="n">inpainting_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_inpainting_model</span><span class="p">()</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>    <span class="k">if</span> <span class="n">inpainting_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Inpainting model is not properly configured.&quot;</span><span class="p">)</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>    <span class="n">segmentation_output</span> <span class="o">=</span> <span class="n">perform_segmentation</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_model</span><span class="p">)</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>    <span class="n">segmentation_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_segmentation_model</span><span class="p">()</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>    <span class="k">if</span> <span class="n">segmentation_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Segmentation model is not properly configured.&quot;</span><span class="p">)</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>    <span class="n">inpainting_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_inpainting_model</span><span class="p">()</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>    <span class="k">if</span> <span class="n">inpainting_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Inpainting model is not properly configured.&quot;</span><span class="p">)</span>
 </span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">post_process_humans_mask</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">)</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>    <span class="n">segmentation_output</span> <span class="o">=</span> <span class="n">perform_segmentation</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_model</span><span class="p">)</span>
 </span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>    <span class="n">inpainted_image</span> <span class="o">=</span> <span class="n">perform_inpainting</span><span class="p">(</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>        <span class="n">image_tensor</span><span class="p">,</span> <span class="n">dilated_segmented_mask</span><span class="p">,</span> <span class="n">inpainting_model</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>    <span class="p">)</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>    <span class="k">return</span> <span class="n">inpainted_image</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">post_process_humans_mask</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">)</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>    <span class="n">inpainted_image</span> <span class="o">=</span> <span class="n">perform_inpainting</span><span class="p">(</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>        <span class="n">image_tensor</span><span class="p">,</span> <span class="n">dilated_segmented_mask</span><span class="p">,</span> <span class="n">inpainting_model</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>    <span class="p">)</span>
 </span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="k">def</span> <span class="nf">post_process_humans_mask</span><span class="p">(</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>    <span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">:</span> <span class="n">SegmentationOutput</span>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">    Post-processes the segmentation output to obtain masks for the human regions only.</span>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">    This function filters out the human regions from the segmentation output and dilates the resulting masks.</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>    <span class="k">return</span> <span class="n">inpainted_image</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="k">def</span> <span class="nf">post_process_humans_mask</span><span class="p">(</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>    <span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">:</span> <span class="n">SegmentationOutput</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">    Post-processes the segmentation output to obtain masks for the human regions only.</span>
 </span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">    Args:</span>
-</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="sd">        image_tensor (torch.Tensor): Original image tensor.</span>
-</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">        segmentation_output (SegmentationOutput): Segmentation output containing mask regions.</span>
-</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>
-</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">    Returns:</span>
-</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        torch.Tensor: Dilated masks for the human regions only.</span>
-</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
-</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>    <span class="n">segmentation_output_with_humans_only</span> <span class="o">=</span> <span class="n">filter_humans_mask</span><span class="p">(</span><span class="n">segmentation_output</span><span class="p">)</span>
-</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>
-</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>    <span class="n">segmentation_masks</span> <span class="o">=</span> <span class="n">get_segmentation_masks</span><span class="p">(</span>
-</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>        <span class="n">og_image</span><span class="o">=</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="o">=</span><span class="n">segmentation_output_with_humans_only</span>
-</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>    <span class="p">)</span>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">dilate_boolean_tensors</span><span class="p">(</span><span class="n">segmentation_masks</span><span class="p">)</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">    This function filters out the human regions from the segmentation output and dilates the resulting masks.</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">    Args:</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">        image_tensor (torch.Tensor): Original image tensor.</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        segmentation_output (SegmentationOutput): Segmentation output containing mask regions.</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">    Returns:</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">        torch.Tensor: Dilated masks for the human regions only.</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>    <span class="n">segmentation_output_with_humans_only</span> <span class="o">=</span> <span class="n">filter_humans_mask</span><span class="p">(</span><span class="n">segmentation_output</span><span class="p">)</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>    <span class="n">segmentation_masks</span> <span class="o">=</span> <span class="n">get_segmentation_masks</span><span class="p">(</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>        <span class="n">og_image</span><span class="o">=</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="o">=</span><span class="n">segmentation_output_with_humans_only</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>    <span class="p">)</span>
 </span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>    <span class="k">return</span> <span class="n">dilated_segmented_mask</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">dilate_boolean_tensors</span><span class="p">(</span><span class="n">segmentation_masks</span><span class="p">)</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>    <span class="k">return</span> <span class="n">dilated_segmented_mask</span>
 </span></pre></div>
 
 
@@ -328,54 +330,56 @@ These masks should have the same shape as the image_tensor but with True values 
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">remove_humans</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>,</span><span class="param">	<span class="n">eraser_config</span><span class="p">:</span> <span class="n"><a href="config/config.html#Config">magic_eraser.config.config.Config</a></span></span><span class="return-annotation">) -> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>:</span></span>
+        <span class="name">remove_humans</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>,</span><span class="param">	<span class="n">eraser_config</span><span class="p">:</span> <span class="n"><a href="model_initialization/initialize.html#ModelInitializer">magic_eraser.model_initialization.initialize.ModelInitializer</a></span></span><span class="return-annotation">) -> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>:</span></span>
 
                 <label class="view-source-button" for="remove_humans-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#remove_humans"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="remove_humans-64"><a href="#remove_humans-64"><span class="linenos"> 64</span></a><span class="k">def</span> <span class="nf">remove_humans</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">eraser_config</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="remove_humans-65"><a href="#remove_humans-65"><span class="linenos"> 65</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="remove_humans-66"><a href="#remove_humans-66"><span class="linenos"> 66</span></a><span class="sd">    Removes humans from an input image tensor using a combination of segmentation and inpainting models.</span>
-</span><span id="remove_humans-67"><a href="#remove_humans-67"><span class="linenos"> 67</span></a>
-</span><span id="remove_humans-68"><a href="#remove_humans-68"><span class="linenos"> 68</span></a><span class="sd">    This function performs two main steps:</span>
-</span><span id="remove_humans-69"><a href="#remove_humans-69"><span class="linenos"> 69</span></a><span class="sd">    1. Segments the human regions in the input image using a pre-trained segmentation model.</span>
-</span><span id="remove_humans-70"><a href="#remove_humans-70"><span class="linenos"> 70</span></a><span class="sd">    2. Inpaints the segmented human regions using a pre-trained inpainting model.</span>
-</span><span id="remove_humans-71"><a href="#remove_humans-71"><span class="linenos"> 71</span></a>
-</span><span id="remove_humans-72"><a href="#remove_humans-72"><span class="linenos"> 72</span></a><span class="sd">    Args:</span>
-</span><span id="remove_humans-73"><a href="#remove_humans-73"><span class="linenos"> 73</span></a><span class="sd">        image_tensor (torch.Tensor): The input image tensor to process.</span>
-</span><span id="remove_humans-74"><a href="#remove_humans-74"><span class="linenos"> 74</span></a><span class="sd">        eraser_config (Config): A configuration object containing settings for both segmentation and inpainting models.</span>
-</span><span id="remove_humans-75"><a href="#remove_humans-75"><span class="linenos"> 75</span></a>
-</span><span id="remove_humans-76"><a href="#remove_humans-76"><span class="linenos"> 76</span></a><span class="sd">    Returns:</span>
-</span><span id="remove_humans-77"><a href="#remove_humans-77"><span class="linenos"> 77</span></a><span class="sd">        torch.Tensor: The processed image tensor with humans removed from the original input.</span>
-</span><span id="remove_humans-78"><a href="#remove_humans-78"><span class="linenos"> 78</span></a>
-</span><span id="remove_humans-79"><a href="#remove_humans-79"><span class="linenos"> 79</span></a><span class="sd">    Raises:</span>
-</span><span id="remove_humans-80"><a href="#remove_humans-80"><span class="linenos"> 80</span></a><span class="sd">        AssertionError: If either the segmentation or inpainting model is not properly configured in the Config object.</span>
-</span><span id="remove_humans-81"><a href="#remove_humans-81"><span class="linenos"> 81</span></a>
-</span><span id="remove_humans-82"><a href="#remove_humans-82"><span class="linenos"> 82</span></a><span class="sd">    Notes:</span>
-</span><span id="remove_humans-83"><a href="#remove_humans-83"><span class="linenos"> 83</span></a><span class="sd">        - This function assumes that the Config object has been properly initialized with valid model paths and parameters.</span>
-</span><span id="remove_humans-84"><a href="#remove_humans-84"><span class="linenos"> 84</span></a><span class="sd">        - The function uses the models specified in the Config object for both segmentation and inpainting tasks.</span>
-</span><span id="remove_humans-85"><a href="#remove_humans-85"><span class="linenos"> 85</span></a><span class="sd">        - The output tensor will have the same shape as the input tensor, but with the human regions replaced by inpainted content.</span>
-</span><span id="remove_humans-86"><a href="#remove_humans-86"><span class="linenos"> 86</span></a>
-</span><span id="remove_humans-87"><a href="#remove_humans-87"><span class="linenos"> 87</span></a><span class="sd">    &quot;&quot;&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="remove_humans-64"><a href="#remove_humans-64"><span class="linenos"> 64</span></a><span class="k">def</span> <span class="nf">remove_humans</span><span class="p">(</span>
+</span><span id="remove_humans-65"><a href="#remove_humans-65"><span class="linenos"> 65</span></a>    <span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">eraser_config</span><span class="p">:</span> <span class="n">ModelInitializer</span>
+</span><span id="remove_humans-66"><a href="#remove_humans-66"><span class="linenos"> 66</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="remove_humans-67"><a href="#remove_humans-67"><span class="linenos"> 67</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="remove_humans-68"><a href="#remove_humans-68"><span class="linenos"> 68</span></a><span class="sd">    Removes humans from an input image tensor using a combination of segmentation and inpainting models.</span>
+</span><span id="remove_humans-69"><a href="#remove_humans-69"><span class="linenos"> 69</span></a>
+</span><span id="remove_humans-70"><a href="#remove_humans-70"><span class="linenos"> 70</span></a><span class="sd">    This function performs two main steps:</span>
+</span><span id="remove_humans-71"><a href="#remove_humans-71"><span class="linenos"> 71</span></a><span class="sd">    1. Segments the human regions in the input image using a pre-trained segmentation model.</span>
+</span><span id="remove_humans-72"><a href="#remove_humans-72"><span class="linenos"> 72</span></a><span class="sd">    2. Inpaints the segmented human regions using a pre-trained inpainting model.</span>
+</span><span id="remove_humans-73"><a href="#remove_humans-73"><span class="linenos"> 73</span></a>
+</span><span id="remove_humans-74"><a href="#remove_humans-74"><span class="linenos"> 74</span></a><span class="sd">    Args:</span>
+</span><span id="remove_humans-75"><a href="#remove_humans-75"><span class="linenos"> 75</span></a><span class="sd">        image_tensor (torch.Tensor): The input image tensor to process.</span>
+</span><span id="remove_humans-76"><a href="#remove_humans-76"><span class="linenos"> 76</span></a><span class="sd">        eraser_config (ModelInitializer): A configuration object containing settings for both segmentation and inpainting models.</span>
+</span><span id="remove_humans-77"><a href="#remove_humans-77"><span class="linenos"> 77</span></a>
+</span><span id="remove_humans-78"><a href="#remove_humans-78"><span class="linenos"> 78</span></a><span class="sd">    Returns:</span>
+</span><span id="remove_humans-79"><a href="#remove_humans-79"><span class="linenos"> 79</span></a><span class="sd">        torch.Tensor: The processed image tensor with humans removed from the original input.</span>
+</span><span id="remove_humans-80"><a href="#remove_humans-80"><span class="linenos"> 80</span></a>
+</span><span id="remove_humans-81"><a href="#remove_humans-81"><span class="linenos"> 81</span></a><span class="sd">    Raises:</span>
+</span><span id="remove_humans-82"><a href="#remove_humans-82"><span class="linenos"> 82</span></a><span class="sd">        AssertionError: If either the segmentation or inpainting model is not properly configured in the ModelInitializer object.</span>
+</span><span id="remove_humans-83"><a href="#remove_humans-83"><span class="linenos"> 83</span></a>
+</span><span id="remove_humans-84"><a href="#remove_humans-84"><span class="linenos"> 84</span></a><span class="sd">    Notes:</span>
+</span><span id="remove_humans-85"><a href="#remove_humans-85"><span class="linenos"> 85</span></a><span class="sd">        - This function assumes that the ModelInitializer object has been properly initialized with valid model paths and parameters.</span>
+</span><span id="remove_humans-86"><a href="#remove_humans-86"><span class="linenos"> 86</span></a><span class="sd">        - The function uses the models specified in the ModelInitializer object for both segmentation and inpainting tasks.</span>
+</span><span id="remove_humans-87"><a href="#remove_humans-87"><span class="linenos"> 87</span></a><span class="sd">        - The output tensor will have the same shape as the input tensor, but with the human regions replaced by inpainted content.</span>
 </span><span id="remove_humans-88"><a href="#remove_humans-88"><span class="linenos"> 88</span></a>
-</span><span id="remove_humans-89"><a href="#remove_humans-89"><span class="linenos"> 89</span></a>    <span class="n">segmentation_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_segmentation_model</span><span class="p">()</span>
-</span><span id="remove_humans-90"><a href="#remove_humans-90"><span class="linenos"> 90</span></a>    <span class="k">if</span> <span class="n">segmentation_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="remove_humans-91"><a href="#remove_humans-91"><span class="linenos"> 91</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Segmentation model is not properly configured.&quot;</span><span class="p">)</span>
-</span><span id="remove_humans-92"><a href="#remove_humans-92"><span class="linenos"> 92</span></a>
-</span><span id="remove_humans-93"><a href="#remove_humans-93"><span class="linenos"> 93</span></a>    <span class="n">inpainting_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_inpainting_model</span><span class="p">()</span>
-</span><span id="remove_humans-94"><a href="#remove_humans-94"><span class="linenos"> 94</span></a>    <span class="k">if</span> <span class="n">inpainting_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="remove_humans-95"><a href="#remove_humans-95"><span class="linenos"> 95</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Inpainting model is not properly configured.&quot;</span><span class="p">)</span>
-</span><span id="remove_humans-96"><a href="#remove_humans-96"><span class="linenos"> 96</span></a>
-</span><span id="remove_humans-97"><a href="#remove_humans-97"><span class="linenos"> 97</span></a>    <span class="n">segmentation_output</span> <span class="o">=</span> <span class="n">perform_segmentation</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_model</span><span class="p">)</span>
+</span><span id="remove_humans-89"><a href="#remove_humans-89"><span class="linenos"> 89</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="remove_humans-90"><a href="#remove_humans-90"><span class="linenos"> 90</span></a>
+</span><span id="remove_humans-91"><a href="#remove_humans-91"><span class="linenos"> 91</span></a>    <span class="n">segmentation_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_segmentation_model</span><span class="p">()</span>
+</span><span id="remove_humans-92"><a href="#remove_humans-92"><span class="linenos"> 92</span></a>    <span class="k">if</span> <span class="n">segmentation_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="remove_humans-93"><a href="#remove_humans-93"><span class="linenos"> 93</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Segmentation model is not properly configured.&quot;</span><span class="p">)</span>
+</span><span id="remove_humans-94"><a href="#remove_humans-94"><span class="linenos"> 94</span></a>
+</span><span id="remove_humans-95"><a href="#remove_humans-95"><span class="linenos"> 95</span></a>    <span class="n">inpainting_model</span> <span class="o">=</span> <span class="n">eraser_config</span><span class="o">.</span><span class="n">get_inpainting_model</span><span class="p">()</span>
+</span><span id="remove_humans-96"><a href="#remove_humans-96"><span class="linenos"> 96</span></a>    <span class="k">if</span> <span class="n">inpainting_model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="remove_humans-97"><a href="#remove_humans-97"><span class="linenos"> 97</span></a>        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Inpainting model is not properly configured.&quot;</span><span class="p">)</span>
 </span><span id="remove_humans-98"><a href="#remove_humans-98"><span class="linenos"> 98</span></a>
-</span><span id="remove_humans-99"><a href="#remove_humans-99"><span class="linenos"> 99</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">post_process_humans_mask</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">)</span>
+</span><span id="remove_humans-99"><a href="#remove_humans-99"><span class="linenos"> 99</span></a>    <span class="n">segmentation_output</span> <span class="o">=</span> <span class="n">perform_segmentation</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_model</span><span class="p">)</span>
 </span><span id="remove_humans-100"><a href="#remove_humans-100"><span class="linenos">100</span></a>
-</span><span id="remove_humans-101"><a href="#remove_humans-101"><span class="linenos">101</span></a>    <span class="n">inpainted_image</span> <span class="o">=</span> <span class="n">perform_inpainting</span><span class="p">(</span>
-</span><span id="remove_humans-102"><a href="#remove_humans-102"><span class="linenos">102</span></a>        <span class="n">image_tensor</span><span class="p">,</span> <span class="n">dilated_segmented_mask</span><span class="p">,</span> <span class="n">inpainting_model</span>
-</span><span id="remove_humans-103"><a href="#remove_humans-103"><span class="linenos">103</span></a>    <span class="p">)</span>
-</span><span id="remove_humans-104"><a href="#remove_humans-104"><span class="linenos">104</span></a>
-</span><span id="remove_humans-105"><a href="#remove_humans-105"><span class="linenos">105</span></a>    <span class="k">return</span> <span class="n">inpainted_image</span>
+</span><span id="remove_humans-101"><a href="#remove_humans-101"><span class="linenos">101</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">post_process_humans_mask</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">)</span>
+</span><span id="remove_humans-102"><a href="#remove_humans-102"><span class="linenos">102</span></a>
+</span><span id="remove_humans-103"><a href="#remove_humans-103"><span class="linenos">103</span></a>    <span class="n">inpainted_image</span> <span class="o">=</span> <span class="n">perform_inpainting</span><span class="p">(</span>
+</span><span id="remove_humans-104"><a href="#remove_humans-104"><span class="linenos">104</span></a>        <span class="n">image_tensor</span><span class="p">,</span> <span class="n">dilated_segmented_mask</span><span class="p">,</span> <span class="n">inpainting_model</span>
+</span><span id="remove_humans-105"><a href="#remove_humans-105"><span class="linenos">105</span></a>    <span class="p">)</span>
+</span><span id="remove_humans-106"><a href="#remove_humans-106"><span class="linenos">106</span></a>
+</span><span id="remove_humans-107"><a href="#remove_humans-107"><span class="linenos">107</span></a>    <span class="k">return</span> <span class="n">inpainted_image</span>
 </span></pre></div>
 
 
@@ -392,7 +396,7 @@ These masks should have the same shape as the image_tensor but with True values 
 
 <ul>
 <li><strong>image_tensor (torch.Tensor):</strong>  The input image tensor to process.</li>
-<li><strong>eraser_config (Config):</strong>  A configuration object containing settings for both segmentation and inpainting models.</li>
+<li><strong>eraser_config (ModelInitializer):</strong>  A configuration object containing settings for both segmentation and inpainting models.</li>
 </ul>
 
 <h6 id="returns">Returns:</h6>
@@ -404,15 +408,15 @@ These masks should have the same shape as the image_tensor but with True values 
 <h6 id="raises">Raises:</h6>
 
 <ul>
-<li><strong>AssertionError:</strong>  If either the segmentation or inpainting model is not properly configured in the Config object.</li>
+<li><strong>AssertionError:</strong>  If either the segmentation or inpainting model is not properly configured in the ModelInitializer object.</li>
 </ul>
 
 <h6 id="notes">Notes:</h6>
 
 <blockquote>
   <ul>
-  <li>This function assumes that the Config object has been properly initialized with valid model paths and parameters.</li>
-  <li>The function uses the models specified in the Config object for both segmentation and inpainting tasks.</li>
+  <li>This function assumes that the ModelInitializer object has been properly initialized with valid model paths and parameters.</li>
+  <li>The function uses the models specified in the ModelInitializer object for both segmentation and inpainting tasks.</li>
   <li>The output tensor will have the same shape as the input tensor, but with the human regions replaced by inpainted content.</li>
   </ul>
 </blockquote>
@@ -431,31 +435,31 @@ These masks should have the same shape as the image_tensor but with True values 
 
     </div>
     <a class="headerlink" href="#post_process_humans_mask"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="post_process_humans_mask-108"><a href="#post_process_humans_mask-108"><span class="linenos">108</span></a><span class="k">def</span> <span class="nf">post_process_humans_mask</span><span class="p">(</span>
-</span><span id="post_process_humans_mask-109"><a href="#post_process_humans_mask-109"><span class="linenos">109</span></a>    <span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">:</span> <span class="n">SegmentationOutput</span>
-</span><span id="post_process_humans_mask-110"><a href="#post_process_humans_mask-110"><span class="linenos">110</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="post_process_humans_mask-111"><a href="#post_process_humans_mask-111"><span class="linenos">111</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="post_process_humans_mask-112"><a href="#post_process_humans_mask-112"><span class="linenos">112</span></a><span class="sd">    Post-processes the segmentation output to obtain masks for the human regions only.</span>
-</span><span id="post_process_humans_mask-113"><a href="#post_process_humans_mask-113"><span class="linenos">113</span></a>
-</span><span id="post_process_humans_mask-114"><a href="#post_process_humans_mask-114"><span class="linenos">114</span></a><span class="sd">    This function filters out the human regions from the segmentation output and dilates the resulting masks.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="post_process_humans_mask-110"><a href="#post_process_humans_mask-110"><span class="linenos">110</span></a><span class="k">def</span> <span class="nf">post_process_humans_mask</span><span class="p">(</span>
+</span><span id="post_process_humans_mask-111"><a href="#post_process_humans_mask-111"><span class="linenos">111</span></a>    <span class="n">image_tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="p">:</span> <span class="n">SegmentationOutput</span>
+</span><span id="post_process_humans_mask-112"><a href="#post_process_humans_mask-112"><span class="linenos">112</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="post_process_humans_mask-113"><a href="#post_process_humans_mask-113"><span class="linenos">113</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="post_process_humans_mask-114"><a href="#post_process_humans_mask-114"><span class="linenos">114</span></a><span class="sd">    Post-processes the segmentation output to obtain masks for the human regions only.</span>
 </span><span id="post_process_humans_mask-115"><a href="#post_process_humans_mask-115"><span class="linenos">115</span></a>
-</span><span id="post_process_humans_mask-116"><a href="#post_process_humans_mask-116"><span class="linenos">116</span></a><span class="sd">    Args:</span>
-</span><span id="post_process_humans_mask-117"><a href="#post_process_humans_mask-117"><span class="linenos">117</span></a><span class="sd">        image_tensor (torch.Tensor): Original image tensor.</span>
-</span><span id="post_process_humans_mask-118"><a href="#post_process_humans_mask-118"><span class="linenos">118</span></a><span class="sd">        segmentation_output (SegmentationOutput): Segmentation output containing mask regions.</span>
-</span><span id="post_process_humans_mask-119"><a href="#post_process_humans_mask-119"><span class="linenos">119</span></a>
-</span><span id="post_process_humans_mask-120"><a href="#post_process_humans_mask-120"><span class="linenos">120</span></a><span class="sd">    Returns:</span>
-</span><span id="post_process_humans_mask-121"><a href="#post_process_humans_mask-121"><span class="linenos">121</span></a><span class="sd">        torch.Tensor: Dilated masks for the human regions only.</span>
-</span><span id="post_process_humans_mask-122"><a href="#post_process_humans_mask-122"><span class="linenos">122</span></a>
-</span><span id="post_process_humans_mask-123"><a href="#post_process_humans_mask-123"><span class="linenos">123</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="post_process_humans_mask-124"><a href="#post_process_humans_mask-124"><span class="linenos">124</span></a>    <span class="n">segmentation_output_with_humans_only</span> <span class="o">=</span> <span class="n">filter_humans_mask</span><span class="p">(</span><span class="n">segmentation_output</span><span class="p">)</span>
-</span><span id="post_process_humans_mask-125"><a href="#post_process_humans_mask-125"><span class="linenos">125</span></a>
-</span><span id="post_process_humans_mask-126"><a href="#post_process_humans_mask-126"><span class="linenos">126</span></a>    <span class="n">segmentation_masks</span> <span class="o">=</span> <span class="n">get_segmentation_masks</span><span class="p">(</span>
-</span><span id="post_process_humans_mask-127"><a href="#post_process_humans_mask-127"><span class="linenos">127</span></a>        <span class="n">og_image</span><span class="o">=</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="o">=</span><span class="n">segmentation_output_with_humans_only</span>
-</span><span id="post_process_humans_mask-128"><a href="#post_process_humans_mask-128"><span class="linenos">128</span></a>    <span class="p">)</span>
-</span><span id="post_process_humans_mask-129"><a href="#post_process_humans_mask-129"><span class="linenos">129</span></a>
-</span><span id="post_process_humans_mask-130"><a href="#post_process_humans_mask-130"><span class="linenos">130</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">dilate_boolean_tensors</span><span class="p">(</span><span class="n">segmentation_masks</span><span class="p">)</span>
+</span><span id="post_process_humans_mask-116"><a href="#post_process_humans_mask-116"><span class="linenos">116</span></a><span class="sd">    This function filters out the human regions from the segmentation output and dilates the resulting masks.</span>
+</span><span id="post_process_humans_mask-117"><a href="#post_process_humans_mask-117"><span class="linenos">117</span></a>
+</span><span id="post_process_humans_mask-118"><a href="#post_process_humans_mask-118"><span class="linenos">118</span></a><span class="sd">    Args:</span>
+</span><span id="post_process_humans_mask-119"><a href="#post_process_humans_mask-119"><span class="linenos">119</span></a><span class="sd">        image_tensor (torch.Tensor): Original image tensor.</span>
+</span><span id="post_process_humans_mask-120"><a href="#post_process_humans_mask-120"><span class="linenos">120</span></a><span class="sd">        segmentation_output (SegmentationOutput): Segmentation output containing mask regions.</span>
+</span><span id="post_process_humans_mask-121"><a href="#post_process_humans_mask-121"><span class="linenos">121</span></a>
+</span><span id="post_process_humans_mask-122"><a href="#post_process_humans_mask-122"><span class="linenos">122</span></a><span class="sd">    Returns:</span>
+</span><span id="post_process_humans_mask-123"><a href="#post_process_humans_mask-123"><span class="linenos">123</span></a><span class="sd">        torch.Tensor: Dilated masks for the human regions only.</span>
+</span><span id="post_process_humans_mask-124"><a href="#post_process_humans_mask-124"><span class="linenos">124</span></a>
+</span><span id="post_process_humans_mask-125"><a href="#post_process_humans_mask-125"><span class="linenos">125</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="post_process_humans_mask-126"><a href="#post_process_humans_mask-126"><span class="linenos">126</span></a>    <span class="n">segmentation_output_with_humans_only</span> <span class="o">=</span> <span class="n">filter_humans_mask</span><span class="p">(</span><span class="n">segmentation_output</span><span class="p">)</span>
+</span><span id="post_process_humans_mask-127"><a href="#post_process_humans_mask-127"><span class="linenos">127</span></a>
+</span><span id="post_process_humans_mask-128"><a href="#post_process_humans_mask-128"><span class="linenos">128</span></a>    <span class="n">segmentation_masks</span> <span class="o">=</span> <span class="n">get_segmentation_masks</span><span class="p">(</span>
+</span><span id="post_process_humans_mask-129"><a href="#post_process_humans_mask-129"><span class="linenos">129</span></a>        <span class="n">og_image</span><span class="o">=</span><span class="n">image_tensor</span><span class="p">,</span> <span class="n">segmentation_output</span><span class="o">=</span><span class="n">segmentation_output_with_humans_only</span>
+</span><span id="post_process_humans_mask-130"><a href="#post_process_humans_mask-130"><span class="linenos">130</span></a>    <span class="p">)</span>
 </span><span id="post_process_humans_mask-131"><a href="#post_process_humans_mask-131"><span class="linenos">131</span></a>
-</span><span id="post_process_humans_mask-132"><a href="#post_process_humans_mask-132"><span class="linenos">132</span></a>    <span class="k">return</span> <span class="n">dilated_segmented_mask</span>
+</span><span id="post_process_humans_mask-132"><a href="#post_process_humans_mask-132"><span class="linenos">132</span></a>    <span class="n">dilated_segmented_mask</span> <span class="o">=</span> <span class="n">dilate_boolean_tensors</span><span class="p">(</span><span class="n">segmentation_masks</span><span class="p">)</span>
+</span><span id="post_process_humans_mask-133"><a href="#post_process_humans_mask-133"><span class="linenos">133</span></a>
+</span><span id="post_process_humans_mask-134"><a href="#post_process_humans_mask-134"><span class="linenos">134</span></a>    <span class="k">return</span> <span class="n">dilated_segmented_mask</span>
 </span></pre></div>
 
 

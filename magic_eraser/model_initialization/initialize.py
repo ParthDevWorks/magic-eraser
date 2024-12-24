@@ -15,8 +15,6 @@ class ModelInitializer:
 
     Attributes:
         global_config (Config): Global configuration object containing model-related settings.
-        segmentation_model (SegmentationModel or None): Loaded segmentation model, if initialized.
-        inpainting_model (InpaintingModel or None): Loaded inpainting model, if initialized.
     """
 
     def __init__(self, global_config: Config) -> None:
