@@ -4,7 +4,6 @@ import argparse
 import json
 import sys
 
-from magic_eraser.config.config import VALID_MODES
 from magic_eraser.core import eraser
 
 logging.basicConfig(level=logging.INFO)
@@ -15,7 +14,6 @@ def main():
     parser.add_argument(
         "--config", required=True, type=str, help="Path to the configuration file"
     )
-    parser.add_argument("--mode", type=str, choices=VALID_MODES, required=True)
     parser.add_argument(
         "--input",
         required=True,
@@ -48,17 +46,12 @@ def main():
         with open(config_path, "r") as f:
             config_dict = json.load(f)
 
-    mode = args.mode
-    if len(mode.strip()) == 0:
-        raise ValueError("Mode cannot be an empty string")
-
     input_folder = args.input
     output_folder = args.output
     num_workers = args.num_workers
 
-    succ_cnt, err_cnt = eraser(
+    _, err_cnt = eraser(
         config_dict=config_dict,
-        mode=mode,
         input_folder_path=input_folder,
         output_folder_path=output_folder,
         num_workers=num_workers,

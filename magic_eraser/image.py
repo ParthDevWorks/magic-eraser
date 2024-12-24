@@ -1,5 +1,5 @@
 import torch
-from magic_eraser.config.config import Config
+from magic_eraser.model_initialization.initialize import ModelInitializer
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
 from magic_eraser.utils.image import dilate_boolean_tensors
@@ -60,7 +60,9 @@ def perform_inpainting(
     return inpainted_image
 
 
-def remove_humans(image_tensor: torch.Tensor, eraser_config: Config) -> torch.Tensor:
+def remove_humans(
+    image_tensor: torch.Tensor, eraser_config: ModelInitializer
+) -> torch.Tensor:
     """
     Removes humans from an input image tensor using a combination of segmentation and inpainting models.
 
@@ -70,17 +72,17 @@ def remove_humans(image_tensor: torch.Tensor, eraser_config: Config) -> torch.Te
 
     Args:
         image_tensor (torch.Tensor): The input image tensor to process.
-        eraser_config (Config): A configuration object containing settings for both segmentation and inpainting models.
+        eraser_config (ModelInitializer): A configuration object containing settings for both segmentation and inpainting models.
 
     Returns:
         torch.Tensor: The processed image tensor with humans removed from the original input.
 
     Raises:
-        AssertionError: If either the segmentation or inpainting model is not properly configured in the Config object.
+        AssertionError: If either the segmentation or inpainting model is not properly configured in the ModelInitializer object.
 
     Notes:
-        - This function assumes that the Config object has been properly initialized with valid model paths and parameters.
-        - The function uses the models specified in the Config object for both segmentation and inpainting tasks.
+        - This function assumes that the ModelInitializer object has been properly initialized with valid model paths and parameters.
+        - The function uses the models specified in the ModelInitializer object for both segmentation and inpainting tasks.
         - The output tensor will have the same shape as the input tensor, but with the human regions replaced by inpainted content.
 
     """

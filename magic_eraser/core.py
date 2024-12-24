@@ -10,11 +10,12 @@ import time
 
 import torch
 from magic_eraser.config.config import Config
+from magic_eraser.model_initialization.initialize import ModelInitializer
 from magic_eraser.image import remove_humans
 from magic_eraser.utils.image import load_image, save_image
 from magic_eraser.utils.book_keeping import ErrorLogs, SuccessLogs, FatalProcessingError
 
-SUPPORTED_FILE_EXTENSIONS = (".jpg", ".png", ".heic")
+SUPPORTED_FILE_EXTENSIONS = (".jpg", ".png", ".heic", ".jpeg")
 SUCCESS_LOG_MESSAGE = "Image processed successfully"
 
 _global_worker_ = {}
@@ -33,8 +34,9 @@ def _worker_init(config: Config):
         if torch.get_num_interop_threads() != 1:
             torch.set_num_interop_threads(1)
 
-        config.load_models()
-        _global_worker_["config"] = config
+        model_initializer = ModelInitializer(global_config=config)
+        model_initializer.load_models()
+        _global_worker_["config"] = model_initializer
     except Exception:
         _global_worker_["error"]["initialization_error"] = True
         _global_worker_["error"]["message"] = FatalProcessingError(
@@ -56,7 +58,7 @@ def core_process(
 
         image_tensor = load_image(input_path)
 
-        if eraser_config.mode == "erase_humans":
+        if eraser_config.global_config["mode"] == "erase_humans":
 
             start_time_inferece = time.perf_counter()
             output_image_tensor = remove_humans(image_tensor, eraser_config)
@@ -67,7 +69,7 @@ def core_process(
             rv_list.append(
                 ErrorLogs(
                     input_path=input_path,
-                    mode=eraser_config.mode,
+                    mode=eraser_config.global_config["mode"],
                     message="Unsupported mode",
                 )
             )
@@ -83,7 +85,7 @@ def core_process(
                 SuccessLogs(
                     input_path=input_path,
                     output_path=output_image_path,
-                    mode=eraser_config.mode,
+                    mode=eraser_config.global_config["mode"],
                     message=SUCCESS_LOG_MESSAGE,
                     inference_time_seconds=end_time_inference,
                 )
@@ -93,7 +95,7 @@ def core_process(
         rv_list.append(
             ErrorLogs(
                 input_path=input_path,
-                mode=eraser_config.mode,
+                mode=eraser_config.global_config["mode"],
                 message=str(e),
                 traceback=traceback.format_exc(),
             )
@@ -103,7 +105,6 @@ def core_process(
 
 def eraser(
     config_dict: dict,
-    mode: str,
     input_folder_path: str,
     output_folder_path: str,
     num_workers: int = 2,
@@ -113,7 +114,6 @@ def eraser(
 
     Args:
         config_dict (dict): A dictionary containing configuration settings for the eraser.
-        mode (str): The operation mode (e.g., "erase_humans").
         input_folder_path (str): Path to the folder containing input images.
         output_folder_path (str): Path where the processed images will be saved.
         num_workers (int): Number of worker processes to use for parallel execution. Default is 2.
@@ -128,7 +128,7 @@ def eraser(
         ValueError: If the output folder path is empty or doesn't exist.
 
     """
-    config = Config(config=config_dict, mode=mode)
+    config = Config(**config_dict)
 
     if len(input_folder_path.strip()) == 0:
         raise ValueError("Input folder path cannot be an empty string")
