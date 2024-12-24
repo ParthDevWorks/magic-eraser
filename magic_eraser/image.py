@@ -2,7 +2,7 @@ import torch
 from magic_eraser.model_initialization.initialize import ModelInitializer
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
-from magic_eraser.utils.image import dilate_boolean_tensors, apply_color_splash
+from magic_eraser.utils.image import dilate_boolean_tensors, rgb_to_grayscale
 from magic_eraser.segmentation.utils.helper import (
     get_segmentation_masks,
     filter_humans_mask,
@@ -114,9 +114,17 @@ def color_splash_humans(
         image_tensor, segmentation_output, dilate_tensors=False
     )
 
-    color_splashed_tensor = apply_color_splash(image_tensor, dilated_segmented_mask)
+    if dilated_segmented_mask.dtype != "float32":
+        dilated_segmented_mask = dilated_segmented_mask.float()
 
-    return color_splashed_tensor
+    og_grayscale_image = rgb_to_grayscale(image_tensor)
+
+    color_splash_tensor = (
+        dilated_segmented_mask * image_tensor
+        + (1 - dilated_segmented_mask) * og_grayscale_image
+    )
+
+    return color_splash_tensor
 
 
 def post_process_humans_mask(
