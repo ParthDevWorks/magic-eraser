@@ -2,7 +2,7 @@ import torch
 from magic_eraser.model_initialization.initialize import ModelInitializer
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
-from magic_eraser.utils.image import dilate_boolean_tensors
+from magic_eraser.utils.image import dilate_boolean_tensors, rgb_to_grayscale
 from magic_eraser.segmentation.utils.helper import (
     get_segmentation_masks,
     filter_humans_mask,
@@ -88,12 +88,8 @@ def remove_humans(
     """
 
     segmentation_model = eraser_config.get_segmentation_model()
-    if segmentation_model is None:
-        raise AssertionError("Segmentation model is not properly configured.")
 
     inpainting_model = eraser_config.get_inpainting_model()
-    if inpainting_model is None:
-        raise AssertionError("Inpainting model is not properly configured.")
 
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
@@ -106,8 +102,48 @@ def remove_humans(
     return inpainted_image
 
 
+def color_splash_humans(
+    image_tensor: torch.Tensor, eraser_config: ModelInitializer
+) -> torch.Tensor:
+    """
+    Applies a color splash effect to human regions in an input image tensor.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor to process.
+        eraser_config (ModelInitializer): Configuration object containing settings for the segmentation model.
+
+    Returns:
+        torch.Tensor: The processed image tensor with a color splash effect applied to human regions.
+
+    Raises:
+        AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
+    """
+
+    segmentation_model = eraser_config.get_segmentation_model()
+
+    segmentation_output = perform_segmentation(image_tensor, segmentation_model)
+
+    dilated_segmented_mask = post_process_humans_mask(
+        image_tensor, segmentation_output, dilate_tensors=False
+    )
+
+    if dilated_segmented_mask.dtype != "float32":
+        dilated_segmented_mask = dilated_segmented_mask.float()
+
+    og_grayscale_image = rgb_to_grayscale(image_tensor)
+
+    color_splash_tensor = (
+        dilated_segmented_mask * image_tensor
+        + (1 - dilated_segmented_mask) * og_grayscale_image
+    )
+
+    return color_splash_tensor
+
+
 def post_process_humans_mask(
-    image_tensor: torch.Tensor, segmentation_output: SegmentationOutput
+    image_tensor: torch.Tensor,
+    segmentation_output: SegmentationOutput,
+    dilate_tensors: bool = True,
 ) -> torch.Tensor:
     """
     Post-processes the segmentation output to obtain masks for the human regions only.
@@ -117,6 +153,7 @@ def post_process_humans_mask(
     Args:
         image_tensor (torch.Tensor): Original image tensor.
         segmentation_output (SegmentationOutput): Segmentation output containing mask regions.
+        dilate_tensors (bool): Whether to dilate the resulting masks. Defaults to True.
 
     Returns:
         torch.Tensor: Dilated masks for the human regions only.
@@ -128,6 +165,7 @@ def post_process_humans_mask(
         og_image=image_tensor, segmentation_output=segmentation_output_with_humans_only
     )
 
-    dilated_segmented_mask = dilate_boolean_tensors(segmentation_masks)
+    if dilate_tensors:
+        segmentation_masks = dilate_boolean_tensors(segmentation_masks)
 
-    return dilated_segmented_mask
+    return segmentation_masks

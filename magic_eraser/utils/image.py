@@ -110,3 +110,26 @@ def dilate_boolean_tensors(image: torch.Tensor, iterations: int = 20) -> torch.T
     dilated_mask = dilated_first_channel.unsqueeze(0).expand_as(image)
 
     return dilated_mask
+
+
+def rgb_to_grayscale(image: torch.Tensor) -> torch.Tensor:
+    """
+    Convert an RGB image to grayscale using perceptual weights.
+    This approach uses the luminance formula, which applies different weights to the RGB channels based on human perception:
+
+    Gray = 0.2989 * R + 0.5870 * G + 0.1140 * B
+
+    These weights reflect how humans perceive green (stronger impact), red, and blue (weaker impact) differently.
+
+    Args:
+        image (torch.Tensor): RGB image tensor of shape (C, H, W).
+
+    Returns:
+        torch.Tensor: Grayscale image tensor of shape (C, H, W).
+    """
+    # Weights for the RGB channels
+    weights = torch.tensor([0.2989, 0.5870, 0.1140]).to(image.device)
+    # Apply weights to the RGB channels and sum them
+    grayscale = (image * weights.view(-1, 1, 1)).sum(dim=0, keepdim=True)
+    grayscale_image = grayscale.repeat(3, 1, 1)
+    return grayscale_image

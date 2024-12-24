@@ -42,6 +42,9 @@
             <li>
                     <a class="function" href="#dilate_boolean_tensors">dilate_boolean_tensors</a>
             </li>
+            <li>
+                    <a class="function" href="#rgb_to_grayscale">rgb_to_grayscale</a>
+            </li>
     </ul>
 
 
@@ -175,6 +178,29 @@
 </span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>    <span class="n">dilated_mask</span> <span class="o">=</span> <span class="n">dilated_first_channel</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 </span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>
 </span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>    <span class="k">return</span> <span class="n">dilated_mask</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="k">def</span> <span class="nf">rgb_to_grayscale</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">    Convert an RGB image to grayscale using perceptual weights.</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">    This approach uses the luminance formula, which applies different weights to the RGB channels based on human perception:</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">    Gray = 0.2989 * R + 0.5870 * G + 0.1140 * B</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">    These weights reflect how humans perceive green (stronger impact), red, and blue (weaker impact) differently.</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">    Args:</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="sd">        image (torch.Tensor): RGB image tensor of shape (C, H, W).</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">    Returns:</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">        torch.Tensor: Grayscale image tensor of shape (C, H, W).</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>    <span class="c1"># Weights for the RGB channels</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>    <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.2989</span><span class="p">,</span> <span class="mf">0.5870</span><span class="p">,</span> <span class="mf">0.1140</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>    <span class="c1"># Apply weights to the RGB channels and sum them</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>    <span class="n">grayscale</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span> <span class="o">*</span> <span class="n">weights</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>    <span class="n">grayscale_image</span> <span class="o">=</span> <span class="n">grayscale</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>    <span class="k">return</span> <span class="n">grayscale_image</span>
 </span></pre></div>
 
 
@@ -393,6 +419,63 @@ The dilated values are then copied to the rest of the channels.</p>
 
 <blockquote>
   <p>torch.Tensor: The dilated boolean image with the same shape as the input.</p>
+</blockquote>
+</div>
+
+
+                </section>
+                <section id="rgb_to_grayscale">
+                            <input id="rgb_to_grayscale-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">rgb_to_grayscale</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></span><span class="return-annotation">) -> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>:</span></span>
+
+                <label class="view-source-button" for="rgb_to_grayscale-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#rgb_to_grayscale"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="rgb_to_grayscale-116"><a href="#rgb_to_grayscale-116"><span class="linenos">116</span></a><span class="k">def</span> <span class="nf">rgb_to_grayscale</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="rgb_to_grayscale-117"><a href="#rgb_to_grayscale-117"><span class="linenos">117</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="rgb_to_grayscale-118"><a href="#rgb_to_grayscale-118"><span class="linenos">118</span></a><span class="sd">    Convert an RGB image to grayscale using perceptual weights.</span>
+</span><span id="rgb_to_grayscale-119"><a href="#rgb_to_grayscale-119"><span class="linenos">119</span></a><span class="sd">    This approach uses the luminance formula, which applies different weights to the RGB channels based on human perception:</span>
+</span><span id="rgb_to_grayscale-120"><a href="#rgb_to_grayscale-120"><span class="linenos">120</span></a>
+</span><span id="rgb_to_grayscale-121"><a href="#rgb_to_grayscale-121"><span class="linenos">121</span></a><span class="sd">    Gray = 0.2989 * R + 0.5870 * G + 0.1140 * B</span>
+</span><span id="rgb_to_grayscale-122"><a href="#rgb_to_grayscale-122"><span class="linenos">122</span></a>
+</span><span id="rgb_to_grayscale-123"><a href="#rgb_to_grayscale-123"><span class="linenos">123</span></a><span class="sd">    These weights reflect how humans perceive green (stronger impact), red, and blue (weaker impact) differently.</span>
+</span><span id="rgb_to_grayscale-124"><a href="#rgb_to_grayscale-124"><span class="linenos">124</span></a>
+</span><span id="rgb_to_grayscale-125"><a href="#rgb_to_grayscale-125"><span class="linenos">125</span></a><span class="sd">    Args:</span>
+</span><span id="rgb_to_grayscale-126"><a href="#rgb_to_grayscale-126"><span class="linenos">126</span></a><span class="sd">        image (torch.Tensor): RGB image tensor of shape (C, H, W).</span>
+</span><span id="rgb_to_grayscale-127"><a href="#rgb_to_grayscale-127"><span class="linenos">127</span></a>
+</span><span id="rgb_to_grayscale-128"><a href="#rgb_to_grayscale-128"><span class="linenos">128</span></a><span class="sd">    Returns:</span>
+</span><span id="rgb_to_grayscale-129"><a href="#rgb_to_grayscale-129"><span class="linenos">129</span></a><span class="sd">        torch.Tensor: Grayscale image tensor of shape (C, H, W).</span>
+</span><span id="rgb_to_grayscale-130"><a href="#rgb_to_grayscale-130"><span class="linenos">130</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="rgb_to_grayscale-131"><a href="#rgb_to_grayscale-131"><span class="linenos">131</span></a>    <span class="c1"># Weights for the RGB channels</span>
+</span><span id="rgb_to_grayscale-132"><a href="#rgb_to_grayscale-132"><span class="linenos">132</span></a>    <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.2989</span><span class="p">,</span> <span class="mf">0.5870</span><span class="p">,</span> <span class="mf">0.1140</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+</span><span id="rgb_to_grayscale-133"><a href="#rgb_to_grayscale-133"><span class="linenos">133</span></a>    <span class="c1"># Apply weights to the RGB channels and sum them</span>
+</span><span id="rgb_to_grayscale-134"><a href="#rgb_to_grayscale-134"><span class="linenos">134</span></a>    <span class="n">grayscale</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span> <span class="o">*</span> <span class="n">weights</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="rgb_to_grayscale-135"><a href="#rgb_to_grayscale-135"><span class="linenos">135</span></a>    <span class="n">grayscale_image</span> <span class="o">=</span> <span class="n">grayscale</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="rgb_to_grayscale-136"><a href="#rgb_to_grayscale-136"><span class="linenos">136</span></a>    <span class="k">return</span> <span class="n">grayscale_image</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Convert an RGB image to grayscale using perceptual weights.
+This approach uses the luminance formula, which applies different weights to the RGB channels based on human perception:</p>
+
+<p>Gray = 0.2989 * R + 0.5870 * G + 0.1140 * B</p>
+
+<p>These weights reflect how humans perceive green (stronger impact), red, and blue (weaker impact) differently.</p>
+
+<h6 id="arguments">Arguments:</h6>
+
+<ul>
+<li><strong>image (torch.Tensor):</strong>  RGB image tensor of shape (C, H, W).</li>
+</ul>
+
+<h6 id="returns">Returns:</h6>
+
+<blockquote>
+  <p>torch.Tensor: Grayscale image tensor of shape (C, H, W).</p>
 </blockquote>
 </div>
 
