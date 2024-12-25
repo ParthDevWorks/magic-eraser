@@ -11,13 +11,17 @@ def get_inpainitng_model(id, *args, **kwrgs) -> InpaintingModel:
     Returns:
         InpaintingModel object
     """
-    valid_ids = ["lama_onnx"]
+    valid_ids = ["lama_onnx", "runwayml"]
 
     if id in valid_ids:
         if id == "lama_onnx":
             from magic_eraser.inpainting.models.lama.main import LamOnnx
 
             model = LamOnnx()
+        elif id == "runwayml":
+            from magic_eraser.inpainting.models.runwayml.main import RunWayML
+
+            model = RunWayML()
         else:
             raise ValueError(
                 f"The model id {id} provided is supported but there is no implementation method written"
