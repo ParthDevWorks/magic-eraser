@@ -14,7 +14,6 @@ from magic_eraser.utils.image import resize_image
 class LamOnnx(InpaintingModel):
     def __init__(self) -> None:
         self.model = None
-        self.device = None
 
     def get_model_id(self) -> str:
         """Returns the identifier for the inpainting model.
@@ -45,16 +44,7 @@ class LamOnnx(InpaintingModel):
 
         logging.info("Loading Lama model weights")
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = ort.InferenceSession(self.lamaonnx_path)
-
-    # HACK: Workaround for loading ONNX model in Multiprocessing Pool. Needs to be fixed.
-    def __getstate__(self):
-        return {"lamaonnx_path": self.lamaonnx_path, "device": self.device}
-
-    def __setstate__(self, state):
-        self.device = state["device"]
-        self.model = ort.InferenceSession(state["lamaonnx_path"])
 
     def _pre_process(
         self, image: torch.Tensor, mask: torch.Tensor
@@ -63,8 +53,8 @@ class LamOnnx(InpaintingModel):
         resized_image_tensor = resize_image(image=image, target_size=(512, 512))
         resized_mask_tensor = resize_image(image=mask, target_size=(512, 512))
 
-        image_resized = resized_image_tensor.unsqueeze(0).to(device=self.device)
-        mask_resized = resized_mask_tensor[0:1].unsqueeze(0).to(device=self.device)
+        image_resized = resized_image_tensor.unsqueeze(0)
+        mask_resized = resized_mask_tensor[0:1].unsqueeze(0)
 
         # Convert to NumPy (ONNX requires NumPy arrays)
         image_numpy = image_resized.numpy()
@@ -114,4 +104,3 @@ class LamOnnx(InpaintingModel):
     def shutdown(self) -> None:
         """Cleans up resources by setting the model to None."""
         self.model = None
-        self.device = None

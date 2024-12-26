@@ -49,12 +49,14 @@ class RunWayML(InpaintingModel):
 
         logging.info("Loading RunwayML weights")
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(
+            "mps" if torch.backends.mps.is_available() else "cpu"
+        )
         self.generator = torch.Generator(device=self.device).manual_seed(0)
         self.prompt = prompt
         self.model = AutoPipelineForInpainting.from_pretrained(
             self.runwayml_path,
-        )
+        ).to(self.device)
 
     def _pre_process(
         self, image: torch.Tensor, mask: torch.Tensor
