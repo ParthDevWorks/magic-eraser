@@ -140,6 +140,41 @@ def color_splash_humans(
     return color_splash_tensor
 
 
+def remove_background(
+    image_tensor: torch.Tensor, eraser_config: ModelInitializer
+) -> torch.Tensor:
+    """
+    Removes the background from an input image tensor using a combination of segmentation and masking techniques.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor to process.
+        eraser_config (ModelInitializer): A configuration object containing settings for the segmentation model.
+
+    Returns:
+        torch.Tensor: The processed image tensor with the background removed.
+
+    Raises:
+        AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
+
+    """
+    segmentation_model = eraser_config.get_segmentation_model()
+
+    segmentation_output = perform_segmentation(image_tensor, segmentation_model)
+
+    dilated_segmented_mask = post_process_humans_mask(
+        image_tensor, segmentation_output, dilate_tensors=False
+    )
+
+    if dilated_segmented_mask.dtype != "float32":
+        dilated_segmented_mask = dilated_segmented_mask.float()
+
+    background_removed_tensor = dilated_segmented_mask * image_tensor + (
+        1 - dilated_segmented_mask
+    ) * torch.ones(image_tensor.shape[-2:])
+
+    return background_removed_tensor
+
+
 def post_process_humans_mask(
     image_tensor: torch.Tensor,
     segmentation_output: SegmentationOutput,
