@@ -22,4 +22,6 @@ class Config(BaseModel):
     segmentation_model_id: Literal["mask_rcnn"] = "mask_rcnn"
     inpainting_model: bool = False
     inpainting_model_id: Literal["lama_onnx", "runwayml"] = "lama_onnx"
-    mode: Literal["erase_humans", "color_splash_humans"] = "erase_humans"
+    mode: Literal["erase_humans", "color_splash_humans", "remove_background"] = (
+        "erase_humans"
+    )

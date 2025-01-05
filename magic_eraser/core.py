@@ -11,7 +11,7 @@ import time
 import torch
 from magic_eraser.config.config import Config
 from magic_eraser.model_initialization.initialize import ModelInitializer
-from magic_eraser.image import remove_humans, color_splash_humans
+from magic_eraser.image import remove_humans, color_splash_humans, remove_background
 from magic_eraser.utils.image import load_image, save_image
 from magic_eraser.utils.book_keeping import ErrorLogs, SuccessLogs, FatalProcessingError
 
@@ -69,6 +69,13 @@ def core_process(
 
             start_time_inferece = time.perf_counter()
             output_image_tensor = color_splash_humans(image_tensor, eraser_config)
+            end_time_inference = round(time.perf_counter() - start_time_inferece, 2)
+            image_processed_successfully = True
+
+        elif eraser_config.global_config["mode"] == "remove_background":
+
+            start_time_inferece = time.perf_counter()
+            output_image_tensor = remove_background(image_tensor, eraser_config)
             end_time_inference = round(time.perf_counter() - start_time_inferece, 2)
             image_processed_successfully = True
 
