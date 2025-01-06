@@ -60,7 +60,7 @@
 
                         <label class="view-source-button" for="mod-config-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">List</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ConfigDict</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
@@ -74,19 +74,19 @@
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">        segmentation_model_id (str): The ID of the segmentation model. Defaults to &quot;mask_rcnn&quot;.</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">        inpainting_model (bool): Boolean indicating whether to use inpainting model. Defaults to False</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">        inpainting_model_id (str): The ID of the inpainting model. Defaults to &quot;lama_onnx&quot;.</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">        mode (str): The mode for which the configuration is being used. Defaults to &quot;erase_humans&quot;.</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="n">segmentation_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">segmentation_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mask_rcnn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mask_rcnn&quot;</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="n">inpainting_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="n">inpainting_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;lama_onnx&quot;</span><span class="p">,</span> <span class="s2">&quot;runwayml&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lama_onnx&quot;</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;erase_humans&quot;</span><span class="p">,</span> <span class="s2">&quot;color_splash_humans&quot;</span><span class="p">,</span> <span class="s2">&quot;remove_background&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>        <span class="s2">&quot;erase_humans&quot;</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="p">)</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">        mode (str): The mode for which the configuration is being used. Defaults to &quot;erase&quot;.</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        target (List): A list of targets to apply the mode to. Defaults to [&quot;person&quot;].</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">segmentation_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="n">segmentation_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mask_rcnn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mask_rcnn&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="n">inpainting_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="n">inpainting_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;lama_onnx&quot;</span><span class="p">,</span> <span class="s2">&quot;runwayml&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lama_onnx&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;erase&quot;</span><span class="p">,</span> <span class="s2">&quot;color_splash&quot;</span><span class="p">,</span> <span class="s2">&quot;remove_background&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;erase&quot;</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="n">target</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;person&quot;</span><span class="p">]</span>
 </span></pre></div>
 
 
@@ -111,19 +111,19 @@
 </span><span id="Config-13"><a href="#Config-13"><span class="linenos">13</span></a><span class="sd">        segmentation_model_id (str): The ID of the segmentation model. Defaults to &quot;mask_rcnn&quot;.</span>
 </span><span id="Config-14"><a href="#Config-14"><span class="linenos">14</span></a><span class="sd">        inpainting_model (bool): Boolean indicating whether to use inpainting model. Defaults to False</span>
 </span><span id="Config-15"><a href="#Config-15"><span class="linenos">15</span></a><span class="sd">        inpainting_model_id (str): The ID of the inpainting model. Defaults to &quot;lama_onnx&quot;.</span>
-</span><span id="Config-16"><a href="#Config-16"><span class="linenos">16</span></a><span class="sd">        mode (str): The mode for which the configuration is being used. Defaults to &quot;erase_humans&quot;.</span>
-</span><span id="Config-17"><a href="#Config-17"><span class="linenos">17</span></a>
-</span><span id="Config-18"><a href="#Config-18"><span class="linenos">18</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="Config-19"><a href="#Config-19"><span class="linenos">19</span></a>
-</span><span id="Config-20"><a href="#Config-20"><span class="linenos">20</span></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
-</span><span id="Config-21"><a href="#Config-21"><span class="linenos">21</span></a>
-</span><span id="Config-22"><a href="#Config-22"><span class="linenos">22</span></a>    <span class="n">segmentation_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="Config-23"><a href="#Config-23"><span class="linenos">23</span></a>    <span class="n">segmentation_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mask_rcnn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mask_rcnn&quot;</span>
-</span><span id="Config-24"><a href="#Config-24"><span class="linenos">24</span></a>    <span class="n">inpainting_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="Config-25"><a href="#Config-25"><span class="linenos">25</span></a>    <span class="n">inpainting_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;lama_onnx&quot;</span><span class="p">,</span> <span class="s2">&quot;runwayml&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lama_onnx&quot;</span>
-</span><span id="Config-26"><a href="#Config-26"><span class="linenos">26</span></a>    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;erase_humans&quot;</span><span class="p">,</span> <span class="s2">&quot;color_splash_humans&quot;</span><span class="p">,</span> <span class="s2">&quot;remove_background&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="Config-27"><a href="#Config-27"><span class="linenos">27</span></a>        <span class="s2">&quot;erase_humans&quot;</span>
-</span><span id="Config-28"><a href="#Config-28"><span class="linenos">28</span></a>    <span class="p">)</span>
+</span><span id="Config-16"><a href="#Config-16"><span class="linenos">16</span></a><span class="sd">        mode (str): The mode for which the configuration is being used. Defaults to &quot;erase&quot;.</span>
+</span><span id="Config-17"><a href="#Config-17"><span class="linenos">17</span></a><span class="sd">        target (List): A list of targets to apply the mode to. Defaults to [&quot;person&quot;].</span>
+</span><span id="Config-18"><a href="#Config-18"><span class="linenos">18</span></a>
+</span><span id="Config-19"><a href="#Config-19"><span class="linenos">19</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Config-20"><a href="#Config-20"><span class="linenos">20</span></a>
+</span><span id="Config-21"><a href="#Config-21"><span class="linenos">21</span></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+</span><span id="Config-22"><a href="#Config-22"><span class="linenos">22</span></a>
+</span><span id="Config-23"><a href="#Config-23"><span class="linenos">23</span></a>    <span class="n">segmentation_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Config-24"><a href="#Config-24"><span class="linenos">24</span></a>    <span class="n">segmentation_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mask_rcnn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mask_rcnn&quot;</span>
+</span><span id="Config-25"><a href="#Config-25"><span class="linenos">25</span></a>    <span class="n">inpainting_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Config-26"><a href="#Config-26"><span class="linenos">26</span></a>    <span class="n">inpainting_model_id</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;lama_onnx&quot;</span><span class="p">,</span> <span class="s2">&quot;runwayml&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lama_onnx&quot;</span>
+</span><span id="Config-27"><a href="#Config-27"><span class="linenos">27</span></a>    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;erase&quot;</span><span class="p">,</span> <span class="s2">&quot;color_splash&quot;</span><span class="p">,</span> <span class="s2">&quot;remove_background&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;erase&quot;</span>
+</span><span id="Config-28"><a href="#Config-28"><span class="linenos">28</span></a>    <span class="n">target</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;person&quot;</span><span class="p">]</span>
 </span></pre></div>
 
 
@@ -136,7 +136,8 @@
   segmentation_model_id (str): The ID of the segmentation model. Defaults to "mask_rcnn".
   inpainting_model (bool): Boolean indicating whether to use inpainting model. Defaults to False
   inpainting_model_id (str): The ID of the inpainting model. Defaults to "lama_onnx".
-  mode (str): The mode for which the configuration is being used. Defaults to "erase_humans".</p>
+  mode (str): The mode for which the configuration is being used. Defaults to "erase".
+  target (List): A list of targets to apply the mode to. Defaults to ["person"].</p>
 </blockquote>
 </div>
 
