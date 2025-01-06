@@ -10,7 +10,8 @@ def default_config_erase_humans():
         "segmentation_model_id": "mask_rcnn",
         "inpainting_model": True,
         "inpainting_model_id": "lama_onnx",
-        "mode": "erase_humans",
+        "mode": "erase",
+        "target": ["person"],
     }
 
     return config_dict
