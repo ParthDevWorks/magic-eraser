@@ -96,12 +96,14 @@ def erase(image_tensor: torch.Tensor, eraser_config: ModelInitializer) -> torch.
         segmentation_output,
         target_labels=eraser_config.global_config["target"],
     )
+    if dilated_segmented_mask.any():
+        inpainted_image = perform_inpainting(
+            image_tensor, dilated_segmented_mask, inpainting_model
+        )
 
-    inpainted_image = perform_inpainting(
-        image_tensor, dilated_segmented_mask, inpainting_model
-    )
-
-    return inpainted_image
+        return inpainted_image
+    else:
+        return image_tensor
 
 
 def color_splash(
