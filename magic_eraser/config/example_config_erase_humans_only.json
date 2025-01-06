@@ -3,5 +3,8 @@
     "segmentation_model_id": "mask_rcnn",
     "inpainting_model": true,
     "inpainting_model_id": "lama_onnx",
-    "mode": "erase_humans"
+    "mode": "color_splash",
+    "target": [
+        "persons"
+    ]
 }

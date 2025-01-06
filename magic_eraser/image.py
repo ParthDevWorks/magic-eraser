@@ -5,7 +5,7 @@ from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutp
 from magic_eraser.utils.image import dilate_boolean_tensors, rgb_to_grayscale
 from magic_eraser.segmentation.utils.helper import (
     get_segmentation_masks,
-    filter_humans_mask,
+    filter_mask,
 )
 from magic_eraser.inpainting.base import InpaintingModel
 
@@ -60,22 +60,20 @@ def perform_inpainting(
     return inpainted_image
 
 
-def remove_humans(
-    image_tensor: torch.Tensor, eraser_config: ModelInitializer
-) -> torch.Tensor:
+def erase(image_tensor: torch.Tensor, eraser_config: ModelInitializer) -> torch.Tensor:
     """
-    Removes humans from an input image tensor using a combination of segmentation and inpainting models.
+    Erases target objects defined in config from an input image tensor using a combination of segmentation and inpainting models.
 
     This function performs two main steps:
-    1. Segments the human regions in the input image using a pre-trained segmentation model.
-    2. Inpaints the segmented human regions using a pre-trained inpainting model.
+    1. Segments the target object regions in the input image using a pre-trained segmentation model.
+    2. Inpaints the segmented target object regions using a pre-trained inpainting model.
 
     Args:
         image_tensor (torch.Tensor): The input image tensor to process.
         eraser_config (ModelInitializer): A configuration object containing settings for both segmentation and inpainting models.
 
     Returns:
-        torch.Tensor: The processed image tensor with humans removed from the original input.
+        torch.Tensor: The processed image tensor with target object removed from the original input.
 
     Raises:
         AssertionError: If either the segmentation or inpainting model is not properly configured in the ModelInitializer object.
@@ -83,7 +81,7 @@ def remove_humans(
     Notes:
         - This function assumes that the ModelInitializer object has been properly initialized with valid model paths and parameters.
         - The function uses the models specified in the ModelInitializer object for both segmentation and inpainting tasks.
-        - The output tensor will have the same shape as the input tensor, but with the human regions replaced by inpainted content.
+        - The output tensor will have the same shape as the input tensor, but with the target object regions replaced by inpainted content.
 
     """
 
@@ -93,7 +91,11 @@ def remove_humans(
 
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
-    dilated_segmented_mask = post_process_humans_mask(image_tensor, segmentation_output)
+    dilated_segmented_mask = post_process_mask(
+        image_tensor,
+        segmentation_output,
+        target_labels=eraser_config.global_config["target"],
+    )
 
     inpainted_image = perform_inpainting(
         image_tensor, dilated_segmented_mask, inpainting_model
@@ -102,18 +104,18 @@ def remove_humans(
     return inpainted_image
 
 
-def color_splash_humans(
+def color_splash(
     image_tensor: torch.Tensor, eraser_config: ModelInitializer
 ) -> torch.Tensor:
     """
-    Applies a color splash effect to human regions in an input image tensor.
+    Applies a color splash effect to target objct regions in an input image tensor.
 
     Args:
         image_tensor (torch.Tensor): The input image tensor to process.
         eraser_config (ModelInitializer): Configuration object containing settings for the segmentation model.
 
     Returns:
-        torch.Tensor: The processed image tensor with a color splash effect applied to human regions.
+        torch.Tensor: The processed image tensor with a color splash effect applied to target object regions.
 
     Raises:
         AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
@@ -123,8 +125,11 @@ def color_splash_humans(
 
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
-    dilated_segmented_mask = post_process_humans_mask(
-        image_tensor, segmentation_output, dilate_tensors=False
+    dilated_segmented_mask = post_process_mask(
+        image_tensor,
+        segmentation_output,
+        target_labels=eraser_config.global_config["target"],
+        dilate_tensors=False,
     )
 
     if dilated_segmented_mask.dtype != "float32":
@@ -151,7 +156,7 @@ def remove_background(
         eraser_config (ModelInitializer): A configuration object containing settings for the segmentation model.
 
     Returns:
-        torch.Tensor: The processed image tensor with the background removed.
+        torch.Tensor: The processed image tensor with target kept and the background removed.
 
     Raises:
         AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
@@ -161,8 +166,11 @@ def remove_background(
 
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
-    dilated_segmented_mask = post_process_humans_mask(
-        image_tensor, segmentation_output, dilate_tensors=False
+    dilated_segmented_mask = post_process_mask(
+        image_tensor,
+        segmentation_output,
+        target_labels=eraser_config.global_config["target"],
+        dilate_tensors=False,
     )
 
     if dilated_segmented_mask.dtype != "float32":
@@ -175,29 +183,33 @@ def remove_background(
     return background_removed_tensor
 
 
-def post_process_humans_mask(
+def post_process_mask(
     image_tensor: torch.Tensor,
     segmentation_output: SegmentationOutput,
+    target_labels: list,
     dilate_tensors: bool = True,
 ) -> torch.Tensor:
     """
-    Post-processes the segmentation output to obtain masks for the human regions only.
+    Post-processes the segmentation output to obtain masks for the target object regions only.
 
-    This function filters out the human regions from the segmentation output and dilates the resulting masks.
+    This function filters out the target object regions from the segmentation output and dilates the resulting masks.
 
     Args:
         image_tensor (torch.Tensor): Original image tensor.
         segmentation_output (SegmentationOutput): Segmentation output containing mask regions.
+        target_labels (list): List of target object labels to filter from the segmentation output.
         dilate_tensors (bool): Whether to dilate the resulting masks. Defaults to True.
 
     Returns:
-        torch.Tensor: Dilated masks for the human regions only.
+        torch.Tensor: Dilated masks for the target object regions only.
 
     """
-    segmentation_output_with_humans_only = filter_humans_mask(segmentation_output)
+    segmentation_output_with_targets_only = filter_mask(
+        segmentation_output, target_labels
+    )
 
     segmentation_masks = get_segmentation_masks(
-        og_image=image_tensor, segmentation_output=segmentation_output_with_humans_only
+        og_image=image_tensor, segmentation_output=segmentation_output_with_targets_only
     )
 
     if dilate_tensors:

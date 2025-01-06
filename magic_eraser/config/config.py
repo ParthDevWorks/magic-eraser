@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, List
 
 from pydantic import BaseModel, ConfigDict
 
@@ -12,7 +12,8 @@ class Config(BaseModel):
         segmentation_model_id (str): The ID of the segmentation model. Defaults to "mask_rcnn".
         inpainting_model (bool): Boolean indicating whether to use inpainting model. Defaults to False
         inpainting_model_id (str): The ID of the inpainting model. Defaults to "lama_onnx".
-        mode (str): The mode for which the configuration is being used. Defaults to "erase_humans".
+        mode (str): The mode for which the configuration is being used. Defaults to "erase".
+        target (List): A list of targets to apply the mode to. Defaults to ["person"].
 
     """
 
@@ -22,6 +23,5 @@ class Config(BaseModel):
     segmentation_model_id: Literal["mask_rcnn"] = "mask_rcnn"
     inpainting_model: bool = False
     inpainting_model_id: Literal["lama_onnx", "runwayml"] = "lama_onnx"
-    mode: Literal["erase_humans", "color_splash_humans", "remove_background"] = (
-        "erase_humans"
-    )
+    mode: Literal["erase", "color_splash", "remove_background"] = "erase"
+    target: List = ["person"]

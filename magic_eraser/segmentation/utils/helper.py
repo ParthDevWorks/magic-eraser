@@ -1,9 +1,8 @@
+from typing import List
 import torch
 from magic_eraser.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
-
-HUMAN_LABEL_VALUES = ["person"]
 
 
 def get_segmentation_masks(
@@ -37,18 +36,30 @@ def get_segmentation_masks(
     return segmentation_masks
 
 
-def filter_humans_mask(segmentation_output: SegmentationOutput) -> SegmentationOutput:
+def filter_mask(
+    segmentation_output: SegmentationOutput, target_labels: List[str]
+) -> SegmentationOutput:
+    """
+    Filters out target object regions from the segmentation output.
 
-    human_label_index = []
+    Args:
+        segmentation_output (SegmentationOutput): Segmentation output containing mask regions.
+        target_labels (List[str]): List of target object string labels to filter from the segmentation output.
+
+    Returns:
+        SegmentationOutput: Segmentation output containing mask regions for target object regions only.
+    """
+
+    label_index = []
 
     for index, label in enumerate(segmentation_output.labels):
-        if label in HUMAN_LABEL_VALUES:
-            human_label_index.append(index)
+        if label in target_labels:
+            label_index.append(index)
 
-    bbox = segmentation_output.bounding_box[human_label_index]
-    labels = [segmentation_output.labels[i] for i in human_label_index]
-    scores = segmentation_output.confidence_scores[human_label_index]
-    prediction_masks = segmentation_output.prediction_masks[human_label_index]
+    bbox = segmentation_output.bounding_box[label_index]
+    labels = [segmentation_output.labels[i] for i in label_index]
+    scores = segmentation_output.confidence_scores[label_index]
+    prediction_masks = segmentation_output.prediction_masks[label_index]
 
     return SegmentationOutput(
         bounding_box=bbox,
