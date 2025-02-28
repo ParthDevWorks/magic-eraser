@@ -1,0 +1,19 @@
+name: Bump Pyproject Version
+
+on:
+    pull_request:
+        types:
+            - closed
+        branches:
+            - "dev"
+
+jobs:
+    bump_version:
+        if: github.event.pull_request.merged == true
+        runs-on: ubuntu-latest
+        steps:
+          - name:
+            uses: ParthDevWorks/development-actions/actions/bump-pyproject-version/action.yml@main
+            with:
+                branch: "dev"
+            
