@@ -12,7 +12,10 @@ jobs:
         if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         steps:
-          - name:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+
+          - name: Bump Version Script
             uses: ParthDevWorks/development-actions/actions/bump-pyproject-version/action.yml@main
             with:
                 branch: "dev"
