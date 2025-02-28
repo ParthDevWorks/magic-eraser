@@ -16,7 +16,7 @@ jobs:
             uses: actions/checkout@v4
 
           - name: Bump Version Script
-            uses: ParthDevWorks/development-actions/actions/bump-pyproject-version/action.yml@main
+            uses: ParthDevWorks/development-actions/actions/bump-pyproject-version@main
             with:
                 branch: "dev"
             
