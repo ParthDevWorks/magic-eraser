@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "magic-eraser"
-version = "0.1.0.dev1"
+version = "0.1.0.dev2"
 description = ""
 authors = ["Parth Rathod <rathodparth02@gmail.com>"]
 readme = "README.md"
