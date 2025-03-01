@@ -38,3 +38,15 @@ Magic Eraser uses [pdoc](https://github.com/mitmproxy/pdoc) for automatic docume
     ```
     poetry run generate-docs
     ```
+
+## Code Coverage
+Magic Eraser can use [Coverage Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters) as extension for VS-Code to visualize what part of code has been covered by unit tests.
+
+1. To Generate Code Coverage Information Locally:
+   Run from the root of the project
+   ```
+   poetry run test-coverage-local
+   ```
+2. This will generate `lcov.info` file locally. (This file is gitignored and hence it wont pollute the commit tree)
+3. Install the Extension for VS-Code
+4. Visualize the code coverage
