@@ -22,9 +22,11 @@ transformers = "^4.48.0"
 ipykernel = "^6.29.5"
 pytest = "^8.2.1"
 pdoc = "^15.0.1"
+pytest-cov = "^6.0.0"
 
 [tool.poetry.scripts]
 generate-docs = "scripts.generate_docs:main"
+test-coverage-local = "run_cov_tests:local_coverage"
 
 [build-system]
 requires = ["poetry-core"]
