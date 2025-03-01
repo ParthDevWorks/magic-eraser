@@ -51,7 +51,7 @@ class SuccessLogs(Logs):
         self.inference_time_seconds = inference_time_seconds
 
 
-class FatalProcessingError(Exception):
+class FatalProcessingError(Logs):
     __slots__ = ["message", "traceback"]
 
     def __init__(
@@ -61,12 +61,6 @@ class FatalProcessingError(Exception):
     ):
         self.message = message
         self.traceback = traceback
-
-    def as_dict(self):
-        return {slot: getattr(self, slot) for slot in self.__slots__}
-
-    def __str__(self):
-        return self.as_dict().__str__()
 
 
 if __name__ == "__main__":
