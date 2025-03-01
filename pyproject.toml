@@ -39,7 +39,8 @@ omit = [
 [tool.coverage.report]
 exclude_also = [
         "if __name__ == .__main__.:",
-        "@abstractmethod"
+        "@abstractmethod",
+        "def __str__(self):"
         ]
 
 [build-system]
