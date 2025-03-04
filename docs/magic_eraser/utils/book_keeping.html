@@ -30,12 +30,6 @@
 
             <h2>API Documentation</h2>
                 <ul class="memberlist">
-            <li>
-                    <a class="class" href="#FatalProcessingError">FatalProcessingError</a>
-                            <ul class="memberlist">
-                </ul>
-
-            </li>
     </ul>
 
 
@@ -110,7 +104,7 @@
 </span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">inference_time_seconds</span> <span class="o">=</span> <span class="n">inference_time_seconds</span>
 </span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
 </span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="k">class</span> <span class="nc">FatalProcessingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="k">class</span> <span class="nc">FatalProcessingError</span><span class="p">(</span><span class="n">Logs</span><span class="p">):</span>
 </span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;traceback&quot;</span><span class="p">]</span>
 </span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
 </span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -121,70 +115,29 @@
 </span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
 </span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">traceback</span> <span class="o">=</span> <span class="n">traceback</span>
 </span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">slot</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">}</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="n">dummy_error_message</span> <span class="o">=</span> <span class="n">ErrorLogs</span><span class="p">(</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>        <span class="n">input_path</span><span class="o">=</span><span class="s2">&quot;/path/to/test.jpg&quot;</span><span class="p">,</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;erase_humans&quot;</span><span class="p">,</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Import Error&quot;</span><span class="p">,</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>        <span class="n">traceback</span><span class="o">=</span><span class="s2">&quot;ModuleNotFoundError: No module named &#39;magic_eraser&#39;&quot;</span><span class="p">,</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>    <span class="p">)</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>    <span class="nb">print</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="p">)</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="p">))</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;***&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>
-</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>    <span class="nb">print</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()))</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;***&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>
-</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a>    <span class="nb">print</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()))</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>    <span class="n">dummy_error_message</span> <span class="o">=</span> <span class="n">ErrorLogs</span><span class="p">(</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>        <span class="n">input_path</span><span class="o">=</span><span class="s2">&quot;/path/to/test.jpg&quot;</span><span class="p">,</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;erase_humans&quot;</span><span class="p">,</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Import Error&quot;</span><span class="p">,</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="n">traceback</span><span class="o">=</span><span class="s2">&quot;ModuleNotFoundError: No module named &#39;magic_eraser&#39;&quot;</span><span class="p">,</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>    <span class="p">)</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>    <span class="nb">print</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="p">)</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="p">))</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;***&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>    <span class="nb">print</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()))</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;***&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>    <span class="nb">print</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">dummy_error_message</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()))</span>
 </span></pre></div>
 
 
             </section>
-                <section id="FatalProcessingError">
-                            <input id="FatalProcessingError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr class">
-            
-    <span class="def">class</span>
-    <span class="name">FatalProcessingError</span><wbr>(<span class="base">builtins.Exception</span>):
-
-                <label class="view-source-button" for="FatalProcessingError-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#FatalProcessingError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="FatalProcessingError-55"><a href="#FatalProcessingError-55"><span class="linenos">55</span></a><span class="k">class</span> <span class="nc">FatalProcessingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-</span><span id="FatalProcessingError-56"><a href="#FatalProcessingError-56"><span class="linenos">56</span></a>    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;traceback&quot;</span><span class="p">]</span>
-</span><span id="FatalProcessingError-57"><a href="#FatalProcessingError-57"><span class="linenos">57</span></a>
-</span><span id="FatalProcessingError-58"><a href="#FatalProcessingError-58"><span class="linenos">58</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-</span><span id="FatalProcessingError-59"><a href="#FatalProcessingError-59"><span class="linenos">59</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="FatalProcessingError-60"><a href="#FatalProcessingError-60"><span class="linenos">60</span></a>        <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Fatal Processing Error&quot;</span><span class="p">,</span>
-</span><span id="FatalProcessingError-61"><a href="#FatalProcessingError-61"><span class="linenos">61</span></a>        <span class="n">traceback</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="FatalProcessingError-62"><a href="#FatalProcessingError-62"><span class="linenos">62</span></a>    <span class="p">):</span>
-</span><span id="FatalProcessingError-63"><a href="#FatalProcessingError-63"><span class="linenos">63</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
-</span><span id="FatalProcessingError-64"><a href="#FatalProcessingError-64"><span class="linenos">64</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">traceback</span> <span class="o">=</span> <span class="n">traceback</span>
-</span><span id="FatalProcessingError-65"><a href="#FatalProcessingError-65"><span class="linenos">65</span></a>
-</span><span id="FatalProcessingError-66"><a href="#FatalProcessingError-66"><span class="linenos">66</span></a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="FatalProcessingError-67"><a href="#FatalProcessingError-67"><span class="linenos">67</span></a>        <span class="k">return</span> <span class="p">{</span><span class="n">slot</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">}</span>
-</span><span id="FatalProcessingError-68"><a href="#FatalProcessingError-68"><span class="linenos">68</span></a>
-</span><span id="FatalProcessingError-69"><a href="#FatalProcessingError-69"><span class="linenos">69</span></a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="FatalProcessingError-70"><a href="#FatalProcessingError-70"><span class="linenos">70</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Common base class for all non-exit exceptions.</p>
-</div>
-
-
-                </section>
     </main>
 <script>
     function escapeHTML(html) {

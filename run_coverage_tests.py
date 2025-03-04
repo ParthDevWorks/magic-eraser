@@ -6,5 +6,6 @@ def local_coverage():
     pytest.main(pytest_args)
 
 
-if __name__ == "__main__":
-    local_coverage()
+def terminal_coverage():
+    pytest_args = ["--cov=magic_eraser", "--cov-report=term", "tests/"]
+    pytest.main(pytest_args)

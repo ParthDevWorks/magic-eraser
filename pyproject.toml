@@ -27,6 +27,7 @@ pytest-cov = "^6.0.0"
 [tool.poetry.scripts]
 generate-docs = "scripts.generate_docs:main"
 test-coverage-local = "run_coverage_tests:local_coverage"
+terminal-coverage = "run_coverage_tests:terminal_coverage"
 
 [tool.coverage.run]
 omit = [

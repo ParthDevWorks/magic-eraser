@@ -11,7 +11,7 @@ import time
 import torch
 from magic_eraser.config.config import Config
 from magic_eraser.model_initialization.initialize import ModelInitializer
-from magic_eraser.image import erase, color_splash, remove_background
+from magic_eraser.pipeline import Pipeline
 from magic_eraser.utils.image import load_image, save_image
 from magic_eraser.utils.book_keeping import ErrorLogs, SuccessLogs, FatalProcessingError
 
@@ -35,8 +35,11 @@ def _worker_init(config: Config):
             torch.set_num_interop_threads(1)
 
         model_initializer = ModelInitializer(global_config=config)
-        model_initializer.load_models()
-        _global_worker_["config"] = model_initializer
+
+        pipeline = Pipeline(model_initializer=model_initializer)
+        pipeline.load_models()
+
+        _global_worker_["pipeline"] = pipeline
     except Exception:
         _global_worker_["error"]["initialization_error"] = True
         _global_worker_["error"]["message"] = FatalProcessingError(
@@ -51,43 +54,17 @@ def core_process(
     if _global_worker_["error"]["initialization_error"]:
         return _global_worker_["error"]["message"]
 
-    eraser_config = _global_worker_["config"]
+    pipeline: Pipeline = _global_worker_["pipeline"]
     try:
-        image_processed_successfully = False
         assert isinstance(input_path, str)
 
         image_tensor = load_image(input_path)
 
-        if eraser_config.global_config["mode"] == "erase":
+        start_time_inferece = time.perf_counter()
+        output_image_tensor = pipeline.analyze_image(image_tensor)
+        end_time_inference = round(time.perf_counter() - start_time_inferece, 2)
 
-            start_time_inferece = time.perf_counter()
-            output_image_tensor = erase(image_tensor, eraser_config)
-            end_time_inference = round(time.perf_counter() - start_time_inferece, 2)
-            image_processed_successfully = True
-
-        elif eraser_config.global_config["mode"] == "color_splash":
-
-            start_time_inferece = time.perf_counter()
-            output_image_tensor = color_splash(image_tensor, eraser_config)
-            end_time_inference = round(time.perf_counter() - start_time_inferece, 2)
-            image_processed_successfully = True
-
-        elif eraser_config.global_config["mode"] == "remove_background":
-
-            start_time_inferece = time.perf_counter()
-            output_image_tensor = remove_background(image_tensor, eraser_config)
-            end_time_inference = round(time.perf_counter() - start_time_inferece, 2)
-            image_processed_successfully = True
-
-        else:
-            rv_list.append(
-                ErrorLogs(
-                    input_path=input_path,
-                    mode=eraser_config.global_config["mode"],
-                    message="Unsupported mode",
-                )
-            )
-        if image_processed_successfully:
+        if pipeline.is_image_processing_successfull:
             output_image_path = (
                 os.path.join(output_dir, os.path.basename(input_path)).split(".", 1)[0]
                 + ".PNG"
@@ -98,7 +75,7 @@ def core_process(
                 SuccessLogs(
                     input_path=input_path,
                     output_path=output_image_path,
-                    mode=eraser_config.global_config["mode"],
+                    mode=pipeline.global_config["mode"],
                     message=SUCCESS_LOG_MESSAGE,
                     inference_time_seconds=end_time_inference,
                 )
@@ -108,7 +85,7 @@ def core_process(
         rv_list.append(
             ErrorLogs(
                 input_path=input_path,
-                mode=eraser_config.global_config["mode"],
+                mode=pipeline.global_config["mode"],
                 message=str(e),
                 traceback=traceback.format_exc(),
             )
