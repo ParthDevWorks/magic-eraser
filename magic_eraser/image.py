@@ -60,7 +60,12 @@ def perform_inpainting(
     return inpainted_image
 
 
-def erase(image_tensor: torch.Tensor, eraser_config: ModelInitializer) -> torch.Tensor:
+def erase(
+    image_tensor: torch.Tensor,
+    segmentation_model: SegmentationModel,
+    inpainting_model: InpaintingModel,
+    target_labels: list[str],
+) -> torch.Tensor:
     """
     Erases target objects defined in config from an input image tensor using a combination of segmentation and inpainting models.
 
@@ -70,7 +75,9 @@ def erase(image_tensor: torch.Tensor, eraser_config: ModelInitializer) -> torch.
 
     Args:
         image_tensor (torch.Tensor): The input image tensor to process.
-        eraser_config (ModelInitializer): A configuration object containing settings for both segmentation and inpainting models.
+        segmentation_model (SegmentationModel): An instance of a SegmentationModel subclass.
+        inpainting_model (InpaintingModel): An instance of an InpaintingModel subclass.
+        target_labels (list[str]): A list of target object labels to remove from the input image.
 
     Returns:
         torch.Tensor: The processed image tensor with target object removed from the original input.
@@ -85,16 +92,12 @@ def erase(image_tensor: torch.Tensor, eraser_config: ModelInitializer) -> torch.
 
     """
 
-    segmentation_model = eraser_config.get_segmentation_model()
-
-    inpainting_model = eraser_config.get_inpainting_model()
-
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
     dilated_segmented_mask = post_process_mask(
         image_tensor,
         segmentation_output,
-        target_labels=eraser_config.global_config["target"],
+        target_labels=target_labels,
     )
     if dilated_segmented_mask.any():
         inpainted_image = perform_inpainting(
@@ -107,14 +110,17 @@ def erase(image_tensor: torch.Tensor, eraser_config: ModelInitializer) -> torch.
 
 
 def color_splash(
-    image_tensor: torch.Tensor, eraser_config: ModelInitializer
+    image_tensor: torch.Tensor,
+    segmentation_model: SegmentationModel,
+    target_labels: list[str],
 ) -> torch.Tensor:
     """
     Applies a color splash effect to target objct regions in an input image tensor.
 
     Args:
         image_tensor (torch.Tensor): The input image tensor to process.
-        eraser_config (ModelInitializer): Configuration object containing settings for the segmentation model.
+        segmentation_model (SegmentationModel): An instance of a SegmentationModel subclass.
+        target_labels (list[str]): A list of target object labels to color splash from the input image.
 
     Returns:
         torch.Tensor: The processed image tensor with a color splash effect applied to target object regions.
@@ -123,14 +129,12 @@ def color_splash(
         AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
     """
 
-    segmentation_model = eraser_config.get_segmentation_model()
-
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
     dilated_segmented_mask = post_process_mask(
         image_tensor,
         segmentation_output,
-        target_labels=eraser_config.global_config["target"],
+        target_labels=target_labels,
         dilate_tensors=False,
     )
 
@@ -148,14 +152,17 @@ def color_splash(
 
 
 def remove_background(
-    image_tensor: torch.Tensor, eraser_config: ModelInitializer
+    image_tensor: torch.Tensor,
+    segmentation_model: SegmentationModel,
+    target_labels: list[str],
 ) -> torch.Tensor:
     """
     Removes the background from an input image tensor using a combination of segmentation and masking techniques.
 
     Args:
         image_tensor (torch.Tensor): The input image tensor to process.
-        eraser_config (ModelInitializer): A configuration object containing settings for the segmentation model.
+        segmentation_model (SegmentationModel): An instance of a SegmentationModel subclass.
+        target_labels (list[str]): A list of target object labels to keep from the input image.
 
     Returns:
         torch.Tensor: The processed image tensor with target kept and the background removed.
@@ -164,14 +171,13 @@ def remove_background(
         AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
 
     """
-    segmentation_model = eraser_config.get_segmentation_model()
 
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
     dilated_segmented_mask = post_process_mask(
         image_tensor,
         segmentation_output,
-        target_labels=eraser_config.global_config["target"],
+        target_labels=target_labels,
         dilate_tensors=False,
     )
 
