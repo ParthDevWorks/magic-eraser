@@ -37,9 +37,6 @@
                                 <a class="function" href="#RunWayML.get_model_id">get_model_id</a>
                         </li>
                         <li>
-                                <a class="function" href="#RunWayML.initialize">initialize</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#RunWayML.inference">inference</a>
                         </li>
                         <li>
@@ -82,110 +79,109 @@
 </span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>
 </span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>
 </span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="k">class</span> <span class="nc">RunWayML</span><span class="p">(</span><span class="n">InpaintingModel</span><span class="p">):</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="sd">     Loads the pretrained RunWay AI model weights.</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="sd">    Raises:</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="sd">        ValueError:  If the path to the model weights is not found.</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">        Returns:</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">            str: A string representing the model ID.</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>        <span class="k">return</span> <span class="s2">&quot;runwayml&quot;</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blend with surroundings. Fill seamlessly. Extend the texture. Match the surrounding area&quot;</span><span class="p">,</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blend with surroundings. Fill seamlessly. Extend the texture. Match the surrounding area&quot;</span><span class="p">,</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the pretrained RunWay AI model weights.</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">        Raises:</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">            ValueError:  If the path to the model weights is not found.</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>            <span class="s2">&quot;runwayml&quot;</span><span class="p">,</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>            <span class="s2">&quot;models--runwayml--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb&quot;</span><span class="p">,</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>        <span class="p">)</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">):</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>                <span class="sa">f</span><span class="s2">&quot;Runway AI Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>            <span class="p">)</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading RunwayML weights&quot;</span><span class="p">)</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>            <span class="s2">&quot;runwayml&quot;</span><span class="p">,</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>            <span class="s2">&quot;models--runwayml--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb&quot;</span><span class="p">,</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>        <span class="p">)</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">):</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>                <span class="sa">f</span><span class="s2">&quot;Runway AI Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>            <span class="p">)</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading RunwayML weights&quot;</span><span class="p">)</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>            <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>        <span class="p">)</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoPipelineForInpainting</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">,</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 </span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>            <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>        <span class="p">)</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoPipelineForInpainting</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">,</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>    <span class="k">def</span> <span class="nf">_pre_process</span><span class="p">(</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]:</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>        <span class="n">resized_image_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>        <span class="n">resized_mask_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>        <span class="n">image_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_image_tensor</span><span class="p">)</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>        <span class="n">msk_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_mask_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>        <span class="k">return</span> <span class="n">image_pil</span><span class="p">,</span> <span class="n">msk_pil</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>    <span class="k">def</span> <span class="nf">_post_processing</span><span class="p">(</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">og_image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>        <span class="n">output_tensor</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()(</span><span class="n">output</span><span class="p">)</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>        <span class="n">resized_image</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">output_tensor</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>        <span class="p">)</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>        <span class="k">return</span> <span class="n">resized_image</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">        Args:</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">            image torch.Tensor: The input image tensor.</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">            mask torch.Tensor: The mask tensor indicating areas to be inpainted.</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">        Returns:</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">            torch.Tensor: The inpainted image tensor.</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>                <span class="s2">&quot;Model is not initialized. Initialize the model before calling inference.&quot;</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>            <span class="p">)</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="n">image_pil</span><span class="p">,</span> <span class="n">mask_pil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>            <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">,</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">image_pil</span><span class="p">,</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>            <span class="n">mask_image</span><span class="o">=</span><span class="n">mask_pil</span><span class="p">,</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>            <span class="n">num_inference_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="n">guidance_sacle</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>        <span class="n">final_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_processing</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>        <span class="k">return</span> <span class="n">final_output</span>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
-</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up resources by setting the model to None.&quot;&quot;&quot;</span>
-</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        Returns:</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">            str: A string representing the model ID.</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>        <span class="k">return</span> <span class="s2">&quot;runwayml&quot;</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>    <span class="k">def</span> <span class="nf">_pre_process</span><span class="p">(</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]:</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>        <span class="n">resized_image_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>        <span class="n">resized_mask_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>        <span class="n">image_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_image_tensor</span><span class="p">)</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>        <span class="n">msk_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_mask_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>        <span class="k">return</span> <span class="n">image_pil</span><span class="p">,</span> <span class="n">msk_pil</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>    <span class="k">def</span> <span class="nf">_post_processing</span><span class="p">(</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">og_image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>        <span class="n">output_tensor</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()(</span><span class="n">output</span><span class="p">)</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>        <span class="n">resized_image</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">output_tensor</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>        <span class="p">)</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>        <span class="k">return</span> <span class="n">resized_image</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">        Args:</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">            image torch.Tensor: The input image tensor.</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">            mask torch.Tensor: The mask tensor indicating areas to be inpainted.</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">        Returns:</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">            torch.Tensor: The inpainted image tensor.</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>                <span class="s2">&quot;Model is not initialized. Initialize the model before calling inference.&quot;</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>            <span class="p">)</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>        <span class="n">image_pil</span><span class="p">,</span> <span class="n">mask_pil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>            <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">,</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">image_pil</span><span class="p">,</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>            <span class="n">mask_image</span><span class="o">=</span><span class="n">mask_pil</span><span class="p">,</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>            <span class="n">num_inference_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>            <span class="n">guidance_sacle</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>        <span class="n">final_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_processing</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>        <span class="k">return</span> <span class="n">final_output</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up resources by setting the model to None.&quot;&quot;&quot;</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -202,114 +198,119 @@
     </div>
     <a class="headerlink" href="#RunWayML"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML-14"><a href="#RunWayML-14"><span class="linenos"> 14</span></a><span class="k">class</span> <span class="nc">RunWayML</span><span class="p">(</span><span class="n">InpaintingModel</span><span class="p">):</span>
-</span><span id="RunWayML-15"><a href="#RunWayML-15"><span class="linenos"> 15</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML-16"><a href="#RunWayML-16"><span class="linenos"> 16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="RunWayML-17"><a href="#RunWayML-17"><span class="linenos"> 17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="RunWayML-18"><a href="#RunWayML-18"><span class="linenos"> 18</span></a>
-</span><span id="RunWayML-19"><a href="#RunWayML-19"><span class="linenos"> 19</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="RunWayML-20"><a href="#RunWayML-20"><span class="linenos"> 20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="RunWayML-15"><a href="#RunWayML-15"><span class="linenos"> 15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="RunWayML-16"><a href="#RunWayML-16"><span class="linenos"> 16</span></a><span class="sd">     Loads the pretrained RunWay AI model weights.</span>
+</span><span id="RunWayML-17"><a href="#RunWayML-17"><span class="linenos"> 17</span></a>
+</span><span id="RunWayML-18"><a href="#RunWayML-18"><span class="linenos"> 18</span></a><span class="sd">    Raises:</span>
+</span><span id="RunWayML-19"><a href="#RunWayML-19"><span class="linenos"> 19</span></a><span class="sd">        ValueError:  If the path to the model weights is not found.</span>
+</span><span id="RunWayML-20"><a href="#RunWayML-20"><span class="linenos"> 20</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="RunWayML-21"><a href="#RunWayML-21"><span class="linenos"> 21</span></a>
-</span><span id="RunWayML-22"><a href="#RunWayML-22"><span class="linenos"> 22</span></a><span class="sd">        Returns:</span>
-</span><span id="RunWayML-23"><a href="#RunWayML-23"><span class="linenos"> 23</span></a><span class="sd">            str: A string representing the model ID.</span>
-</span><span id="RunWayML-24"><a href="#RunWayML-24"><span class="linenos"> 24</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="RunWayML-25"><a href="#RunWayML-25"><span class="linenos"> 25</span></a>        <span class="k">return</span> <span class="s2">&quot;runwayml&quot;</span>
+</span><span id="RunWayML-22"><a href="#RunWayML-22"><span class="linenos"> 22</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+</span><span id="RunWayML-23"><a href="#RunWayML-23"><span class="linenos"> 23</span></a>        <span class="bp">self</span><span class="p">,</span>
+</span><span id="RunWayML-24"><a href="#RunWayML-24"><span class="linenos"> 24</span></a>        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blend with surroundings. Fill seamlessly. Extend the texture. Match the surrounding area&quot;</span><span class="p">,</span>
+</span><span id="RunWayML-25"><a href="#RunWayML-25"><span class="linenos"> 25</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="RunWayML-26"><a href="#RunWayML-26"><span class="linenos"> 26</span></a>
-</span><span id="RunWayML-27"><a href="#RunWayML-27"><span class="linenos"> 27</span></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
-</span><span id="RunWayML-28"><a href="#RunWayML-28"><span class="linenos"> 28</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="RunWayML-29"><a href="#RunWayML-29"><span class="linenos"> 29</span></a>        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blend with surroundings. Fill seamlessly. Extend the texture. Match the surrounding area&quot;</span><span class="p">,</span>
-</span><span id="RunWayML-30"><a href="#RunWayML-30"><span class="linenos"> 30</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML-31"><a href="#RunWayML-31"><span class="linenos"> 31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the pretrained RunWay AI model weights.</span>
-</span><span id="RunWayML-32"><a href="#RunWayML-32"><span class="linenos"> 32</span></a>
-</span><span id="RunWayML-33"><a href="#RunWayML-33"><span class="linenos"> 33</span></a><span class="sd">        Raises:</span>
-</span><span id="RunWayML-34"><a href="#RunWayML-34"><span class="linenos"> 34</span></a><span class="sd">            ValueError:  If the path to the model weights is not found.</span>
-</span><span id="RunWayML-35"><a href="#RunWayML-35"><span class="linenos"> 35</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="RunWayML-36"><a href="#RunWayML-36"><span class="linenos"> 36</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
-</span><span id="RunWayML-37"><a href="#RunWayML-37"><span class="linenos"> 37</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML-38"><a href="#RunWayML-38"><span class="linenos"> 38</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
-</span><span id="RunWayML-39"><a href="#RunWayML-39"><span class="linenos"> 39</span></a>
-</span><span id="RunWayML-40"><a href="#RunWayML-40"><span class="linenos"> 40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-</span><span id="RunWayML-41"><a href="#RunWayML-41"><span class="linenos"> 41</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span>
-</span><span id="RunWayML-42"><a href="#RunWayML-42"><span class="linenos"> 42</span></a>            <span class="s2">&quot;runwayml&quot;</span><span class="p">,</span>
-</span><span id="RunWayML-43"><a href="#RunWayML-43"><span class="linenos"> 43</span></a>            <span class="s2">&quot;models--runwayml--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb&quot;</span><span class="p">,</span>
-</span><span id="RunWayML-44"><a href="#RunWayML-44"><span class="linenos"> 44</span></a>        <span class="p">)</span>
-</span><span id="RunWayML-45"><a href="#RunWayML-45"><span class="linenos"> 45</span></a>
-</span><span id="RunWayML-46"><a href="#RunWayML-46"><span class="linenos"> 46</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">):</span>
-</span><span id="RunWayML-47"><a href="#RunWayML-47"><span class="linenos"> 47</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="RunWayML-48"><a href="#RunWayML-48"><span class="linenos"> 48</span></a>                <span class="sa">f</span><span class="s2">&quot;Runway AI Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="RunWayML-49"><a href="#RunWayML-49"><span class="linenos"> 49</span></a>            <span class="p">)</span>
-</span><span id="RunWayML-50"><a href="#RunWayML-50"><span class="linenos"> 50</span></a>
-</span><span id="RunWayML-51"><a href="#RunWayML-51"><span class="linenos"> 51</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading RunwayML weights&quot;</span><span class="p">)</span>
+</span><span id="RunWayML-27"><a href="#RunWayML-27"><span class="linenos"> 27</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
+</span><span id="RunWayML-28"><a href="#RunWayML-28"><span class="linenos"> 28</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="RunWayML-29"><a href="#RunWayML-29"><span class="linenos"> 29</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
+</span><span id="RunWayML-30"><a href="#RunWayML-30"><span class="linenos"> 30</span></a>
+</span><span id="RunWayML-31"><a href="#RunWayML-31"><span class="linenos"> 31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+</span><span id="RunWayML-32"><a href="#RunWayML-32"><span class="linenos"> 32</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span>
+</span><span id="RunWayML-33"><a href="#RunWayML-33"><span class="linenos"> 33</span></a>            <span class="s2">&quot;runwayml&quot;</span><span class="p">,</span>
+</span><span id="RunWayML-34"><a href="#RunWayML-34"><span class="linenos"> 34</span></a>            <span class="s2">&quot;models--runwayml--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb&quot;</span><span class="p">,</span>
+</span><span id="RunWayML-35"><a href="#RunWayML-35"><span class="linenos"> 35</span></a>        <span class="p">)</span>
+</span><span id="RunWayML-36"><a href="#RunWayML-36"><span class="linenos"> 36</span></a>
+</span><span id="RunWayML-37"><a href="#RunWayML-37"><span class="linenos"> 37</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">):</span>
+</span><span id="RunWayML-38"><a href="#RunWayML-38"><span class="linenos"> 38</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="RunWayML-39"><a href="#RunWayML-39"><span class="linenos"> 39</span></a>                <span class="sa">f</span><span class="s2">&quot;Runway AI Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="RunWayML-40"><a href="#RunWayML-40"><span class="linenos"> 40</span></a>            <span class="p">)</span>
+</span><span id="RunWayML-41"><a href="#RunWayML-41"><span class="linenos"> 41</span></a>
+</span><span id="RunWayML-42"><a href="#RunWayML-42"><span class="linenos"> 42</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading RunwayML weights&quot;</span><span class="p">)</span>
+</span><span id="RunWayML-43"><a href="#RunWayML-43"><span class="linenos"> 43</span></a>
+</span><span id="RunWayML-44"><a href="#RunWayML-44"><span class="linenos"> 44</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+</span><span id="RunWayML-45"><a href="#RunWayML-45"><span class="linenos"> 45</span></a>            <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+</span><span id="RunWayML-46"><a href="#RunWayML-46"><span class="linenos"> 46</span></a>        <span class="p">)</span>
+</span><span id="RunWayML-47"><a href="#RunWayML-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="RunWayML-48"><a href="#RunWayML-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span>
+</span><span id="RunWayML-49"><a href="#RunWayML-49"><span class="linenos"> 49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoPipelineForInpainting</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+</span><span id="RunWayML-50"><a href="#RunWayML-50"><span class="linenos"> 50</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">,</span>
+</span><span id="RunWayML-51"><a href="#RunWayML-51"><span class="linenos"> 51</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 </span><span id="RunWayML-52"><a href="#RunWayML-52"><span class="linenos"> 52</span></a>
-</span><span id="RunWayML-53"><a href="#RunWayML-53"><span class="linenos"> 53</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
-</span><span id="RunWayML-54"><a href="#RunWayML-54"><span class="linenos"> 54</span></a>            <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
-</span><span id="RunWayML-55"><a href="#RunWayML-55"><span class="linenos"> 55</span></a>        <span class="p">)</span>
-</span><span id="RunWayML-56"><a href="#RunWayML-56"><span class="linenos"> 56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="RunWayML-57"><a href="#RunWayML-57"><span class="linenos"> 57</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span>
-</span><span id="RunWayML-58"><a href="#RunWayML-58"><span class="linenos"> 58</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoPipelineForInpainting</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
-</span><span id="RunWayML-59"><a href="#RunWayML-59"><span class="linenos"> 59</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">,</span>
-</span><span id="RunWayML-60"><a href="#RunWayML-60"><span class="linenos"> 60</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-</span><span id="RunWayML-61"><a href="#RunWayML-61"><span class="linenos"> 61</span></a>
-</span><span id="RunWayML-62"><a href="#RunWayML-62"><span class="linenos"> 62</span></a>    <span class="k">def</span> <span class="nf">_pre_process</span><span class="p">(</span>
-</span><span id="RunWayML-63"><a href="#RunWayML-63"><span class="linenos"> 63</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
-</span><span id="RunWayML-64"><a href="#RunWayML-64"><span class="linenos"> 64</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]:</span>
-</span><span id="RunWayML-65"><a href="#RunWayML-65"><span class="linenos"> 65</span></a>
-</span><span id="RunWayML-66"><a href="#RunWayML-66"><span class="linenos"> 66</span></a>        <span class="n">resized_image_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
-</span><span id="RunWayML-67"><a href="#RunWayML-67"><span class="linenos"> 67</span></a>        <span class="n">resized_mask_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
-</span><span id="RunWayML-68"><a href="#RunWayML-68"><span class="linenos"> 68</span></a>
-</span><span id="RunWayML-69"><a href="#RunWayML-69"><span class="linenos"> 69</span></a>        <span class="n">image_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_image_tensor</span><span class="p">)</span>
-</span><span id="RunWayML-70"><a href="#RunWayML-70"><span class="linenos"> 70</span></a>        <span class="n">msk_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_mask_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
-</span><span id="RunWayML-71"><a href="#RunWayML-71"><span class="linenos"> 71</span></a>        <span class="k">return</span> <span class="n">image_pil</span><span class="p">,</span> <span class="n">msk_pil</span>
-</span><span id="RunWayML-72"><a href="#RunWayML-72"><span class="linenos"> 72</span></a>
-</span><span id="RunWayML-73"><a href="#RunWayML-73"><span class="linenos"> 73</span></a>    <span class="k">def</span> <span class="nf">_post_processing</span><span class="p">(</span>
-</span><span id="RunWayML-74"><a href="#RunWayML-74"><span class="linenos"> 74</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">og_image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span>
-</span><span id="RunWayML-75"><a href="#RunWayML-75"><span class="linenos"> 75</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="RunWayML-76"><a href="#RunWayML-76"><span class="linenos"> 76</span></a>        <span class="n">output_tensor</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()(</span><span class="n">output</span><span class="p">)</span>
-</span><span id="RunWayML-77"><a href="#RunWayML-77"><span class="linenos"> 77</span></a>
-</span><span id="RunWayML-78"><a href="#RunWayML-78"><span class="linenos"> 78</span></a>        <span class="n">resized_image</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span>
-</span><span id="RunWayML-79"><a href="#RunWayML-79"><span class="linenos"> 79</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">output_tensor</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-</span><span id="RunWayML-80"><a href="#RunWayML-80"><span class="linenos"> 80</span></a>        <span class="p">)</span>
-</span><span id="RunWayML-81"><a href="#RunWayML-81"><span class="linenos"> 81</span></a>
-</span><span id="RunWayML-82"><a href="#RunWayML-82"><span class="linenos"> 82</span></a>        <span class="k">return</span> <span class="n">resized_image</span>
-</span><span id="RunWayML-83"><a href="#RunWayML-83"><span class="linenos"> 83</span></a>
-</span><span id="RunWayML-84"><a href="#RunWayML-84"><span class="linenos"> 84</span></a>    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="RunWayML-85"><a href="#RunWayML-85"><span class="linenos"> 85</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="RunWayML-86"><a href="#RunWayML-86"><span class="linenos"> 86</span></a><span class="sd">        Args:</span>
-</span><span id="RunWayML-87"><a href="#RunWayML-87"><span class="linenos"> 87</span></a><span class="sd">            image torch.Tensor: The input image tensor.</span>
-</span><span id="RunWayML-88"><a href="#RunWayML-88"><span class="linenos"> 88</span></a><span class="sd">            mask torch.Tensor: The mask tensor indicating areas to be inpainted.</span>
-</span><span id="RunWayML-89"><a href="#RunWayML-89"><span class="linenos"> 89</span></a>
-</span><span id="RunWayML-90"><a href="#RunWayML-90"><span class="linenos"> 90</span></a><span class="sd">        Returns:</span>
-</span><span id="RunWayML-91"><a href="#RunWayML-91"><span class="linenos"> 91</span></a><span class="sd">            torch.Tensor: The inpainted image tensor.</span>
-</span><span id="RunWayML-92"><a href="#RunWayML-92"><span class="linenos"> 92</span></a>
-</span><span id="RunWayML-93"><a href="#RunWayML-93"><span class="linenos"> 93</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="RunWayML-94"><a href="#RunWayML-94"><span class="linenos"> 94</span></a>
-</span><span id="RunWayML-95"><a href="#RunWayML-95"><span class="linenos"> 95</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML-96"><a href="#RunWayML-96"><span class="linenos"> 96</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="RunWayML-97"><a href="#RunWayML-97"><span class="linenos"> 97</span></a>                <span class="s2">&quot;Model is not initialized. Initialize the model before calling inference.&quot;</span>
-</span><span id="RunWayML-98"><a href="#RunWayML-98"><span class="linenos"> 98</span></a>            <span class="p">)</span>
-</span><span id="RunWayML-99"><a href="#RunWayML-99"><span class="linenos"> 99</span></a>
-</span><span id="RunWayML-100"><a href="#RunWayML-100"><span class="linenos">100</span></a>        <span class="n">image_pil</span><span class="p">,</span> <span class="n">mask_pil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
-</span><span id="RunWayML-101"><a href="#RunWayML-101"><span class="linenos">101</span></a>
-</span><span id="RunWayML-102"><a href="#RunWayML-102"><span class="linenos">102</span></a>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
-</span><span id="RunWayML-103"><a href="#RunWayML-103"><span class="linenos">103</span></a>            <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">,</span>
-</span><span id="RunWayML-104"><a href="#RunWayML-104"><span class="linenos">104</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">image_pil</span><span class="p">,</span>
-</span><span id="RunWayML-105"><a href="#RunWayML-105"><span class="linenos">105</span></a>            <span class="n">mask_image</span><span class="o">=</span><span class="n">mask_pil</span><span class="p">,</span>
-</span><span id="RunWayML-106"><a href="#RunWayML-106"><span class="linenos">106</span></a>            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
-</span><span id="RunWayML-107"><a href="#RunWayML-107"><span class="linenos">107</span></a>            <span class="n">num_inference_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="RunWayML-108"><a href="#RunWayML-108"><span class="linenos">108</span></a>            <span class="n">guidance_sacle</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="RunWayML-109"><a href="#RunWayML-109"><span class="linenos">109</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="RunWayML-110"><a href="#RunWayML-110"><span class="linenos">110</span></a>
-</span><span id="RunWayML-111"><a href="#RunWayML-111"><span class="linenos">111</span></a>        <span class="n">final_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_processing</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
-</span><span id="RunWayML-112"><a href="#RunWayML-112"><span class="linenos">112</span></a>
-</span><span id="RunWayML-113"><a href="#RunWayML-113"><span class="linenos">113</span></a>        <span class="k">return</span> <span class="n">final_output</span>
-</span><span id="RunWayML-114"><a href="#RunWayML-114"><span class="linenos">114</span></a>
-</span><span id="RunWayML-115"><a href="#RunWayML-115"><span class="linenos">115</span></a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML-116"><a href="#RunWayML-116"><span class="linenos">116</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up resources by setting the model to None.&quot;&quot;&quot;</span>
-</span><span id="RunWayML-117"><a href="#RunWayML-117"><span class="linenos">117</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="RunWayML-118"><a href="#RunWayML-118"><span class="linenos">118</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="RunWayML-53"><a href="#RunWayML-53"><span class="linenos"> 53</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="RunWayML-54"><a href="#RunWayML-54"><span class="linenos"> 54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="RunWayML-55"><a href="#RunWayML-55"><span class="linenos"> 55</span></a>
+</span><span id="RunWayML-56"><a href="#RunWayML-56"><span class="linenos"> 56</span></a><span class="sd">        Returns:</span>
+</span><span id="RunWayML-57"><a href="#RunWayML-57"><span class="linenos"> 57</span></a><span class="sd">            str: A string representing the model ID.</span>
+</span><span id="RunWayML-58"><a href="#RunWayML-58"><span class="linenos"> 58</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="RunWayML-59"><a href="#RunWayML-59"><span class="linenos"> 59</span></a>        <span class="k">return</span> <span class="s2">&quot;runwayml&quot;</span>
+</span><span id="RunWayML-60"><a href="#RunWayML-60"><span class="linenos"> 60</span></a>
+</span><span id="RunWayML-61"><a href="#RunWayML-61"><span class="linenos"> 61</span></a>    <span class="k">def</span> <span class="nf">_pre_process</span><span class="p">(</span>
+</span><span id="RunWayML-62"><a href="#RunWayML-62"><span class="linenos"> 62</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
+</span><span id="RunWayML-63"><a href="#RunWayML-63"><span class="linenos"> 63</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">]:</span>
+</span><span id="RunWayML-64"><a href="#RunWayML-64"><span class="linenos"> 64</span></a>
+</span><span id="RunWayML-65"><a href="#RunWayML-65"><span class="linenos"> 65</span></a>        <span class="n">resized_image_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
+</span><span id="RunWayML-66"><a href="#RunWayML-66"><span class="linenos"> 66</span></a>        <span class="n">resized_mask_tensor</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">))</span>
+</span><span id="RunWayML-67"><a href="#RunWayML-67"><span class="linenos"> 67</span></a>
+</span><span id="RunWayML-68"><a href="#RunWayML-68"><span class="linenos"> 68</span></a>        <span class="n">image_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_image_tensor</span><span class="p">)</span>
+</span><span id="RunWayML-69"><a href="#RunWayML-69"><span class="linenos"> 69</span></a>        <span class="n">msk_pil</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToPILImage</span><span class="p">()(</span><span class="n">resized_mask_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
+</span><span id="RunWayML-70"><a href="#RunWayML-70"><span class="linenos"> 70</span></a>        <span class="k">return</span> <span class="n">image_pil</span><span class="p">,</span> <span class="n">msk_pil</span>
+</span><span id="RunWayML-71"><a href="#RunWayML-71"><span class="linenos"> 71</span></a>
+</span><span id="RunWayML-72"><a href="#RunWayML-72"><span class="linenos"> 72</span></a>    <span class="k">def</span> <span class="nf">_post_processing</span><span class="p">(</span>
+</span><span id="RunWayML-73"><a href="#RunWayML-73"><span class="linenos"> 73</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">og_image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span>
+</span><span id="RunWayML-74"><a href="#RunWayML-74"><span class="linenos"> 74</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="RunWayML-75"><a href="#RunWayML-75"><span class="linenos"> 75</span></a>        <span class="n">output_tensor</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()(</span><span class="n">output</span><span class="p">)</span>
+</span><span id="RunWayML-76"><a href="#RunWayML-76"><span class="linenos"> 76</span></a>
+</span><span id="RunWayML-77"><a href="#RunWayML-77"><span class="linenos"> 77</span></a>        <span class="n">resized_image</span> <span class="o">=</span> <span class="n">resize_image</span><span class="p">(</span>
+</span><span id="RunWayML-78"><a href="#RunWayML-78"><span class="linenos"> 78</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">output_tensor</span><span class="p">,</span> <span class="n">target_size</span><span class="o">=</span><span class="p">(</span><span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">og_image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</span><span id="RunWayML-79"><a href="#RunWayML-79"><span class="linenos"> 79</span></a>        <span class="p">)</span>
+</span><span id="RunWayML-80"><a href="#RunWayML-80"><span class="linenos"> 80</span></a>
+</span><span id="RunWayML-81"><a href="#RunWayML-81"><span class="linenos"> 81</span></a>        <span class="k">return</span> <span class="n">resized_image</span>
+</span><span id="RunWayML-82"><a href="#RunWayML-82"><span class="linenos"> 82</span></a>
+</span><span id="RunWayML-83"><a href="#RunWayML-83"><span class="linenos"> 83</span></a>    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="RunWayML-84"><a href="#RunWayML-84"><span class="linenos"> 84</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="RunWayML-85"><a href="#RunWayML-85"><span class="linenos"> 85</span></a><span class="sd">        Args:</span>
+</span><span id="RunWayML-86"><a href="#RunWayML-86"><span class="linenos"> 86</span></a><span class="sd">            image torch.Tensor: The input image tensor.</span>
+</span><span id="RunWayML-87"><a href="#RunWayML-87"><span class="linenos"> 87</span></a><span class="sd">            mask torch.Tensor: The mask tensor indicating areas to be inpainted.</span>
+</span><span id="RunWayML-88"><a href="#RunWayML-88"><span class="linenos"> 88</span></a>
+</span><span id="RunWayML-89"><a href="#RunWayML-89"><span class="linenos"> 89</span></a><span class="sd">        Returns:</span>
+</span><span id="RunWayML-90"><a href="#RunWayML-90"><span class="linenos"> 90</span></a><span class="sd">            torch.Tensor: The inpainted image tensor.</span>
+</span><span id="RunWayML-91"><a href="#RunWayML-91"><span class="linenos"> 91</span></a>
+</span><span id="RunWayML-92"><a href="#RunWayML-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="RunWayML-93"><a href="#RunWayML-93"><span class="linenos"> 93</span></a>
+</span><span id="RunWayML-94"><a href="#RunWayML-94"><span class="linenos"> 94</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="RunWayML-95"><a href="#RunWayML-95"><span class="linenos"> 95</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="RunWayML-96"><a href="#RunWayML-96"><span class="linenos"> 96</span></a>                <span class="s2">&quot;Model is not initialized. Initialize the model before calling inference.&quot;</span>
+</span><span id="RunWayML-97"><a href="#RunWayML-97"><span class="linenos"> 97</span></a>            <span class="p">)</span>
+</span><span id="RunWayML-98"><a href="#RunWayML-98"><span class="linenos"> 98</span></a>
+</span><span id="RunWayML-99"><a href="#RunWayML-99"><span class="linenos"> 99</span></a>        <span class="n">image_pil</span><span class="p">,</span> <span class="n">mask_pil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+</span><span id="RunWayML-100"><a href="#RunWayML-100"><span class="linenos">100</span></a>
+</span><span id="RunWayML-101"><a href="#RunWayML-101"><span class="linenos">101</span></a>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+</span><span id="RunWayML-102"><a href="#RunWayML-102"><span class="linenos">102</span></a>            <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">,</span>
+</span><span id="RunWayML-103"><a href="#RunWayML-103"><span class="linenos">103</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">image_pil</span><span class="p">,</span>
+</span><span id="RunWayML-104"><a href="#RunWayML-104"><span class="linenos">104</span></a>            <span class="n">mask_image</span><span class="o">=</span><span class="n">mask_pil</span><span class="p">,</span>
+</span><span id="RunWayML-105"><a href="#RunWayML-105"><span class="linenos">105</span></a>            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+</span><span id="RunWayML-106"><a href="#RunWayML-106"><span class="linenos">106</span></a>            <span class="n">num_inference_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="RunWayML-107"><a href="#RunWayML-107"><span class="linenos">107</span></a>            <span class="n">guidance_sacle</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="RunWayML-108"><a href="#RunWayML-108"><span class="linenos">108</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="RunWayML-109"><a href="#RunWayML-109"><span class="linenos">109</span></a>
+</span><span id="RunWayML-110"><a href="#RunWayML-110"><span class="linenos">110</span></a>        <span class="n">final_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_processing</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</span><span id="RunWayML-111"><a href="#RunWayML-111"><span class="linenos">111</span></a>
+</span><span id="RunWayML-112"><a href="#RunWayML-112"><span class="linenos">112</span></a>        <span class="k">return</span> <span class="n">final_output</span>
+</span><span id="RunWayML-113"><a href="#RunWayML-113"><span class="linenos">113</span></a>
+</span><span id="RunWayML-114"><a href="#RunWayML-114"><span class="linenos">114</span></a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="RunWayML-115"><a href="#RunWayML-115"><span class="linenos">115</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up resources by setting the model to None.&quot;&quot;&quot;</span>
+</span><span id="RunWayML-116"><a href="#RunWayML-116"><span class="linenos">116</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="RunWayML-117"><a href="#RunWayML-117"><span class="linenos">117</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Abstract Class for All Inpainting model.</p>
+            <div class="docstring"><p>Loads the pretrained RunWay AI model weights.</p>
+
+<h6 id="raises">Raises:</h6>
+
+<ul>
+<li><strong>ValueError:</strong>   If the path to the model weights is not found.</li>
+</ul>
 </div>
 
 
@@ -324,13 +325,13 @@
 
     </div>
     <a class="headerlink" href="#RunWayML.get_model_id"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML.get_model_id-19"><a href="#RunWayML.get_model_id-19"><span class="linenos">19</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="RunWayML.get_model_id-20"><a href="#RunWayML.get_model_id-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
-</span><span id="RunWayML.get_model_id-21"><a href="#RunWayML.get_model_id-21"><span class="linenos">21</span></a>
-</span><span id="RunWayML.get_model_id-22"><a href="#RunWayML.get_model_id-22"><span class="linenos">22</span></a><span class="sd">        Returns:</span>
-</span><span id="RunWayML.get_model_id-23"><a href="#RunWayML.get_model_id-23"><span class="linenos">23</span></a><span class="sd">            str: A string representing the model ID.</span>
-</span><span id="RunWayML.get_model_id-24"><a href="#RunWayML.get_model_id-24"><span class="linenos">24</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="RunWayML.get_model_id-25"><a href="#RunWayML.get_model_id-25"><span class="linenos">25</span></a>        <span class="k">return</span> <span class="s2">&quot;runwayml&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML.get_model_id-53"><a href="#RunWayML.get_model_id-53"><span class="linenos">53</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="RunWayML.get_model_id-54"><a href="#RunWayML.get_model_id-54"><span class="linenos">54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="RunWayML.get_model_id-55"><a href="#RunWayML.get_model_id-55"><span class="linenos">55</span></a>
+</span><span id="RunWayML.get_model_id-56"><a href="#RunWayML.get_model_id-56"><span class="linenos">56</span></a><span class="sd">        Returns:</span>
+</span><span id="RunWayML.get_model_id-57"><a href="#RunWayML.get_model_id-57"><span class="linenos">57</span></a><span class="sd">            str: A string representing the model ID.</span>
+</span><span id="RunWayML.get_model_id-58"><a href="#RunWayML.get_model_id-58"><span class="linenos">58</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="RunWayML.get_model_id-59"><a href="#RunWayML.get_model_id-59"><span class="linenos">59</span></a>        <span class="k">return</span> <span class="s2">&quot;runwayml&quot;</span>
 </span></pre></div>
 
 
@@ -341,65 +342,6 @@
 <blockquote>
   <p>str: A string representing the model ID.</p>
 </blockquote>
-</div>
-
-
-                            </div>
-                            <div id="RunWayML.initialize" class="classattr">
-                                        <input id="RunWayML.initialize-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">initialize</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="bp">self</span>,</span><span class="param">	<span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Blend with surroundings. Fill seamlessly. Extend the texture. Match the surrounding area&#39;</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
-
-                <label class="view-source-button" for="RunWayML.initialize-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#RunWayML.initialize"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML.initialize-27"><a href="#RunWayML.initialize-27"><span class="linenos">27</span></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span>
-</span><span id="RunWayML.initialize-28"><a href="#RunWayML.initialize-28"><span class="linenos">28</span></a>        <span class="bp">self</span><span class="p">,</span>
-</span><span id="RunWayML.initialize-29"><a href="#RunWayML.initialize-29"><span class="linenos">29</span></a>        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Blend with surroundings. Fill seamlessly. Extend the texture. Match the surrounding area&quot;</span><span class="p">,</span>
-</span><span id="RunWayML.initialize-30"><a href="#RunWayML.initialize-30"><span class="linenos">30</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML.initialize-31"><a href="#RunWayML.initialize-31"><span class="linenos">31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the pretrained RunWay AI model weights.</span>
-</span><span id="RunWayML.initialize-32"><a href="#RunWayML.initialize-32"><span class="linenos">32</span></a>
-</span><span id="RunWayML.initialize-33"><a href="#RunWayML.initialize-33"><span class="linenos">33</span></a><span class="sd">        Raises:</span>
-</span><span id="RunWayML.initialize-34"><a href="#RunWayML.initialize-34"><span class="linenos">34</span></a><span class="sd">            ValueError:  If the path to the model weights is not found.</span>
-</span><span id="RunWayML.initialize-35"><a href="#RunWayML.initialize-35"><span class="linenos">35</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="RunWayML.initialize-36"><a href="#RunWayML.initialize-36"><span class="linenos">36</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
-</span><span id="RunWayML.initialize-37"><a href="#RunWayML.initialize-37"><span class="linenos">37</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML.initialize-38"><a href="#RunWayML.initialize-38"><span class="linenos">38</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
-</span><span id="RunWayML.initialize-39"><a href="#RunWayML.initialize-39"><span class="linenos">39</span></a>
-</span><span id="RunWayML.initialize-40"><a href="#RunWayML.initialize-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-</span><span id="RunWayML.initialize-41"><a href="#RunWayML.initialize-41"><span class="linenos">41</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span>
-</span><span id="RunWayML.initialize-42"><a href="#RunWayML.initialize-42"><span class="linenos">42</span></a>            <span class="s2">&quot;runwayml&quot;</span><span class="p">,</span>
-</span><span id="RunWayML.initialize-43"><a href="#RunWayML.initialize-43"><span class="linenos">43</span></a>            <span class="s2">&quot;models--runwayml--stable-diffusion-inpainting/snapshots/8a4288a76071f7280aedbdb3253bdb9e9d5d84bb&quot;</span><span class="p">,</span>
-</span><span id="RunWayML.initialize-44"><a href="#RunWayML.initialize-44"><span class="linenos">44</span></a>        <span class="p">)</span>
-</span><span id="RunWayML.initialize-45"><a href="#RunWayML.initialize-45"><span class="linenos">45</span></a>
-</span><span id="RunWayML.initialize-46"><a href="#RunWayML.initialize-46"><span class="linenos">46</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">):</span>
-</span><span id="RunWayML.initialize-47"><a href="#RunWayML.initialize-47"><span class="linenos">47</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="RunWayML.initialize-48"><a href="#RunWayML.initialize-48"><span class="linenos">48</span></a>                <span class="sa">f</span><span class="s2">&quot;Runway AI Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="RunWayML.initialize-49"><a href="#RunWayML.initialize-49"><span class="linenos">49</span></a>            <span class="p">)</span>
-</span><span id="RunWayML.initialize-50"><a href="#RunWayML.initialize-50"><span class="linenos">50</span></a>
-</span><span id="RunWayML.initialize-51"><a href="#RunWayML.initialize-51"><span class="linenos">51</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading RunwayML weights&quot;</span><span class="p">)</span>
-</span><span id="RunWayML.initialize-52"><a href="#RunWayML.initialize-52"><span class="linenos">52</span></a>
-</span><span id="RunWayML.initialize-53"><a href="#RunWayML.initialize-53"><span class="linenos">53</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
-</span><span id="RunWayML.initialize-54"><a href="#RunWayML.initialize-54"><span class="linenos">54</span></a>            <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
-</span><span id="RunWayML.initialize-55"><a href="#RunWayML.initialize-55"><span class="linenos">55</span></a>        <span class="p">)</span>
-</span><span id="RunWayML.initialize-56"><a href="#RunWayML.initialize-56"><span class="linenos">56</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">generator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="RunWayML.initialize-57"><a href="#RunWayML.initialize-57"><span class="linenos">57</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">prompt</span>
-</span><span id="RunWayML.initialize-58"><a href="#RunWayML.initialize-58"><span class="linenos">58</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoPipelineForInpainting</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
-</span><span id="RunWayML.initialize-59"><a href="#RunWayML.initialize-59"><span class="linenos">59</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">runwayml_path</span><span class="p">,</span>
-</span><span id="RunWayML.initialize-60"><a href="#RunWayML.initialize-60"><span class="linenos">60</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Loads the pretrained RunWay AI model weights.</p>
-
-<h6 id="raises">Raises:</h6>
-
-<ul>
-<li><strong>ValueError:</strong>   If the path to the model weights is not found.</li>
-</ul>
 </div>
 
 
@@ -415,36 +357,36 @@
 
     </div>
     <a class="headerlink" href="#RunWayML.inference"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML.inference-84"><a href="#RunWayML.inference-84"><span class="linenos"> 84</span></a>    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-</span><span id="RunWayML.inference-85"><a href="#RunWayML.inference-85"><span class="linenos"> 85</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="RunWayML.inference-86"><a href="#RunWayML.inference-86"><span class="linenos"> 86</span></a><span class="sd">        Args:</span>
-</span><span id="RunWayML.inference-87"><a href="#RunWayML.inference-87"><span class="linenos"> 87</span></a><span class="sd">            image torch.Tensor: The input image tensor.</span>
-</span><span id="RunWayML.inference-88"><a href="#RunWayML.inference-88"><span class="linenos"> 88</span></a><span class="sd">            mask torch.Tensor: The mask tensor indicating areas to be inpainted.</span>
-</span><span id="RunWayML.inference-89"><a href="#RunWayML.inference-89"><span class="linenos"> 89</span></a>
-</span><span id="RunWayML.inference-90"><a href="#RunWayML.inference-90"><span class="linenos"> 90</span></a><span class="sd">        Returns:</span>
-</span><span id="RunWayML.inference-91"><a href="#RunWayML.inference-91"><span class="linenos"> 91</span></a><span class="sd">            torch.Tensor: The inpainted image tensor.</span>
-</span><span id="RunWayML.inference-92"><a href="#RunWayML.inference-92"><span class="linenos"> 92</span></a>
-</span><span id="RunWayML.inference-93"><a href="#RunWayML.inference-93"><span class="linenos"> 93</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="RunWayML.inference-94"><a href="#RunWayML.inference-94"><span class="linenos"> 94</span></a>
-</span><span id="RunWayML.inference-95"><a href="#RunWayML.inference-95"><span class="linenos"> 95</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML.inference-96"><a href="#RunWayML.inference-96"><span class="linenos"> 96</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="RunWayML.inference-97"><a href="#RunWayML.inference-97"><span class="linenos"> 97</span></a>                <span class="s2">&quot;Model is not initialized. Initialize the model before calling inference.&quot;</span>
-</span><span id="RunWayML.inference-98"><a href="#RunWayML.inference-98"><span class="linenos"> 98</span></a>            <span class="p">)</span>
-</span><span id="RunWayML.inference-99"><a href="#RunWayML.inference-99"><span class="linenos"> 99</span></a>
-</span><span id="RunWayML.inference-100"><a href="#RunWayML.inference-100"><span class="linenos">100</span></a>        <span class="n">image_pil</span><span class="p">,</span> <span class="n">mask_pil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
-</span><span id="RunWayML.inference-101"><a href="#RunWayML.inference-101"><span class="linenos">101</span></a>
-</span><span id="RunWayML.inference-102"><a href="#RunWayML.inference-102"><span class="linenos">102</span></a>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
-</span><span id="RunWayML.inference-103"><a href="#RunWayML.inference-103"><span class="linenos">103</span></a>            <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">,</span>
-</span><span id="RunWayML.inference-104"><a href="#RunWayML.inference-104"><span class="linenos">104</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">image_pil</span><span class="p">,</span>
-</span><span id="RunWayML.inference-105"><a href="#RunWayML.inference-105"><span class="linenos">105</span></a>            <span class="n">mask_image</span><span class="o">=</span><span class="n">mask_pil</span><span class="p">,</span>
-</span><span id="RunWayML.inference-106"><a href="#RunWayML.inference-106"><span class="linenos">106</span></a>            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
-</span><span id="RunWayML.inference-107"><a href="#RunWayML.inference-107"><span class="linenos">107</span></a>            <span class="n">num_inference_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="RunWayML.inference-108"><a href="#RunWayML.inference-108"><span class="linenos">108</span></a>            <span class="n">guidance_sacle</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-</span><span id="RunWayML.inference-109"><a href="#RunWayML.inference-109"><span class="linenos">109</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="RunWayML.inference-110"><a href="#RunWayML.inference-110"><span class="linenos">110</span></a>
-</span><span id="RunWayML.inference-111"><a href="#RunWayML.inference-111"><span class="linenos">111</span></a>        <span class="n">final_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_processing</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
-</span><span id="RunWayML.inference-112"><a href="#RunWayML.inference-112"><span class="linenos">112</span></a>
-</span><span id="RunWayML.inference-113"><a href="#RunWayML.inference-113"><span class="linenos">113</span></a>        <span class="k">return</span> <span class="n">final_output</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML.inference-83"><a href="#RunWayML.inference-83"><span class="linenos"> 83</span></a>    <span class="k">def</span> <span class="nf">inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+</span><span id="RunWayML.inference-84"><a href="#RunWayML.inference-84"><span class="linenos"> 84</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="RunWayML.inference-85"><a href="#RunWayML.inference-85"><span class="linenos"> 85</span></a><span class="sd">        Args:</span>
+</span><span id="RunWayML.inference-86"><a href="#RunWayML.inference-86"><span class="linenos"> 86</span></a><span class="sd">            image torch.Tensor: The input image tensor.</span>
+</span><span id="RunWayML.inference-87"><a href="#RunWayML.inference-87"><span class="linenos"> 87</span></a><span class="sd">            mask torch.Tensor: The mask tensor indicating areas to be inpainted.</span>
+</span><span id="RunWayML.inference-88"><a href="#RunWayML.inference-88"><span class="linenos"> 88</span></a>
+</span><span id="RunWayML.inference-89"><a href="#RunWayML.inference-89"><span class="linenos"> 89</span></a><span class="sd">        Returns:</span>
+</span><span id="RunWayML.inference-90"><a href="#RunWayML.inference-90"><span class="linenos"> 90</span></a><span class="sd">            torch.Tensor: The inpainted image tensor.</span>
+</span><span id="RunWayML.inference-91"><a href="#RunWayML.inference-91"><span class="linenos"> 91</span></a>
+</span><span id="RunWayML.inference-92"><a href="#RunWayML.inference-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="RunWayML.inference-93"><a href="#RunWayML.inference-93"><span class="linenos"> 93</span></a>
+</span><span id="RunWayML.inference-94"><a href="#RunWayML.inference-94"><span class="linenos"> 94</span></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="RunWayML.inference-95"><a href="#RunWayML.inference-95"><span class="linenos"> 95</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="RunWayML.inference-96"><a href="#RunWayML.inference-96"><span class="linenos"> 96</span></a>                <span class="s2">&quot;Model is not initialized. Initialize the model before calling inference.&quot;</span>
+</span><span id="RunWayML.inference-97"><a href="#RunWayML.inference-97"><span class="linenos"> 97</span></a>            <span class="p">)</span>
+</span><span id="RunWayML.inference-98"><a href="#RunWayML.inference-98"><span class="linenos"> 98</span></a>
+</span><span id="RunWayML.inference-99"><a href="#RunWayML.inference-99"><span class="linenos"> 99</span></a>        <span class="n">image_pil</span><span class="p">,</span> <span class="n">mask_pil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+</span><span id="RunWayML.inference-100"><a href="#RunWayML.inference-100"><span class="linenos">100</span></a>
+</span><span id="RunWayML.inference-101"><a href="#RunWayML.inference-101"><span class="linenos">101</span></a>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span>
+</span><span id="RunWayML.inference-102"><a href="#RunWayML.inference-102"><span class="linenos">102</span></a>            <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prompt</span><span class="p">,</span>
+</span><span id="RunWayML.inference-103"><a href="#RunWayML.inference-103"><span class="linenos">103</span></a>            <span class="n">image</span><span class="o">=</span><span class="n">image_pil</span><span class="p">,</span>
+</span><span id="RunWayML.inference-104"><a href="#RunWayML.inference-104"><span class="linenos">104</span></a>            <span class="n">mask_image</span><span class="o">=</span><span class="n">mask_pil</span><span class="p">,</span>
+</span><span id="RunWayML.inference-105"><a href="#RunWayML.inference-105"><span class="linenos">105</span></a>            <span class="n">generator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">,</span>
+</span><span id="RunWayML.inference-106"><a href="#RunWayML.inference-106"><span class="linenos">106</span></a>            <span class="n">num_inference_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="RunWayML.inference-107"><a href="#RunWayML.inference-107"><span class="linenos">107</span></a>            <span class="n">guidance_sacle</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+</span><span id="RunWayML.inference-108"><a href="#RunWayML.inference-108"><span class="linenos">108</span></a>        <span class="p">)</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="RunWayML.inference-109"><a href="#RunWayML.inference-109"><span class="linenos">109</span></a>
+</span><span id="RunWayML.inference-110"><a href="#RunWayML.inference-110"><span class="linenos">110</span></a>        <span class="n">final_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_processing</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+</span><span id="RunWayML.inference-111"><a href="#RunWayML.inference-111"><span class="linenos">111</span></a>
+</span><span id="RunWayML.inference-112"><a href="#RunWayML.inference-112"><span class="linenos">112</span></a>        <span class="k">return</span> <span class="n">final_output</span>
 </span></pre></div>
 
 
@@ -475,10 +417,10 @@
 
     </div>
     <a class="headerlink" href="#RunWayML.shutdown"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML.shutdown-115"><a href="#RunWayML.shutdown-115"><span class="linenos">115</span></a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="RunWayML.shutdown-116"><a href="#RunWayML.shutdown-116"><span class="linenos">116</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up resources by setting the model to None.&quot;&quot;&quot;</span>
-</span><span id="RunWayML.shutdown-117"><a href="#RunWayML.shutdown-117"><span class="linenos">117</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="RunWayML.shutdown-118"><a href="#RunWayML.shutdown-118"><span class="linenos">118</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="RunWayML.shutdown-114"><a href="#RunWayML.shutdown-114"><span class="linenos">114</span></a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="RunWayML.shutdown-115"><a href="#RunWayML.shutdown-115"><span class="linenos">115</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Cleans up resources by setting the model to None.&quot;&quot;&quot;</span>
+</span><span id="RunWayML.shutdown-116"><a href="#RunWayML.shutdown-116"><span class="linenos">116</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="RunWayML.shutdown-117"><a href="#RunWayML.shutdown-117"><span class="linenos">117</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="kc">None</span>
 </span></pre></div>
 
 
