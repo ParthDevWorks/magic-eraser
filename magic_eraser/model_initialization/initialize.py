@@ -1,6 +1,10 @@
 from typing import Union
 
-from magic_eraser.config.config import Config
+from magic_eraser.config.config import (
+    Config,
+    DEFAULT_SEGMENTATION_MODEL_ID,
+    DEFAULT_INPAINTING_MODEL_ID,
+)
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.inpainting.base import InpaintingModel
 
@@ -9,7 +13,7 @@ class ModelInitializer:
     """
     This class is responsible for initializing and managing models used in the MAGIC_ERASER project.
 
-    It handles the loading and initialization of both segmentation and inpainting models based on configuration settings.
+    It handles the loading and initialization of both segmentation and inpainting models.
 
     The class provides methods to load specific models, retrieve loaded models, and shut down models when necessary.
 
@@ -24,25 +28,18 @@ class ModelInitializer:
 
     def load_segmentation_model(self) -> None:
         """
-        Load and initialize the segmentation model based on the configuration settings.
+        Load and initialize the segmentation model.
 
-        This method is responsible for loading the appropriate segmentation model as specified in the global configuration.
-        It checks if the segmentation model should be used, and if so, it loads the model with the given ID.
+        This method is responsible for loading the segmentation model.
 
         Inorder to use the segmentation model, use function 'get_segmentation_model' to get the model object.
-
-        Notes:
-            - The method first checks if the segmentation model should be used based on the 'segmentation_model' key in the global configuration.
-            - If the segmentation model should be used, it retrieves the 'segmentation_model_id' from the global configuration.
         """
-        if not self.global_config["segmentation_model"]:
-            return
 
         if self.segmentation_model is None:
             from magic_eraser.segmentation.factory import get_segmentation_model
 
             self.segmentation_model = get_segmentation_model(
-                id=self.global_config["segmentation_model_id"], initialize=True
+                id=DEFAULT_SEGMENTATION_MODEL_ID, initialize=True
             )
 
     def get_segmentation_model(self) -> Union[SegmentationModel, None]:
@@ -50,25 +47,18 @@ class ModelInitializer:
 
     def load_inpainting_model(self) -> None:
         """
-        Load and initialize the inpainting model based on the configuration settings.
+        Load and initialize the inpainting model.
 
-        This method is responsible for loading the appropriate inpainting model as specified in the global configuration.
-        It checks if the inpainting model should be used, and if so, it loads the model with the given ID.
+        This method is responsible for loading the inpainting model.
 
         Inorder to use the inpainting model, use function 'get_inpainting_model' to get the model object.
-
-        Notes:
-            - The method first checks if the inpainting model should be used based on the 'inpainting_model' key in the global configuration.
-            - If the inpainting model should be used, it retrieves the 'inpainting_model_id' from the global configuration.
         """
-        if not self.global_config["inpainting_model"]:
-            return
 
         if self.inpainting_model is None:
             from magic_eraser.inpainting.factory import get_inpainitng_model
 
             self.inpainting_model = get_inpainitng_model(
-                id=self.global_config["inpainting_model_id"], initialize=True
+                id=DEFAULT_INPAINTING_MODEL_ID, initialize=True
             )
 
     def get_inpainting_model(self) -> Union[InpaintingModel, None]:

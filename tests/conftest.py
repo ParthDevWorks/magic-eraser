@@ -6,10 +6,6 @@ from magic_eraser.segmentation.factory import get_segmentation_model
 @pytest.fixture(scope="session")
 def default_config_erase_humans():
     config_dict = {
-        "segmentation_model": True,
-        "segmentation_model_id": "mask_rcnn",
-        "inpainting_model": True,
-        "inpainting_model_id": "lama_onnx",
         "mode": "erase",
         "target": ["person"],
     }

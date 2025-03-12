@@ -18,7 +18,7 @@ def main():
         "--input",
         required=True,
         type=str,
-        help="Path to Image Folder",
+        help="Path to Image or Image Folder",
     )
     parser.add_argument(
         "--output",
@@ -47,13 +47,13 @@ def main():
             config_dict = json.load(f)
 
     input_folder = args.input
-    output_folder = args.output
+    output_folder_dir = args.output
     num_workers = args.num_workers
 
     _, err_cnt = eraser(
         config_dict=config_dict,
-        input_folder_path=input_folder,
-        output_folder_path=output_folder,
+        input_path=input_folder,
+        output_folder_dir=output_folder_dir,
         num_workers=num_workers,
     )
 

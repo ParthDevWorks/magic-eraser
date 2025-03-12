@@ -7,7 +7,7 @@ from typing import List, Tuple
 import traceback
 import json
 import time
-
+from pathlib import Path
 import torch
 from magic_eraser.config.config import Config
 from magic_eraser.model_initialization.initialize import ModelInitializer
@@ -95,8 +95,8 @@ def core_process(
 
 def eraser(
     config_dict: dict,
-    input_folder_path: str,
-    output_folder_path: str,
+    input_path: str,
+    output_folder_dir: str,
     num_workers: int = 2,
 ) -> Tuple[int, int]:
     """
@@ -104,8 +104,8 @@ def eraser(
 
     Args:
         config_dict (dict): A dictionary containing configuration settings for the eraser.
-        input_folder_path (str): Path to the folder containing input images.
-        output_folder_path (str): Path where the processed images will be saved.
+        input_path (str): Path to the folder containing Images or Path to Single Image.
+        output_folder_dir (str): Directory path where the processed images will be saved.
         num_workers (int): Number of worker processes to use for parallel execution. Default is 2.
 
     Returns:
@@ -120,26 +120,28 @@ def eraser(
     """
     config = Config(**config_dict)
 
-    if len(input_folder_path.strip()) == 0:
+    if len(input_path.strip()) == 0:
         raise ValueError("Input folder path cannot be an empty string")
-    elif not os.path.isdir(input_folder_path):
-        raise ValueError("Either Input folder does not exist or is not a directory")
-    else:
+    elif os.path.isdir(input_path):
         input_image_supplier = [
-            os.path.join(input_folder_path, f)
-            for f in os.listdir(input_folder_path)
+            os.path.join(input_path, f)
+            for f in os.listdir(input_path)
             if f.lower().endswith(SUPPORTED_FILE_EXTENSIONS)
         ]
+    elif os.path.isfile(input_path) and input_path.endswith(SUPPORTED_FILE_EXTENSIONS):
+        input_image_supplier = [input_path]
+    else:
+        raise ValueError("Input is not a Path nor a Directory")
 
-    if len(output_folder_path.strip()) == 0:
+    if len(output_folder_dir.strip()) == 0:
         raise ValueError("Output folder path cannot be an empty string")
-    elif not os.path.isdir(output_folder_path):
+    elif not os.path.isdir(output_folder_dir):
         raise ValueError("Either Output folder does not exist or is not a directory")
 
     succ_cnt, err_cnt = process(
         config=config,
         input_paths=input_image_supplier,
-        output_folder_path=output_folder_path,
+        output_folder_dir=output_folder_dir,
         num_workers=num_workers,
     )
 
@@ -155,7 +157,7 @@ def eraser(
 def process(
     config: Config,
     input_paths: List[str],
-    output_folder_path: str,
+    output_folder_dir: str,
     num_workers: int,
 ) -> Tuple[int, int]:
     """
@@ -164,7 +166,7 @@ def process(
     Args:
         config (Config): Configuration object containing settings for the image processing.
         input_paths (List[str]): A list of paths to the input images.
-        output_folder_path (str): Path where the processed images will be saved.
+        output_folder_dir (str): Directorty path where the processed images will be saved.
         num_workers (int): Number of worker processes to use for parallel execution.
 
     Returns:
@@ -176,8 +178,8 @@ def process(
         When num_workers is 0, it runs in-process without using multiprocessing.
         Otherwise, it uses multiprocessing with the specified number of workers.
     """
-    error_writer = open(os.path.join(output_folder_path, "errors.json"), "w")
-    success_writer = open(os.path.join(output_folder_path, "success.json"), "w")
+    error_writer = open(os.path.join(output_folder_dir, "errors.json"), "w")
+    success_writer = open(os.path.join(output_folder_dir, "success.json"), "w")
     err_cnt = 0
     succ_cnt = 0
 
@@ -192,7 +194,7 @@ def process(
         mapper = pool.imap_unordered
 
     jobs = mapper(
-        functools.partial(core_process, output_dir=output_folder_path),
+        functools.partial(core_process, output_dir=output_folder_dir),
         input_paths,
     )
 
