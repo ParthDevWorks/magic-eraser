@@ -11,27 +11,18 @@ from diffusers import AutoPipelineForInpainting
 
 
 class RunWayML(InpaintingModel):
-    def __init__(self) -> None:
-        self.model = None
-        self.device = None
+    """
+     Loads the pretrained RunWay AI model weights.
 
-    def get_model_id(self) -> str:
-        """Returns the identifier for the inpainting model.
+    Raises:
+        ValueError:  If the path to the model weights is not found.
+    """
 
-        Returns:
-            str: A string representing the model ID.
-        """
-        return "runwayml"
-
-    def initialize(
+    def __init__(
         self,
         prompt: str = "Blend with surroundings. Fill seamlessly. Extend the texture. Match the surrounding area",
     ) -> None:
-        """Loads the pretrained RunWay AI model weights.
 
-        Raises:
-            ValueError:  If the path to the model weights is not found.
-        """
         INPAINTING_MODEL_PATH = os.environ.get("INPAINTING_MODEL_PATH")
         if INPAINTING_MODEL_PATH is None:
             raise ValueError("INPAINTING_MODEL_PATH environment variable is not set")
@@ -57,6 +48,14 @@ class RunWayML(InpaintingModel):
         self.model = AutoPipelineForInpainting.from_pretrained(
             self.runwayml_path,
         ).to(self.device)
+
+    def get_model_id(self) -> str:
+        """Returns the identifier for the inpainting model.
+
+        Returns:
+            str: A string representing the model ID.
+        """
+        return "runwayml"
 
     def _pre_process(
         self, image: torch.Tensor, mask: torch.Tensor
