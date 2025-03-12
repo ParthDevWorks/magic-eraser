@@ -37,9 +37,6 @@
                                 <a class="function" href="#LamOnnx.get_model_id">get_model_id</a>
                         </li>
                         <li>
-                                <a class="function" href="#LamOnnx.initialize">initialize</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#LamOnnx.inference">inference</a>
                         </li>
                         <li>
@@ -83,39 +80,39 @@
 </span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>
 </span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>
 </span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="k">class</span> <span class="nc">LamOnnx</span><span class="p">(</span><span class="n">InpaintingModel</span><span class="p">):</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="sd">    Loads the pretrained Lama model weights.</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">        Returns:</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">            str: A string representing the model ID.</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>        <span class="k">return</span> <span class="s2">&quot;lama_onnx&quot;</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the pretrained Lama model weights.</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">        Raises:</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">            ValueError:  If the path to the model weights is not found.</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;lama_onnx/lama_fp32.onnx&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>        <span class="p">)</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">):</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>                <span class="sa">f</span><span class="s2">&quot;Lama Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>            <span class="p">)</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading Lama model weights&quot;</span><span class="p">)</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">)</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="sd">    Raises:</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">        ValueError:  If the path to the model weights is not found.</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;lama_onnx/lama_fp32.onnx&quot;</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>        <span class="p">)</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">):</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>                <span class="sa">f</span><span class="s2">&quot;Lama Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>            <span class="p">)</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading Lama model weights&quot;</span><span class="p">)</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">)</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">        Returns:</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">            str: A string representing the model ID.</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="k">return</span> <span class="s2">&quot;lama_onnx&quot;</span>
 </span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>
 </span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>    <span class="k">def</span> <span class="nf">_pre_process</span><span class="p">(</span>
 </span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
@@ -191,39 +188,39 @@
     </div>
     <a class="headerlink" href="#LamOnnx"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="LamOnnx-15"><a href="#LamOnnx-15"><span class="linenos"> 15</span></a><span class="k">class</span> <span class="nc">LamOnnx</span><span class="p">(</span><span class="n">InpaintingModel</span><span class="p">):</span>
-</span><span id="LamOnnx-16"><a href="#LamOnnx-16"><span class="linenos"> 16</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="LamOnnx-17"><a href="#LamOnnx-17"><span class="linenos"> 17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="LamOnnx-16"><a href="#LamOnnx-16"><span class="linenos"> 16</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="LamOnnx-17"><a href="#LamOnnx-17"><span class="linenos"> 17</span></a><span class="sd">    Loads the pretrained Lama model weights.</span>
 </span><span id="LamOnnx-18"><a href="#LamOnnx-18"><span class="linenos"> 18</span></a>
-</span><span id="LamOnnx-19"><a href="#LamOnnx-19"><span class="linenos"> 19</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="LamOnnx-20"><a href="#LamOnnx-20"><span class="linenos"> 20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
-</span><span id="LamOnnx-21"><a href="#LamOnnx-21"><span class="linenos"> 21</span></a>
-</span><span id="LamOnnx-22"><a href="#LamOnnx-22"><span class="linenos"> 22</span></a><span class="sd">        Returns:</span>
-</span><span id="LamOnnx-23"><a href="#LamOnnx-23"><span class="linenos"> 23</span></a><span class="sd">            str: A string representing the model ID.</span>
-</span><span id="LamOnnx-24"><a href="#LamOnnx-24"><span class="linenos"> 24</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="LamOnnx-25"><a href="#LamOnnx-25"><span class="linenos"> 25</span></a>        <span class="k">return</span> <span class="s2">&quot;lama_onnx&quot;</span>
-</span><span id="LamOnnx-26"><a href="#LamOnnx-26"><span class="linenos"> 26</span></a>
-</span><span id="LamOnnx-27"><a href="#LamOnnx-27"><span class="linenos"> 27</span></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="LamOnnx-28"><a href="#LamOnnx-28"><span class="linenos"> 28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the pretrained Lama model weights.</span>
-</span><span id="LamOnnx-29"><a href="#LamOnnx-29"><span class="linenos"> 29</span></a>
-</span><span id="LamOnnx-30"><a href="#LamOnnx-30"><span class="linenos"> 30</span></a><span class="sd">        Raises:</span>
-</span><span id="LamOnnx-31"><a href="#LamOnnx-31"><span class="linenos"> 31</span></a><span class="sd">            ValueError:  If the path to the model weights is not found.</span>
-</span><span id="LamOnnx-32"><a href="#LamOnnx-32"><span class="linenos"> 32</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="LamOnnx-33"><a href="#LamOnnx-33"><span class="linenos"> 33</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
-</span><span id="LamOnnx-34"><a href="#LamOnnx-34"><span class="linenos"> 34</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="LamOnnx-35"><a href="#LamOnnx-35"><span class="linenos"> 35</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
-</span><span id="LamOnnx-36"><a href="#LamOnnx-36"><span class="linenos"> 36</span></a>
-</span><span id="LamOnnx-37"><a href="#LamOnnx-37"><span class="linenos"> 37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-</span><span id="LamOnnx-38"><a href="#LamOnnx-38"><span class="linenos"> 38</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;lama_onnx/lama_fp32.onnx&quot;</span>
-</span><span id="LamOnnx-39"><a href="#LamOnnx-39"><span class="linenos"> 39</span></a>        <span class="p">)</span>
-</span><span id="LamOnnx-40"><a href="#LamOnnx-40"><span class="linenos"> 40</span></a>
-</span><span id="LamOnnx-41"><a href="#LamOnnx-41"><span class="linenos"> 41</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">):</span>
-</span><span id="LamOnnx-42"><a href="#LamOnnx-42"><span class="linenos"> 42</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="LamOnnx-43"><a href="#LamOnnx-43"><span class="linenos"> 43</span></a>                <span class="sa">f</span><span class="s2">&quot;Lama Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="LamOnnx-44"><a href="#LamOnnx-44"><span class="linenos"> 44</span></a>            <span class="p">)</span>
-</span><span id="LamOnnx-45"><a href="#LamOnnx-45"><span class="linenos"> 45</span></a>
-</span><span id="LamOnnx-46"><a href="#LamOnnx-46"><span class="linenos"> 46</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading Lama model weights&quot;</span><span class="p">)</span>
-</span><span id="LamOnnx-47"><a href="#LamOnnx-47"><span class="linenos"> 47</span></a>
-</span><span id="LamOnnx-48"><a href="#LamOnnx-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">)</span>
+</span><span id="LamOnnx-19"><a href="#LamOnnx-19"><span class="linenos"> 19</span></a><span class="sd">    Raises:</span>
+</span><span id="LamOnnx-20"><a href="#LamOnnx-20"><span class="linenos"> 20</span></a><span class="sd">        ValueError:  If the path to the model weights is not found.</span>
+</span><span id="LamOnnx-21"><a href="#LamOnnx-21"><span class="linenos"> 21</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="LamOnnx-22"><a href="#LamOnnx-22"><span class="linenos"> 22</span></a>
+</span><span id="LamOnnx-23"><a href="#LamOnnx-23"><span class="linenos"> 23</span></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="LamOnnx-24"><a href="#LamOnnx-24"><span class="linenos"> 24</span></a>
+</span><span id="LamOnnx-25"><a href="#LamOnnx-25"><span class="linenos"> 25</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
+</span><span id="LamOnnx-26"><a href="#LamOnnx-26"><span class="linenos"> 26</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="LamOnnx-27"><a href="#LamOnnx-27"><span class="linenos"> 27</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
+</span><span id="LamOnnx-28"><a href="#LamOnnx-28"><span class="linenos"> 28</span></a>
+</span><span id="LamOnnx-29"><a href="#LamOnnx-29"><span class="linenos"> 29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+</span><span id="LamOnnx-30"><a href="#LamOnnx-30"><span class="linenos"> 30</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;lama_onnx/lama_fp32.onnx&quot;</span>
+</span><span id="LamOnnx-31"><a href="#LamOnnx-31"><span class="linenos"> 31</span></a>        <span class="p">)</span>
+</span><span id="LamOnnx-32"><a href="#LamOnnx-32"><span class="linenos"> 32</span></a>
+</span><span id="LamOnnx-33"><a href="#LamOnnx-33"><span class="linenos"> 33</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">):</span>
+</span><span id="LamOnnx-34"><a href="#LamOnnx-34"><span class="linenos"> 34</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span><span id="LamOnnx-35"><a href="#LamOnnx-35"><span class="linenos"> 35</span></a>                <span class="sa">f</span><span class="s2">&quot;Lama Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="LamOnnx-36"><a href="#LamOnnx-36"><span class="linenos"> 36</span></a>            <span class="p">)</span>
+</span><span id="LamOnnx-37"><a href="#LamOnnx-37"><span class="linenos"> 37</span></a>
+</span><span id="LamOnnx-38"><a href="#LamOnnx-38"><span class="linenos"> 38</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading Lama model weights&quot;</span><span class="p">)</span>
+</span><span id="LamOnnx-39"><a href="#LamOnnx-39"><span class="linenos"> 39</span></a>
+</span><span id="LamOnnx-40"><a href="#LamOnnx-40"><span class="linenos"> 40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">)</span>
+</span><span id="LamOnnx-41"><a href="#LamOnnx-41"><span class="linenos"> 41</span></a>
+</span><span id="LamOnnx-42"><a href="#LamOnnx-42"><span class="linenos"> 42</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="LamOnnx-43"><a href="#LamOnnx-43"><span class="linenos"> 43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="LamOnnx-44"><a href="#LamOnnx-44"><span class="linenos"> 44</span></a>
+</span><span id="LamOnnx-45"><a href="#LamOnnx-45"><span class="linenos"> 45</span></a><span class="sd">        Returns:</span>
+</span><span id="LamOnnx-46"><a href="#LamOnnx-46"><span class="linenos"> 46</span></a><span class="sd">            str: A string representing the model ID.</span>
+</span><span id="LamOnnx-47"><a href="#LamOnnx-47"><span class="linenos"> 47</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="LamOnnx-48"><a href="#LamOnnx-48"><span class="linenos"> 48</span></a>        <span class="k">return</span> <span class="s2">&quot;lama_onnx&quot;</span>
 </span><span id="LamOnnx-49"><a href="#LamOnnx-49"><span class="linenos"> 49</span></a>
 </span><span id="LamOnnx-50"><a href="#LamOnnx-50"><span class="linenos"> 50</span></a>    <span class="k">def</span> <span class="nf">_pre_process</span><span class="p">(</span>
 </span><span id="LamOnnx-51"><a href="#LamOnnx-51"><span class="linenos"> 51</span></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
@@ -286,7 +283,13 @@
 </span></pre></div>
 
 
-            <div class="docstring"><p>Abstract Class for All Inpainting model.</p>
+            <div class="docstring"><p>Loads the pretrained Lama model weights.</p>
+
+<h6 id="raises">Raises:</h6>
+
+<ul>
+<li><strong>ValueError:</strong>   If the path to the model weights is not found.</li>
+</ul>
 </div>
 
 
@@ -301,13 +304,13 @@
 
     </div>
     <a class="headerlink" href="#LamOnnx.get_model_id"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="LamOnnx.get_model_id-19"><a href="#LamOnnx.get_model_id-19"><span class="linenos">19</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="LamOnnx.get_model_id-20"><a href="#LamOnnx.get_model_id-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
-</span><span id="LamOnnx.get_model_id-21"><a href="#LamOnnx.get_model_id-21"><span class="linenos">21</span></a>
-</span><span id="LamOnnx.get_model_id-22"><a href="#LamOnnx.get_model_id-22"><span class="linenos">22</span></a><span class="sd">        Returns:</span>
-</span><span id="LamOnnx.get_model_id-23"><a href="#LamOnnx.get_model_id-23"><span class="linenos">23</span></a><span class="sd">            str: A string representing the model ID.</span>
-</span><span id="LamOnnx.get_model_id-24"><a href="#LamOnnx.get_model_id-24"><span class="linenos">24</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="LamOnnx.get_model_id-25"><a href="#LamOnnx.get_model_id-25"><span class="linenos">25</span></a>        <span class="k">return</span> <span class="s2">&quot;lama_onnx&quot;</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="LamOnnx.get_model_id-42"><a href="#LamOnnx.get_model_id-42"><span class="linenos">42</span></a>    <span class="k">def</span> <span class="nf">get_model_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="LamOnnx.get_model_id-43"><a href="#LamOnnx.get_model_id-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the identifier for the inpainting model.</span>
+</span><span id="LamOnnx.get_model_id-44"><a href="#LamOnnx.get_model_id-44"><span class="linenos">44</span></a>
+</span><span id="LamOnnx.get_model_id-45"><a href="#LamOnnx.get_model_id-45"><span class="linenos">45</span></a><span class="sd">        Returns:</span>
+</span><span id="LamOnnx.get_model_id-46"><a href="#LamOnnx.get_model_id-46"><span class="linenos">46</span></a><span class="sd">            str: A string representing the model ID.</span>
+</span><span id="LamOnnx.get_model_id-47"><a href="#LamOnnx.get_model_id-47"><span class="linenos">47</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="LamOnnx.get_model_id-48"><a href="#LamOnnx.get_model_id-48"><span class="linenos">48</span></a>        <span class="k">return</span> <span class="s2">&quot;lama_onnx&quot;</span>
 </span></pre></div>
 
 
@@ -318,53 +321,6 @@
 <blockquote>
   <p>str: A string representing the model ID.</p>
 </blockquote>
-</div>
-
-
-                            </div>
-                            <div id="LamOnnx.initialize" class="classattr">
-                                        <input id="LamOnnx.initialize-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">initialize</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
-
-                <label class="view-source-button" for="LamOnnx.initialize-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#LamOnnx.initialize"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="LamOnnx.initialize-27"><a href="#LamOnnx.initialize-27"><span class="linenos">27</span></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="LamOnnx.initialize-28"><a href="#LamOnnx.initialize-28"><span class="linenos">28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads the pretrained Lama model weights.</span>
-</span><span id="LamOnnx.initialize-29"><a href="#LamOnnx.initialize-29"><span class="linenos">29</span></a>
-</span><span id="LamOnnx.initialize-30"><a href="#LamOnnx.initialize-30"><span class="linenos">30</span></a><span class="sd">        Raises:</span>
-</span><span id="LamOnnx.initialize-31"><a href="#LamOnnx.initialize-31"><span class="linenos">31</span></a><span class="sd">            ValueError:  If the path to the model weights is not found.</span>
-</span><span id="LamOnnx.initialize-32"><a href="#LamOnnx.initialize-32"><span class="linenos">32</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="LamOnnx.initialize-33"><a href="#LamOnnx.initialize-33"><span class="linenos">33</span></a>        <span class="n">INPAINTING_MODEL_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH&quot;</span><span class="p">)</span>
-</span><span id="LamOnnx.initialize-34"><a href="#LamOnnx.initialize-34"><span class="linenos">34</span></a>        <span class="k">if</span> <span class="n">INPAINTING_MODEL_PATH</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="LamOnnx.initialize-35"><a href="#LamOnnx.initialize-35"><span class="linenos">35</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;INPAINTING_MODEL_PATH environment variable is not set&quot;</span><span class="p">)</span>
-</span><span id="LamOnnx.initialize-36"><a href="#LamOnnx.initialize-36"><span class="linenos">36</span></a>
-</span><span id="LamOnnx.initialize-37"><a href="#LamOnnx.initialize-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-</span><span id="LamOnnx.initialize-38"><a href="#LamOnnx.initialize-38"><span class="linenos">38</span></a>            <span class="n">INPAINTING_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;lama_onnx/lama_fp32.onnx&quot;</span>
-</span><span id="LamOnnx.initialize-39"><a href="#LamOnnx.initialize-39"><span class="linenos">39</span></a>        <span class="p">)</span>
-</span><span id="LamOnnx.initialize-40"><a href="#LamOnnx.initialize-40"><span class="linenos">40</span></a>
-</span><span id="LamOnnx.initialize-41"><a href="#LamOnnx.initialize-41"><span class="linenos">41</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">):</span>
-</span><span id="LamOnnx.initialize-42"><a href="#LamOnnx.initialize-42"><span class="linenos">42</span></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="LamOnnx.initialize-43"><a href="#LamOnnx.initialize-43"><span class="linenos">43</span></a>                <span class="sa">f</span><span class="s2">&quot;Lama Model Weights not located inside </span><span class="si">{</span><span class="n">INPAINTING_MODEL_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="LamOnnx.initialize-44"><a href="#LamOnnx.initialize-44"><span class="linenos">44</span></a>            <span class="p">)</span>
-</span><span id="LamOnnx.initialize-45"><a href="#LamOnnx.initialize-45"><span class="linenos">45</span></a>
-</span><span id="LamOnnx.initialize-46"><a href="#LamOnnx.initialize-46"><span class="linenos">46</span></a>        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading Lama model weights&quot;</span><span class="p">)</span>
-</span><span id="LamOnnx.initialize-47"><a href="#LamOnnx.initialize-47"><span class="linenos">47</span></a>
-</span><span id="LamOnnx.initialize-48"><a href="#LamOnnx.initialize-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ort</span><span class="o">.</span><span class="n">InferenceSession</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lamaonnx_path</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Loads the pretrained Lama model weights.</p>
-
-<h6 id="raises">Raises:</h6>
-
-<ul>
-<li><strong>ValueError:</strong>   If the path to the model weights is not found.</li>
-</ul>
 </div>
 
 

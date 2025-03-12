@@ -13,23 +13,15 @@ from torchvision.models.detection import maskrcnn_resnet50_fpn
 
 
 class MaskRcnn(SegmentationModel):
+    """
+    Loads the pretrained Mask R-CNN model weights.
+
+    Raises:
+        ValueError:  If the path to the model weights is not found.
+    """
+
     def __init__(self) -> None:
-        self.model = None
 
-    def get_model_id(self) -> str:
-        """Returns the identifier for the segmentation model.
-
-        Returns:
-            str: A string representing the model ID.
-        """
-        return "mask_rcnn"
-
-    def initialize(self) -> None:
-        """Loads the pretrained Mask R-CNN model weights.
-
-        Raises:
-            ValueError:  If the path to the model weights is not found.
-        """
         SEGMENTATION_MODEL_PATH = os.environ.get("SEGMENTATION_MODEL_PATH")
         if SEGMENTATION_MODEL_PATH is None:
             raise ValueError("SEGMENTATION_MODEL_PATH environment variable is not set")
@@ -51,6 +43,14 @@ class MaskRcnn(SegmentationModel):
         self.model.load_state_dict(torch.load(mask_rcnn_path))
 
         self.model.eval()  # Set the Model to Evaluation Mode
+
+    def get_model_id(self) -> str:
+        """Returns the identifier for the segmentation model.
+
+        Returns:
+            str: A string representing the model ID.
+        """
+        return "mask_rcnn"
 
     def inference(self, image_tensor: torch.Tensor) -> SegmentationOutput:
         """Performs inference on a image.

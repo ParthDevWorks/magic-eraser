@@ -13,12 +13,7 @@ data_root = os.path.join(os.path.dirname(magic_eraser.__file__), "../sample_data
 
 @pytest.fixture(scope="module")
 def model_initialized():
-    return get_inpainitng_model(id="lama_onnx", initialize=True)
-
-
-@pytest.fixture(scope="module")
-def model_uninitialized():
-    return get_inpainitng_model(id="lama_onnx", initialize=False)
+    return get_inpainitng_model(id="lama_onnx")
 
 
 @pytest.fixture(scope="module")
@@ -35,10 +30,6 @@ def test_correct_factory_initialized(model_initialized):
     assert model_initialized.get_model_id() == "lama_onnx"
 
 
-def test_correct_factory_uninitialized(model_uninitialized):
-    assert model_uninitialized.get_model_id() == "lama_onnx"
-
-
 def test_incorrect_factory():
     with pytest.raises(ValueError):
         _ = get_inpainitng_model(id="random")
@@ -48,13 +39,8 @@ def test_check_initialization(model_initialized):
     assert isinstance(model_initialized, LamOnnx)
 
 
-def test_check_incorrect_initialization(model_uninitialized, image, mask):
-    with pytest.raises(ValueError):
-        model_uninitialized.inference(image=image, mask=mask)
-
-
 def test_shutdown(image, mask):
-    model = get_inpainitng_model(id="lama_onnx", initialize=True)
+    model = get_inpainitng_model(id="lama_onnx")
     model.shutdown()
 
     with pytest.raises(ValueError):

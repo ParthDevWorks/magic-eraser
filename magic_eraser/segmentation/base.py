@@ -12,10 +12,6 @@ class SegmentationModel(ABC):
         pass
 
     @abstractmethod
-    def initialize(self) -> None:
-        pass
-
-    @abstractmethod
     def shutdown(self) -> None:
         pass
 

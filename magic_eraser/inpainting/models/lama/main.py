@@ -12,23 +12,15 @@ from magic_eraser.utils.image import resize_image
 
 
 class LamOnnx(InpaintingModel):
+    """
+    Loads the pretrained Lama model weights.
+
+    Raises:
+        ValueError:  If the path to the model weights is not found.
+    """
+
     def __init__(self) -> None:
-        self.model = None
 
-    def get_model_id(self) -> str:
-        """Returns the identifier for the inpainting model.
-
-        Returns:
-            str: A string representing the model ID.
-        """
-        return "lama_onnx"
-
-    def initialize(self) -> None:
-        """Loads the pretrained Lama model weights.
-
-        Raises:
-            ValueError:  If the path to the model weights is not found.
-        """
         INPAINTING_MODEL_PATH = os.environ.get("INPAINTING_MODEL_PATH")
         if INPAINTING_MODEL_PATH is None:
             raise ValueError("INPAINTING_MODEL_PATH environment variable is not set")
@@ -45,6 +37,14 @@ class LamOnnx(InpaintingModel):
         logging.info("Loading Lama model weights")
 
         self.model = ort.InferenceSession(self.lamaonnx_path)
+
+    def get_model_id(self) -> str:
+        """Returns the identifier for the inpainting model.
+
+        Returns:
+            str: A string representing the model ID.
+        """
+        return "lama_onnx"
 
     def _pre_process(
         self, image: torch.Tensor, mask: torch.Tensor

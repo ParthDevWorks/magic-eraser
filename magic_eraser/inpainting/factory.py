@@ -1,9 +1,8 @@
 from magic_eraser.inpainting.base import InpaintingModel
 
 
-def get_inpainitng_model(id, *args, **kwrgs) -> InpaintingModel:
+def get_inpainitng_model(id) -> InpaintingModel:
     """This method is the entry point to load any inpainitng model.
-    User needs to provide initialize=True to initialize the model else model will not be initialized.
 
     Args:
         id (str): Model Id
@@ -31,9 +30,5 @@ def get_inpainitng_model(id, *args, **kwrgs) -> InpaintingModel:
         raise ValueError(
             f"Supported Inpainting Model ids are {valid_ids} but user provided id as {id}"
         )
-
-    init_flag = kwrgs.pop("initialize", False)
-    if init_flag:
-        model.initialize()
 
     return model
