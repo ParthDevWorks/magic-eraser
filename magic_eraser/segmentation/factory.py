@@ -1,9 +1,8 @@
 from magic_eraser.segmentation.base import SegmentationModel
 
 
-def get_segmentation_model(id, *args, **kwrgs) -> SegmentationModel:
+def get_segmentation_model(id) -> SegmentationModel:
     """This method is the entry point to load any segmentation model.
-    User needs to provide initialize=True to initialize the model else model will not be initialized.
 
     Args:
         id (str): Model Id
@@ -27,9 +26,5 @@ def get_segmentation_model(id, *args, **kwrgs) -> SegmentationModel:
         raise ValueError(
             f"Supported Segmentation Model ids are {valid_ids} but user provided id as {id}"
         )
-
-    init_flag = kwrgs.pop("initialize", False)
-    if init_flag:
-        model.initialize()
 
     return model

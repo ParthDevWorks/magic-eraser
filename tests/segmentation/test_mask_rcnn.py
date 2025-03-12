@@ -16,14 +16,6 @@ def image():
     return load_image(os.path.join(data_root, "segmentation", "sample_6.jpg"))
 
 
-def test_correct_factory_initialized(maskrcnn_model_initialized):
-    assert maskrcnn_model_initialized.get_model_id() == "mask_rcnn"
-
-
-def test_correct_factory_uninitialized(maskrcnn_model_uninitialized):
-    assert maskrcnn_model_uninitialized.get_model_id() == "mask_rcnn"
-
-
 def test_incorrect_factory():
     with pytest.raises(ValueError):
         _ = get_segmentation_model(id="random")
@@ -33,13 +25,8 @@ def test_check_initialization(maskrcnn_model_initialized):
     assert isinstance(maskrcnn_model_initialized, MaskRcnn)
 
 
-def test_check_incorrect_initialization(maskrcnn_model_uninitialized, image):
-    with pytest.raises(ValueError):
-        maskrcnn_model_uninitialized.inference(image_tensor=image)
-
-
 def test_shutdown(image):
-    model = get_segmentation_model(id="mask_rcnn", initialize=True)
+    model = get_segmentation_model(id="mask_rcnn")
     model.shutdown()
 
     with pytest.raises(ValueError):

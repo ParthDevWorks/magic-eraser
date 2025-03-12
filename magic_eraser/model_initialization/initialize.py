@@ -39,7 +39,7 @@ class ModelInitializer:
             from magic_eraser.segmentation.factory import get_segmentation_model
 
             self.segmentation_model = get_segmentation_model(
-                id=DEFAULT_SEGMENTATION_MODEL_ID, initialize=True
+                id=DEFAULT_SEGMENTATION_MODEL_ID
             )
 
     def get_segmentation_model(self) -> Union[SegmentationModel, None]:
