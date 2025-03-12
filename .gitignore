@@ -165,6 +165,7 @@ cython_debug/
 # Model Weights
 model_weights/segmentation/*
 model_weights/inpainting/*
+model_weights/ocr/*
 
 # Unit Test Coverage Reports
 *lcov.info
