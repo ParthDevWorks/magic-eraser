@@ -92,7 +92,8 @@ class Doctr(OCRModel):
         Returns:
             np.ndarray: A NumPy array representing the image. (H x W x C format)
         """
-
+        if image_tensor.shape[0] > 3:
+            image_tensor = image_tensor[:3, :, :]
         image_tensor = image_tensor.numpy().transpose(1, 2, 0)
         return image_tensor
 
@@ -162,7 +163,7 @@ if __name__ == "__main__":
 
     model = Doctr()
     image_tensor = load_image(
-        "/Users/parthrathod/Documents/Projects/MAGIC_ERASER/magic-eraser/sample_data/ocr/sample_3.jpg"
+        "/Users/parthrathod/Documents/Projects/MAGIC_ERASER/magic-eraser/sample_data/ocr/sample_4.png"
     )
     out = model.inference(image_tensor)
     print(out)
