@@ -216,6 +216,20 @@ def remove_background(
 
 
 def remove_text(image_tensor: torch.Tensor, ocr_model: OCRModel) -> torch.Tensor:
+    """
+    Removes the text from an input image tensor using ocr model and masking techniques.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor to process.
+        ocr_model (SegmentationModel): An instance of a OCRModel subclass.
+
+    Returns:
+        torch.Tensor: The processed image tensor with text removed.
+
+    Raises:
+        AssertionError: If the ocr model is not properly configured in the ModelInitializer object.
+
+    """
     ocr_output: list[OCRResult] = perform_ocr(image_tensor, ocr_model)
 
     for output in ocr_output:
