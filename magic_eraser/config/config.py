@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict
 
 DEFAULT_SEGMENTATION_MODEL_ID = "mask_rcnn"
 DEFAULT_INPAINTING_MODEL_ID = "lama_onnx"
+DEFAULT_OCR_MODEL_ID = "doctr"
 
 
 class Config(BaseModel):
@@ -18,5 +19,5 @@ class Config(BaseModel):
 
     model_config = ConfigDict(strict=True, extra="forbid")
 
-    mode: Literal["erase", "color_splash", "remove_background"] = "erase"
+    mode: Literal["erase", "color_splash", "remove_background", "remove_text"] = "erase"
     target: List = ["person"]

@@ -14,9 +14,9 @@ def get_ocr_model(id) -> OCRModel:
 
     if id in valid_ids:
         if id == "doctr":
-            from magic_eraser.segmentation.models.mask_rcnn.main import MaskRcnn
+            from magic_eraser.ocr.models.doctr.main import Doctr
 
-            model = MaskRcnn()
+            model = Doctr()
         else:
             raise ValueError(
                 f"The model id {id} provided is supported but there is no implementation method written"
