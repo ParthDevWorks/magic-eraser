@@ -156,14 +156,3 @@ class Doctr(OCRModel):
         geometry *= np.array(page.dimensions)[None::-1]  # Convert to Pixel Co-ordinates
         x, y, w, h = geometry.flatten()
         return BoundingBox(x=int(x), y=int(y), width=int(w), height=int(h))
-
-
-if __name__ == "__main__":
-    from magic_eraser.utils.image import load_image
-
-    model = Doctr()
-    image_tensor = load_image(
-        "/Users/parthrathod/Documents/Projects/MAGIC_ERASER/magic-eraser/sample_data/ocr/sample_4.png"
-    )
-    out = model.inference(image_tensor)
-    print(out)

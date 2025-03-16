@@ -16,5 +16,5 @@ class OCRModel(ABC):
         pass
 
     @abstractmethod
-    def inference(self, image_tensor: torch.Tensor) -> OCRResult:
+    def inference(self, image_tensor: torch.Tensor) -> list[OCRResult]:
         pass

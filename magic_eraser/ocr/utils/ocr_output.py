@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, astuple
 
 
 @dataclass
@@ -7,6 +7,10 @@ class BoundingBox:
     y: int
     width: int
     height: int
+
+    @property
+    def to_tuple(self):
+        return astuple(self)
 
 
 @dataclass
