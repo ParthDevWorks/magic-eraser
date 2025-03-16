@@ -4,7 +4,8 @@ from magic_eraser.config.config import Config
 from magic_eraser.model_initialization.initialize import ModelInitializer
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.inpainting.base import InpaintingModel
-from magic_eraser.image import erase, color_splash, remove_background
+from magic_eraser.ocr.base import OCRModel
+from magic_eraser.image import erase, color_splash, remove_background, remove_text
 
 
 class Pipeline:
@@ -50,6 +51,9 @@ class Pipeline:
                 image_tensor, self.segmentation_model, self.global_config["target"]
             )
 
+        elif self.global_config["mode"] == "remove_text":
+            output_image_tensor = remove_text(image_tensor, self.ocr_model)
+
         self.image_processed_successfully = True
         return output_image_tensor
 
@@ -78,6 +82,16 @@ class Pipeline:
             InpaintingModel | None: Instance of InpaintingModel or None if not initialized.
         """
         return self.model_initializer.get_inpainting_model()
+
+    @property
+    def ocr_model(self) -> OCRModel | None:
+        """
+        Gets the OCRModel instance.
+
+        Returns:
+            OCRModel | None: Instance of OCRModel or None if not initialized.
+        """
+        return self.model_initializer.get_ocr_model()
 
     @property
     def is_image_processing_successfull(self) -> bool:

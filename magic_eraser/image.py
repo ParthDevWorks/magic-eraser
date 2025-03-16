@@ -1,5 +1,6 @@
 import torch
-from magic_eraser.model_initialization.initialize import ModelInitializer
+import scipy
+
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
 from magic_eraser.utils.image import dilate_boolean_tensors, rgb_to_grayscale
@@ -8,6 +9,8 @@ from magic_eraser.segmentation.utils.helper import (
     filter_mask,
 )
 from magic_eraser.inpainting.base import InpaintingModel
+from magic_eraser.ocr.base import OCRModel
+from magic_eraser.ocr.utils.ocr_output import OCRResult
 
 
 def perform_segmentation(
@@ -58,6 +61,27 @@ def perform_inpainting(
     inpainted_image = inpainting_model.inference(image=image_tensor, mask=masks)
 
     return inpainted_image
+
+
+def perform_ocr(image_tensor: torch.Tensor, ocr_model: OCRModel) -> list[OCRResult]:
+    """
+    Performs OCR on the given image tensor using the provided ocr model.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor to perform ocr on.
+        ocr_model (OCRModel): An instance of a OCRModel subclass.
+
+    Returns:
+        List[OCRResult]: A list of ocr results.
+
+    Raises:
+        AssertionError: If the ocr model is None.
+
+    """
+    assert ocr_model is not None
+
+    ocr_output = ocr_model.inference(image_tensor=image_tensor)
+    return ocr_output
 
 
 def erase(
@@ -189,6 +213,44 @@ def remove_background(
     ) * torch.ones(image_tensor.shape[-2:])
 
     return background_removed_tensor
+
+
+def remove_text(image_tensor: torch.Tensor, ocr_model: OCRModel) -> torch.Tensor:
+    """
+    Removes the text from an input image tensor using ocr model and masking techniques.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor to process.
+        ocr_model (SegmentationModel): An instance of a OCRModel subclass.
+
+    Returns:
+        torch.Tensor: The processed image tensor with text removed.
+
+    Raises:
+        AssertionError: If the ocr model is not properly configured in the ModelInitializer object.
+
+    """
+    ocr_output: list[OCRResult] = perform_ocr(image_tensor, ocr_model)
+
+    for output in ocr_output:
+        x, y, w, h = output.bounding_box.to_tuple
+
+        roi = image_tensor[:, y : y + h, x : x + w]
+        roi_int = (roi * 255).to(torch.int)
+
+        # Flatten and compute mode per channel
+        mode_values = []
+        for c in range(roi_int.shape[0]):  # Iterate over channels
+            mode_value = scipy.stats.mode(
+                roi_int[c].flatten().numpy(), keepdims=False
+            ).mode
+            mode_values.append(mode_value / 255.0)  # Convert back to float [0,1]
+
+        mode_tensor = torch.tensor(mode_values, dtype=torch.float32).view(3, 1, 1)
+
+        image_tensor[:, y : y + h, x : x + w] = mode_tensor
+
+    return image_tensor
 
 
 def post_process_mask(
