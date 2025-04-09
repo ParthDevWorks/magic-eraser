@@ -31,20 +31,24 @@ generate-docs = "scripts.generate_docs:main"
 test-coverage-local = "run_coverage_tests:local_coverage"
 terminal-coverage = "run_coverage_tests:terminal_coverage"
 
-[tool.coverage.run]
-omit = [
-        "*/__init__.py",
-
-        # plot.py is just use for debugging
-        "magic_eraser/utils/plot.py"
-        ]
+[tool.pytest.ini_options]
+addopts = "-v --show-capture=stdout --cov=magic_eraser"
+testpaths = ["tests/test_logs.py"]
 
 [tool.coverage.report]
-exclude_also = [
-        "if __name__ == .__main__.:",
-        "@abstractmethod",
-        "def __str__(self):"
-        ]
+omit = [
+        # plot.py is just use for debugging
+        "magic_eraser/utils/plot.py",
+
+        # Base Class for all inpainting models, not used directly
+        "magic_eraser/inpainting/base.py",
+
+        # Base Class for all segmentation models, not used directly
+        "magic_eraser/segmentation/base.py"
+]
+
+skip_empty = true
+show_missing = true
 
 [build-system]
 requires = ["poetry-core"]
