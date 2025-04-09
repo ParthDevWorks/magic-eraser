@@ -43,6 +43,7 @@ jobs:
               uses: MishaKav/pytest-coverage-comment@main
               with:
                 github-token: ${{ env.GITHUB_TOKEN}}
+                coverage-path-prefix: magic_eraser
                 pytest-xml-coverage-path: ./.pytest_cache/coverage.xml
                 junitxml-path: ./.pytest_cache/pytest_coverage_junit.xml
                 create-new-comment: true
