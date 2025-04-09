@@ -37,12 +37,13 @@ jobs:
               run: poetry install --no-interaction --no-root --with dev
 
             - name: Run tests
-              run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml
+              run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml
             
             - name: Pytest Coverage Comment
               uses: MishaKav/pytest-coverage-comment@main
               with:
                 github-token: ${{ env.GITHUB_TOKEN}}
+                pytest-xml-coverage-path: ./.pytest_cache/coverage.xml
                 junitxml-path: ./.pytest_cache/pytest_coverage_junit.xml
                 create-new-comment: true
 
