@@ -43,7 +43,7 @@ jobs:
               uses: MishaKav/pytest-coverage-comment@main
               with:
                 github-token: ${{ env.GITHUB_TOKEN}}
-                junitxml-path: ./pytest.xml
+                junitxml-path: ./.pytest_cache/pytest_coverage_junit.xml
                 create-new-comment: true
-                
+
     
