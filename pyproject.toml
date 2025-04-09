@@ -33,7 +33,7 @@ terminal-coverage = "run_coverage_tests:terminal_coverage"
 
 [tool.pytest.ini_options]
 addopts = "-v --show-capture=stdout --cov=magic_eraser"
-testpaths = ["tests/test_logs.py"]
+testpaths = ["tests/test_logs.py", "tests/test_config.py"]
 
 [tool.coverage.report]
 omit = [
