@@ -11,7 +11,7 @@ from magic_eraser.inpainting.base import InpaintingModel
 from magic_eraser.utils.image import resize_image
 
 
-class LamOnnx(InpaintingModel):
+class LamaOnnx(InpaintingModel):
     """
     Loads the pretrained Lama model weights.
 

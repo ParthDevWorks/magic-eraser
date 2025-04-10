@@ -29,6 +29,29 @@ To install Magic Eraser, follow these steps:
    poetry shell
    ```
 
+## Download Model Weights
+This repository requires downloading pre-trained model weights for different tasks. Follow the instructions below to download the weights and configure your environment.
+
+1. Download the Model Weights
+    
+    Run the following command: `poetry run download-weights`
+
+   This script will fetch the necessary model weights and store them in a specified folder.
+
+
+2. Set Environment Variables
+
+   Once the model weights are downloaded, you will need to set the appropriate environment variables to point to the directories containing the weights. (Better to save it in bashrc script)
+
+   Set the following environment variables:
+      
+      ```bash
+      export SEGMENTATION_MODEL_PATH="{download_folder}/model_weights/segmentation"
+      export INPAINTING_MODEL_PATH="{download_folder}/model_weights/inpainting"
+      export OCR_MODEL_PATH="{download_folder}/model_weights/ocr"
+      ```
+
+
 ## Auto-Documentation
 
 Magic Eraser uses [pdoc](https://github.com/mitmproxy/pdoc) for automatic documentation generation. To generate documentation:

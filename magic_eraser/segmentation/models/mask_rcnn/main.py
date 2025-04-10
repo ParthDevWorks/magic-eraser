@@ -27,7 +27,9 @@ class MaskRcnn(SegmentationModel):
             raise ValueError("SEGMENTATION_MODEL_PATH environment variable is not set")
 
         mask_rcnn_path = os.path.join(
-            SEGMENTATION_MODEL_PATH, "maskrcnn_resnet50_fpn_coco-bf2d0c1e.pth"
+            SEGMENTATION_MODEL_PATH,
+            "mask_rcnn",
+            "maskrcnn_resnet50_fpn_coco-bf2d0c1e.pth",
         )
 
         if not os.path.exists(mask_rcnn_path):

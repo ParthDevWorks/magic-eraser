@@ -14,9 +14,9 @@ def get_inpainitng_model(id) -> InpaintingModel:
 
     if id in valid_ids:
         if id == "lama_onnx":
-            from magic_eraser.inpainting.models.lama.main import LamOnnx
+            from magic_eraser.inpainting.models.lama.main import LamaOnnx
 
-            model = LamOnnx()
+            model = LamaOnnx()
         elif id == "runwayml":
             from magic_eraser.inpainting.models.runwayml.main import RunWayML
 
