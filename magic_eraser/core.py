@@ -7,7 +7,7 @@ from typing import List, Tuple
 import traceback
 import json
 import time
-from pathlib import Path
+
 import torch
 from magic_eraser.config.config import Config
 from magic_eraser.model_initialization.initialize import ModelInitializer
@@ -20,6 +20,9 @@ SUCCESS_LOG_MESSAGE = "Image processed successfully"
 
 _global_worker_ = {}
 
+PYTORCH_THREADS = int(os.environ.get("PYTORCH_THREADS", 1))
+PYTORCH_INTEROP_THREADS = int(os.environ.get("PYTORCH_INTEROP_THREADS", 1))
+
 
 def _worker_init(config: Config):
     # If error happens in worker initialization pools, python goes into infinite loop.
@@ -29,10 +32,10 @@ def _worker_init(config: Config):
         _global_worker_["error"]["initialization_error"] = False
         _global_worker_["error"]["message"] = ""
 
-        if torch.get_num_threads() != 1:
-            torch.set_num_threads(1)
-        if torch.get_num_interop_threads() != 1:
-            torch.set_num_interop_threads(1)
+        if torch.get_num_threads() != PYTORCH_THREADS:
+            torch.set_num_threads(PYTORCH_THREADS)
+        if torch.get_num_interop_threads() != PYTORCH_INTEROP_THREADS:
+            torch.set_num_interop_threads(PYTORCH_INTEROP_THREADS)
 
         model_initializer = ModelInitializer(global_config=config)
 
