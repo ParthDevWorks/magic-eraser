@@ -5,7 +5,7 @@ import torch
 
 import magic_eraser
 from magic_eraser.inpainting.factory import get_inpainitng_model
-from magic_eraser.inpainting.models.lama.main import LamOnnx
+from magic_eraser.inpainting.models.lama.main import LamaOnnx
 from magic_eraser.utils.image import load_image
 
 data_root = os.path.join(os.path.dirname(magic_eraser.__file__), "../sample_data")
@@ -36,7 +36,7 @@ def test_incorrect_factory():
 
 
 def test_check_initialization(model_initialized):
-    assert isinstance(model_initialized, LamOnnx)
+    assert isinstance(model_initialized, LamaOnnx)
 
 
 def test_shutdown(image, mask):

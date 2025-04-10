@@ -21,45 +21,45 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-          with:
-            token: ${{ env.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ env.GITHUB_TOKEN }}
 
-        - name: Set up Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: ${{ env.PYTHON_VERSION }}
-        
-        - name: Install Poetry
-          uses: snok/install-poetry@v1
-          with:
-            version: ${{ env.POETRY_VERSION}}
-            virtualenvs-create: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION}}
+          virtualenvs-create: true
 
-        - name: Install project
-          run: poetry install --no-interaction --no-root --with dev
-        
-        - name: Download Model Weights
-          run: poetry run ${{ env.POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS }}
+      - name: Install project
+        run: poetry install --no-interaction --no-root --with dev
+      
+      - name: Download Model Weights
+        run: poetry run ${{ env.POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS }}
 
-        - name: Run tests
-          id: run-tests
-          run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml || true # This ensures command doesnt cause failure
-        
-        - name: Pytest Coverage Comment
-          uses: MishaKav/pytest-coverage-comment@main
-          with:
-            github-token: ${{ env.GITHUB_TOKEN}}
-            coverage-path-prefix: magic_eraser/
-            pytest-xml-coverage-path: ./.pytest_cache/coverage.xml
-            junitxml-path: ./.pytest_cache/pytest_coverage_junit.xml
-            create-new-comment: true
-        
-        - name: Check Unit Test Results
-          if: ${{ steps.run-tests.outcome == 'failure' }}
-          run: |
-            echo "Unit tests failed. Please check the logs for details."
-            exit 1
+      - name: Run tests
+        id: run-tests
+        run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml || true # This ensures command doesnt cause failure
+      
+      - name: Pytest Coverage Comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          github-token: ${{ env.GITHUB_TOKEN}}
+          coverage-path-prefix: magic_eraser/
+          pytest-xml-coverage-path: ./.pytest_cache/coverage.xml
+          junitxml-path: ./.pytest_cache/pytest_coverage_junit.xml
+          create-new-comment: true
+      
+      - name: Check Unit Test Results
+        if: ${{ steps.run-tests.outcome == 'failure' }}
+        run: |
+          echo "Unit tests failed. Please check the logs for details."
+          exit 1
 
     
