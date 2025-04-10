@@ -13,9 +13,9 @@ env:
   PYTHON_VERSION: '3.12'
   POETRY_VERSION: '2.1.2'
   POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS: download-weights
-  SEGMENTATION_MODEL_PATH: $(pwd)/model_weights/segmentation
-  INPAINTING_MODEL_PATH: $(pwd)/model_weights/inpainting
-  OCR_MODEL_PATH: $(pwd)/model_weights/ocr
+  SEGMENTATION_MODEL_PATH: ${{ github.workspace }}/model_weights/segmentation
+  INPAINTING_MODEL_PATH: ${{ github.workspace }}/model_weights/inpainting
+  OCR_MODEL_PATH: ${{ github.workspace }}/model_weights/ocr
 
 jobs:
   test:
@@ -44,8 +44,8 @@ jobs:
           run: poetry run ${{ env.POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS }}
 
         - name: Run tests
-          run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml
-          continue-on-error: true
+          id: run-tests
+          run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml || true # This ensures command doesnt cause failure
         
         - name: Pytest Coverage Comment
           uses: MishaKav/pytest-coverage-comment@main
@@ -55,5 +55,11 @@ jobs:
             pytest-xml-coverage-path: ./.pytest_cache/coverage.xml
             junitxml-path: ./.pytest_cache/pytest_coverage_junit.xml
             create-new-comment: true
+        
+        - name: Check Unit Test Results
+          if: ${{ steps.run-tests.outcome == 'failure' }}
+          run: |
+            echo "Unit tests failed. Please check the logs for details."
+            exit 1
 
     
