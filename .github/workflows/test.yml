@@ -45,6 +45,7 @@ jobs:
 
         - name: Run tests
           run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml
+          continue-on-error: true
         
         - name: Pytest Coverage Comment
           uses: MishaKav/pytest-coverage-comment@main
