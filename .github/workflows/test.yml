@@ -13,6 +13,7 @@ env:
   PYTHON_VERSION: '3.12'
   POETRY_VERSION: '2.1.2'
   POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS: download-weights
+  MODEL_WEIGHTS_FOLDER_ID: ${{ secrets.MODEL_WEIGHTS_FOLDER_ID }}
   SEGMENTATION_MODEL_PATH: ${{ github.workspace }}/model_weights/segmentation
   INPAINTING_MODEL_PATH: ${{ github.workspace }}/model_weights/inpainting
   OCR_MODEL_PATH: ${{ github.workspace }}/model_weights/ocr
