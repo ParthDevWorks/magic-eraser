@@ -13,6 +13,7 @@ env:
   PYTHON_VERSION: '3.12'
   POETRY_VERSION: '2.1.2'
   POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS: download-weights
+  MODEL_WEIGHTS_FOLDER_ID: ${{ secrets.MODEL_WEIGHTS_FOLDER_ID }}
   SEGMENTATION_MODEL_PATH: ${{ github.workspace }}/model_weights/segmentation
   INPAINTING_MODEL_PATH: ${{ github.workspace }}/model_weights/inpainting
   OCR_MODEL_PATH: ${{ github.workspace }}/model_weights/ocr
@@ -45,7 +46,8 @@ jobs:
 
       - name: Run tests
         id: run-tests
-        run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml || true # This ensures command doesnt cause failure
+        run: poetry run pytest --junit-xml=./.pytest_cache/pytest_coverage_junit.xml --cov-report=xml:./.pytest_cache/coverage.xml
+        continue-on-error: true # This ensures command doesnt cause failure
       
       - name: Pytest Coverage Comment
         uses: MishaKav/pytest-coverage-comment@main

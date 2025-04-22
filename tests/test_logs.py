@@ -3,7 +3,6 @@ from magic_eraser.utils.book_keeping import (
     Logs,
     SuccessLogs,
     ErrorLogs,
-    FatalProcessingError,
 )
 
 
@@ -117,19 +116,4 @@ def test_error_logs(in_path, mode, message, traceback, expected_logs):
         message=message,
         traceback=traceback,
     )
-    assert actual_logs.as_dict() == expected_logs
-
-
-@pytest.mark.parametrize(
-    "message, traceback, expected_logs",
-    [
-        (
-            "Error",
-            "Division by zero",
-            {"message": "Error", "traceback": "Division by zero"},
-        )
-    ],
-)
-def test_fatal_processing_logs(message, traceback, expected_logs):
-    actual_logs = FatalProcessingError(message=message, traceback=traceback)
     assert actual_logs.as_dict() == expected_logs

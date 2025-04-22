@@ -33,7 +33,10 @@ To install Magic Eraser, follow these steps:
 This repository requires downloading pre-trained model weights for different tasks. Follow the instructions below to download the weights and configure your environment.
 
 1. Download the Model Weights
-    
+
+    ```bash
+    export MODEL_WEIGHTS_FOLDER_ID=<talk_to_code_owner>
+    ``` 
     Run the following command: `poetry run download-weights`
 
    This script will fetch the necessary model weights and store them in a specified folder.
