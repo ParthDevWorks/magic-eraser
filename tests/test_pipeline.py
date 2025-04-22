@@ -33,8 +33,7 @@ def test_entire_pipeline(default_config_erase_humans, mode, image):
 
 
 @pytest.mark.parametrize("mode", ["erase", "color_splash", "remove_background"])
-@pytest.mark.parametrize("num_workers", [0, 1])
-def test_entire_code(default_config_erase_humans, mode, num_workers):
+def test_entire_code(default_config_erase_humans, mode):
     default_config_erase_humans["mode"] = mode
 
     with tempfile.TemporaryDirectory() as output_temp_dir:
@@ -43,7 +42,6 @@ def test_entire_code(default_config_erase_humans, mode, num_workers):
             config_dict=default_config_erase_humans,
             input_path=os.path.join(data_root, "segmentation", "sample_1.jpg"),
             output_folder_dir=output_temp_dir,
-            num_workers=num_workers,
         )
 
         expected_output_format = ".PNG"

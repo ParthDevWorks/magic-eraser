@@ -26,12 +26,6 @@ def main():
         required=True,
         help="Output Folder Path where image file(s) will be saved",
     )
-    parser.add_argument(
-        "--num_workers",
-        type=int,
-        default=0,
-        help="Number of workers for parallel processing",
-    )
 
     args = parser.parse_args()
 
@@ -48,13 +42,11 @@ def main():
 
     input_folder = args.input
     output_folder_dir = args.output
-    num_workers = args.num_workers
 
     _, err_cnt = eraser(
         config_dict=config_dict,
         input_path=input_folder,
         output_folder_dir=output_folder_dir,
-        num_workers=num_workers,
     )
 
     if err_cnt > 0:

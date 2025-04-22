@@ -49,35 +49,3 @@ class SuccessLogs(Logs):
         super().__init__(input_path=input_path, mode=mode, message=message)
         self.output_path = output_path
         self.inference_time_seconds = inference_time_seconds
-
-
-class FatalProcessingError(Logs):
-    __slots__ = ["message", "traceback"]
-
-    def __init__(
-        self,
-        message: str = "Fatal Processing Error",
-        traceback: str = None,
-    ):
-        self.message = message
-        self.traceback = traceback
-
-
-if __name__ == "__main__":
-    dummy_error_message = ErrorLogs(
-        input_path="/path/to/test.jpg",
-        mode="erase_humans",
-        message="Import Error",
-        traceback="ModuleNotFoundError: No module named 'magic_eraser'",
-    )
-
-    print(dummy_error_message)
-    print(type(dummy_error_message))
-    print("***" * 20)
-
-    print(dummy_error_message.as_dict())
-    print(type(dummy_error_message.as_dict()))
-    print("***" * 20)
-
-    print(dummy_error_message.__str__())
-    print(type(dummy_error_message.__str__()))
