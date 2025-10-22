@@ -82,7 +82,6 @@ class MaskRcnn(SegmentationModel):
         Returns:
             SegmentationOutput: A structured representation of the segmentation results.
         """
-        boxes = prediction["boxes"]
         labels = [
             COCO_DATASET_CLASSNAMES.get(i, "undefined")
             for i in prediction["labels"].cpu().numpy().tolist()
@@ -91,7 +90,6 @@ class MaskRcnn(SegmentationModel):
         masks = prediction["masks"]
 
         output = SegmentationOutput(
-            bounding_box=boxes,
             labels=labels,
             confidence_scores=scores,
             prediction_masks=masks,

@@ -2,7 +2,7 @@ from typing import Literal, List
 
 from pydantic import BaseModel, ConfigDict
 
-DEFAULT_SEGMENTATION_MODEL_ID = "mask_rcnn"
+DEFAULT_SEGMENTATION_MODEL_ID = "maskformer"
 DEFAULT_INPAINTING_MODEL_ID = "lama_onnx"
 DEFAULT_OCR_MODEL_ID = "doctr"
 
