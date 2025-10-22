@@ -45,6 +45,7 @@ class FacebookMaskFormer(SegmentationModel):
 
         logging.info("Loading MaskFormer Model weights")
 
+        # TODO: Figure out why with GPU, the inference time is increasing.
         self.device = torch.device(
             "mps" if torch.backends.mps.is_available() else "cpu"
         )
