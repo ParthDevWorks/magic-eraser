@@ -56,13 +56,11 @@ def filter_mask(
         if label in target_labels:
             label_index.append(index)
 
-    bbox = segmentation_output.bounding_box[label_index]
     labels = [segmentation_output.labels[i] for i in label_index]
     scores = segmentation_output.confidence_scores[label_index]
     prediction_masks = segmentation_output.prediction_masks[label_index]
 
     return SegmentationOutput(
-        bounding_box=bbox,
         labels=labels,
         confidence_scores=scores,
         prediction_masks=prediction_masks,
