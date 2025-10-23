@@ -54,14 +54,14 @@ class MaskRcnn(SegmentationModel):
         """
         return "mask_rcnn"
 
-    def inference(self, image_tensor: torch.Tensor) -> SegmentationOutput:
+    def inference(self, image_tensor: torch.Tensor) -> list[SegmentationOutput]:
         """Performs inference on a image.
 
         Args:
             image_tensors (torch.Tensor): A tensors representing the image.
 
         Returns:
-            SegmentationOutput
+            List (SegmentationOutput)
         """
         if self.model is None:
             raise ValueError("Mask R-CNN model has not been initialized")
@@ -73,30 +73,47 @@ class MaskRcnn(SegmentationModel):
 
         return post_processing_output
 
-    def _post_processing(self, prediction) -> SegmentationOutput:
+    def _post_processing(self, prediction) -> list[SegmentationOutput]:
         """Processes the raw model predictions into a structured format.
 
         Args:
             predictions (_type_): The raw predictions from the Mask R-CNN model.
 
         Returns:
-            SegmentationOutput: A structured representation of the segmentation results.
+            List (SegmentationOutput): A structured representation of the segmentation results.
         """
-        labels = [
-            COCO_DATASET_CLASSNAMES.get(i, "undefined")
-            for i in prediction["labels"].cpu().numpy().tolist()
-        ]
-        scores = prediction["scores"]
-        masks = prediction["masks"]
 
-        output = SegmentationOutput(
-            labels=labels,
-            confidence_scores=scores,
-            prediction_masks=masks,
-        )
+        output = []
+
+        for label, score, mask in zip(
+            prediction["labels"].cpu().numpy().tolist(),
+            prediction["scores"],
+            prediction["masks"],
+        ):
+            output.append(
+                SegmentationOutput(
+                    label=COCO_DATASET_CLASSNAMES.get(label, "undefined"),
+                    confidence_score=score.item(),
+                    prediction_mask=mask,
+                )
+            )
 
         return output
 
     def shutdown(self) -> None:
         """Cleans up resources by setting the model to None."""
         self.model = None
+
+
+# CLI Testing Purpose
+if __name__ == "__main__":
+    from magic_eraser.utils.image import load_image
+
+    input_path = "/Users/parthrathod/Documents/Projects/MAGIC_ERASER/magic-eraser/sample_data/segmentation/sample_1.jpg"
+
+    image_tensor = load_image(input_path)
+
+    model = MaskRcnn()
+
+    output = model.inference(image_tensor=image_tensor)
+    print(output)

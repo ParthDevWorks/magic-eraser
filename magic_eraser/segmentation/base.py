@@ -16,5 +16,5 @@ class SegmentationModel(ABC):
         pass
 
     @abstractmethod
-    def inference(self, image_tensor: torch.Tensor) -> SegmentationOutput:
+    def inference(self, image_tensor: torch.Tensor) -> list[SegmentationOutput]:
         pass
