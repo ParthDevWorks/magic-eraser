@@ -15,7 +15,7 @@ from magic_eraser.ocr.utils.ocr_output import OCRResult
 
 def perform_segmentation(
     image_tensor: torch.Tensor, segmentation_model: SegmentationModel
-) -> SegmentationOutput:
+) -> list[SegmentationOutput]:
     """
     Performs segmentation on the given image tensor using the provided segmentation model.
 
@@ -24,7 +24,7 @@ def perform_segmentation(
         segmentation_model (SegmentationModel): An instance of a SegmentationModel subclass.
 
     Returns:
-        SegmentationOutput: An object containing the segmentation results.
+        List (SegmentationOutput): A list containing the segmentation results.
 
     Raises:
         AssertionError: If the segmentation model is None.
@@ -255,7 +255,7 @@ def remove_text(image_tensor: torch.Tensor, ocr_model: OCRModel) -> torch.Tensor
 
 def post_process_mask(
     image_tensor: torch.Tensor,
-    segmentation_output: SegmentationOutput,
+    segmentation_output: list[SegmentationOutput],
     target_labels: list,
     dilate_tensors: bool = True,
 ) -> torch.Tensor:
@@ -266,7 +266,7 @@ def post_process_mask(
 
     Args:
         image_tensor (torch.Tensor): Original image tensor.
-        segmentation_output (SegmentationOutput): Segmentation output containing mask regions.
+        segmentation_output (List(SegmentationOutput)): A list of Segmentation output.
         target_labels (list): List of target object labels to filter from the segmentation output.
         dilate_tensors (bool): Whether to dilate the resulting masks. Defaults to True.
 

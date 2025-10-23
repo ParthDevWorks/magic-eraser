@@ -5,6 +5,6 @@ import torch
 
 @dataclass
 class SegmentationOutput:
-    labels: list
-    confidence_scores: torch.Tensor
-    prediction_masks: torch.Tensor
+    label: str
+    confidence_score: float
+    prediction_mask: torch.Tensor
