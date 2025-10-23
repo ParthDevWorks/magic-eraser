@@ -76,7 +76,7 @@ class FacebookMaskFormer(SegmentationModel):
 
     def _post_process(
         self, outputs: MaskFormerForInstanceSegmentationOutput, shape: tuple[int, int]
-    ) -> SegmentationOutput:
+    ) -> list[SegmentationOutput]:
         """Processes the raw model predictions into a structured format.
 
         Args:
@@ -84,36 +84,35 @@ class FacebookMaskFormer(SegmentationModel):
             shape (int,int): Image Shape
 
         Returns:
-            SegmentationOutput: A structured representation of the segmentation results.
+            List (SegmentationOutput): A structured representation of the segmentation results.
         """
 
         result = self.feature_extractor.post_process_instance_segmentation(
             outputs=outputs, target_sizes=[shape], return_binary_maps=True
         )[0]
 
-        labels = []
-        confidence_score = []
+        segmentation_output = []
 
-        for segment_info in result["segments_info"]:
-            labels.append(LABELS[segment_info["label_id"]])
-            confidence_score.append(segment_info["score"])
+        for segment_info, mask in zip(result["segments_info"], result["segmentation"]):
 
-        segmentation_output = SegmentationOutput(
-            labels=labels,
-            confidence_scores=torch.Tensor(confidence_score),
-            prediction_masks=result["segmentation"],
-        )
+            segmentation_output.append(
+                SegmentationOutput(
+                    label=LABELS[segment_info["label_id"]],
+                    confidence_score=segment_info["score"],
+                    prediction_mask=mask,
+                )
+            )
 
         return segmentation_output
 
-    def inference(self, image_tensor: torch.Tensor) -> SegmentationOutput:
+    def inference(self, image_tensor: torch.Tensor) -> list[SegmentationOutput]:
         """Performs inference on a image.
 
         Args:
             image_tensors (torch.Tensor): A tensors representing the image.
 
         Returns:
-            SegmentationOutput
+            List[SegmentationOutput]
         """
 
         if self.model is None:

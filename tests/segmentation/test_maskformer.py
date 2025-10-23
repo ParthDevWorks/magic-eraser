@@ -36,4 +36,6 @@ def test_shutdown(image):
 def test_inference(maskformer_model_initialized, image):
     output = maskformer_model_initialized.inference(image_tensor=image)
 
-    assert isinstance(output, SegmentationOutput)
+    assert isinstance(output, list)
+    for item in output:
+        assert isinstance(item, SegmentationOutput)
