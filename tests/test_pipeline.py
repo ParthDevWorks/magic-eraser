@@ -13,10 +13,12 @@ data_root = str(os.path.join(os.path.dirname(os.path.dirname(__file__)), "sample
 
 @pytest.fixture(scope="module")
 def image():
-    return load_image(os.path.join(data_root, "segmentation", "sample_6.jpg"))
+    return load_image(os.path.join(data_root, "segmentation", "sample_1.jpg"))
 
 
-@pytest.mark.parametrize("mode", ["erase", "color_splash", "remove_background"])
+@pytest.mark.parametrize(
+    "mode", ["erase", "color_splash", "remove_background", "fall_color"]
+)
 def test_entire_pipeline(default_config_erase_humans, mode, image):
     default_config_erase_humans["mode"] = mode
     config = Config(**default_config_erase_humans)
@@ -32,7 +34,9 @@ def test_entire_pipeline(default_config_erase_humans, mode, image):
     assert output.dtype == image.dtype
 
 
-@pytest.mark.parametrize("mode", ["erase", "color_splash", "remove_background"])
+@pytest.mark.parametrize(
+    "mode", ["erase", "color_splash", "remove_background", "fall_color"]
+)
 def test_entire_code(default_config_erase_humans, mode):
     default_config_erase_humans["mode"] = mode
 
