@@ -5,7 +5,13 @@ from magic_eraser.model_initialization.initialize import ModelInitializer
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.inpainting.base import InpaintingModel
 from magic_eraser.ocr.base import OCRModel
-from magic_eraser.image import erase, color_splash, remove_background, remove_text
+from magic_eraser.image import (
+    erase,
+    color_splash,
+    remove_background,
+    remove_text,
+    fall_color,
+)
 
 
 class Pipeline:
@@ -53,6 +59,9 @@ class Pipeline:
 
         elif self.global_config["mode"] == "remove_text":
             output_image_tensor = remove_text(image_tensor, self.ocr_model)
+
+        elif self.global_config["mode"] == "fall_color":
+            output_image_tensor = fall_color(image_tensor, self.segmentation_model)
 
         self.image_processed_successfully = True
         return output_image_tensor

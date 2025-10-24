@@ -3,7 +3,11 @@ import scipy
 
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
-from magic_eraser.utils.image import dilate_boolean_tensors, rgb_to_grayscale
+from magic_eraser.utils.image import (
+    dilate_boolean_tensors,
+    rgb_to_grayscale,
+    change_mask_color,
+)
 from magic_eraser.segmentation.utils.helper import (
     get_segmentation_masks,
     filter_mask,
@@ -253,6 +257,56 @@ def remove_text(image_tensor: torch.Tensor, ocr_model: OCRModel) -> torch.Tensor
     return image_tensor
 
 
+def fall_color(
+    image_tensor: torch.Tensor, segmentation_model: SegmentationModel
+) -> torch.Tensor:
+    """
+    Applies a fall color effect to tree regions in an input image tensor.
+
+    This function performs the following steps:
+    1. Performs segmentation on the input image using the provided segmentation model.
+    2. Post-processes the segmentation output to obtain masks for tree regions.
+    3. Applies a specific fall color (4, 133, 233) to the identified tree regions.
+
+    Args:
+        image_tensor (torch.Tensor): The input image tensor to process.
+        segmentation_model (SegmentationModel): An instance of a SegmentationModel subclass.
+
+    Returns:
+        torch.Tensor: The processed image tensor with fall color applied to tree regions.
+
+    Raises:
+        AssertionError: If the segmentation model is None.
+
+    Notes:
+        - The function uses the provided segmentation model to identify tree regions in the image.
+        - Only tree regions are affected by the fall color application.
+        - The fall color (4, 133, 233) is applied uniformly to all identified tree regions.
+        - If no tree regions are detected, the original image is returned unchanged.
+    """
+    segmentation_output = perform_segmentation(image_tensor, segmentation_model)
+
+    dilated_segmented_mask = post_process_mask(
+        image_tensor, segmentation_output, target_labels=["tree"], dilate_tensors=False
+    )
+
+    fall_color = torch.tensor(
+        [[4, 133, 233]],
+        dtype=torch.float32,
+    )
+    fall_color_tensor = fall_color.view(3, 1, 1).expand(image_tensor.shape)
+
+    if dilated_segmented_mask.any():
+        output_tensor = change_mask_color(
+            og_image=image_tensor,
+            mask=dilated_segmented_mask,
+            change_color_to=fall_color_tensor,
+        )
+        return output_tensor
+    else:
+        return image_tensor
+
+
 def post_process_mask(
     image_tensor: torch.Tensor,
     segmentation_output: list[SegmentationOutput],
@@ -261,8 +315,8 @@ def post_process_mask(
 ) -> torch.Tensor:
     """
     Post-processes the segmentation output to obtain masks for the target object regions only.
-
     This function filters out the target object regions from the segmentation output and dilates the resulting masks.
+    The output tensor is of type boolean with shape as (C, H, W).
 
     Args:
         image_tensor (torch.Tensor): Original image tensor.
