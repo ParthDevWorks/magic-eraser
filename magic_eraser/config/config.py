@@ -19,5 +19,7 @@ class Config(BaseModel):
 
     model_config = ConfigDict(strict=True, extra="forbid")
 
-    mode: Literal["erase", "color_splash", "remove_background", "remove_text"] = "erase"
+    mode: Literal[
+        "erase", "color_splash", "remove_background", "remove_text", "fall_color"
+    ] = "erase"
     target: List = ["person"]
