@@ -10,7 +10,9 @@ def get_segmentation_masks(
     segmentation_output: List[SegmentationOutput],
     confidence_threshold: float = 0.85,
 ) -> torch.Tensor:
-    """Applies segmentation masks to an original image based on confidence scores.
+    """
+    Applies segmentation masks to an original image based on confidence scores.
+    The output tensor is of type boolean with shape as (C, H, W).
 
     Args:
         og_image (torch.Tensor): The original image tensor where segmentation masks will be applied.
