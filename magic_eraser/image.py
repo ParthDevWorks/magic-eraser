@@ -1,12 +1,12 @@
 import torch
 import scipy
+import torchvision.transforms.functional as TVF
 
 from magic_eraser.segmentation.base import SegmentationModel
 from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
 from magic_eraser.utils.image import (
     dilate_boolean_tensors,
     rgb_to_grayscale,
-    change_mask_color,
 )
 from magic_eraser.segmentation.utils.helper import (
     get_segmentation_masks,
@@ -287,24 +287,24 @@ def fall_color(
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
     dilated_segmented_mask = post_process_mask(
-        image_tensor, segmentation_output, target_labels=["tree"], dilate_tensors=False
+        image_tensor,
+        segmentation_output,
+        target_labels=["tree"],
+        dilate_tensors=False,
     )
 
-    fall_color = torch.tensor(
-        [[4, 133, 233]],
-        dtype=torch.float32,
-    )
-    fall_color_tensor = fall_color.view(3, 1, 1).expand(image_tensor.shape)
+    if dilated_segmented_mask.dtype != "float32":
+        dilated_segmented_mask = dilated_segmented_mask.float()
 
-    if dilated_segmented_mask.any():
-        output_tensor = change_mask_color(
-            og_image=image_tensor,
-            mask=dilated_segmented_mask,
-            change_color_to=fall_color_tensor,
-        )
-        return output_tensor
-    else:
-        return image_tensor
+    non_masked_colored_regions = (1 - dilated_segmented_mask) * image_tensor
+    masked_colored_regions = dilated_segmented_mask * image_tensor
+
+    img_filtered = TVF.adjust_hue(masked_colored_regions, -0.1)
+    masked_color_enhance_regions = TVF.adjust_saturation(img_filtered, 1.5)
+
+    final_img = non_masked_colored_regions + masked_color_enhance_regions
+
+    return final_img
 
 
 def post_process_mask(
