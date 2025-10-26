@@ -133,34 +133,3 @@ def rgb_to_grayscale(image: torch.Tensor) -> torch.Tensor:
     grayscale = (image * weights.view(-1, 1, 1)).sum(dim=0, keepdim=True)
     grayscale_image = grayscale.repeat(3, 1, 1)
     return grayscale_image
-
-
-def change_mask_color(
-    og_image: torch.Tensor, mask: torch.Tensor, change_color_to: torch.Tensor
-) -> torch.Tensor:
-    """
-    Change the color of a masked region in an image.
-
-    Args:
-        og_image (torch.Tensor): The original image tensor.
-        mask (torch.Tensor): The mask tensor indicating the regions to be changed.
-        change_color_to (torch.Tensor): The new color tensor to apply to the masked regions.
-
-    Returns:
-        torch.Tensor: The modified image tensor with the specified regions colored according to the new color.
-
-    Notes:
-        1. All input tensors must have the same shape.
-
-    """
-
-    if mask.dtype != torch.float32:
-        mask = mask.float()
-
-    inverted_mask = 1 - mask
-
-    new_mask_color = change_color_to * mask
-
-    changed_color_tensor = (og_image.float() * inverted_mask) + new_mask_color
-
-    return changed_color_tensor

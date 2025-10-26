@@ -37,23 +37,27 @@ def get_segmentation_masks(
 
 
 def filter_mask(
-    segmentation_output: List[SegmentationOutput], target_labels: List[str]
+    segmentation_output: List[SegmentationOutput],
+    filter_labels: List[str] | None = None,
 ) -> List[SegmentationOutput]:
     """
-    Filters out target object regions from the segmentation output.
+    Filters out target object regions from the segmentation output if filter_labels is not None
 
     Args:
         segmentation_output (List(SegmentationOutput)): A list of Segmentation output.
-        target_labels (List[str]): List of target object string labels to filter from the segmentation output.
+        filter_labels (List[str] | None): List of target object string labels to filter from the segmentation output.
 
     Returns:
         List (SegmentationOutput): A filtered list of Segmentation output containing mask regions for target object regions only.
     """
 
+    if filter_labels is None:
+        return segmentation_output
+
     filtered_segmentation_output = []
 
     for item in segmentation_output:
-        if item.label in target_labels:
+        if item.label in filter_labels:
             filtered_segmentation_output.append(item)
 
     return filtered_segmentation_output
