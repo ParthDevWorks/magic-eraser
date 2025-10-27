@@ -106,7 +106,7 @@ class MaskRcnn(SegmentationModel):
 
 
 # CLI Testing Purpose
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     from magic_eraser.utils.image import load_image
 
     input_path = "/Users/parthrathod/Documents/Projects/MAGIC_ERASER/magic-eraser/sample_data/segmentation/sample_1.jpg"
