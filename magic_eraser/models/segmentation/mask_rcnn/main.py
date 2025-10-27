@@ -2,11 +2,11 @@ import logging
 import os
 
 import torch
-from magic_eraser.segmentation.base import SegmentationModel
-from magic_eraser.segmentation.utils.mask_rcnn.coco_dataset_classnames import (
+from magic_eraser.models.segmentation.base import SegmentationModel
+from magic_eraser.models.segmentation.utils.mask_rcnn.coco_dataset_classnames import (
     COCO_DATASET_CLASSNAMES,
 )
-from magic_eraser.segmentation.utils.segmentation_output import (
+from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
 from torchvision.models.detection import maskrcnn_resnet50_fpn
@@ -106,7 +106,7 @@ class MaskRcnn(SegmentationModel):
 
 
 # CLI Testing Purpose
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     from magic_eraser.utils.image import load_image
 
     input_path = "/Users/parthrathod/Documents/Projects/MAGIC_ERASER/magic-eraser/sample_data/segmentation/sample_1.jpg"

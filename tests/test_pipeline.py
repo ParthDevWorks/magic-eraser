@@ -3,35 +3,9 @@ import pytest
 import tempfile
 
 from magic_eraser.core import eraser
-from magic_eraser.utils.image import load_image
-from magic_eraser.config.config import Config
-from magic_eraser.model_initialization.initialize import ModelInitializer
-from magic_eraser.pipeline import Pipeline
+from magic_eraser.models import initialize_all_models
 
 data_root = str(os.path.join(os.path.dirname(os.path.dirname(__file__)), "sample_data"))
-
-
-@pytest.fixture(scope="module")
-def image():
-    return load_image(os.path.join(data_root, "segmentation", "sample_1.jpg"))
-
-
-@pytest.mark.parametrize(
-    "mode", ["erase", "color_splash", "remove_background", "fall_color"]
-)
-def test_entire_pipeline(default_config_erase_humans, mode, image):
-    default_config_erase_humans["mode"] = mode
-    config = Config(**default_config_erase_humans)
-
-    model_initializer = ModelInitializer(global_config=config)
-    pipeline = Pipeline(model_initializer=model_initializer)
-    pipeline.load_models()
-
-    output = pipeline.analyze_image(image)
-
-    assert output is not None
-    assert output.shape == image.shape
-    assert output.dtype == image.dtype
 
 
 @pytest.mark.parametrize(
@@ -39,6 +13,7 @@ def test_entire_pipeline(default_config_erase_humans, mode, image):
 )
 def test_entire_code(default_config_erase_humans, mode):
     default_config_erase_humans["mode"] = mode
+    initialize_all_models()
 
     with tempfile.TemporaryDirectory() as output_temp_dir:
 

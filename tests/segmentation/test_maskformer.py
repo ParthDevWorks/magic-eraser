@@ -4,9 +4,14 @@ import pytest
 
 import magic_eraser
 from magic_eraser.utils.image import load_image
-from magic_eraser.segmentation.factory import get_segmentation_model
-from magic_eraser.segmentation.models.facebook_maskformer.main import FacebookMaskFormer
-from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
+
+from magic_eraser.models import get_model
+from magic_eraser.models.segmentation.facebook_maskformer.main import (
+    FacebookMaskFormer,
+)
+from magic_eraser.models.segmentation.utils.segmentation_output import (
+    SegmentationOutput,
+)
 
 data_root = os.path.join(os.path.dirname(magic_eraser.__file__), "../sample_data")
 
@@ -18,7 +23,7 @@ def image():
 
 def test_incorrect_factory():
     with pytest.raises(ValueError):
-        _ = get_segmentation_model(id="random")
+        _ = get_model(model_id="random", disable_cache=True)
 
 
 def test_check_initialization(maskformer_model_initialized):
@@ -26,7 +31,7 @@ def test_check_initialization(maskformer_model_initialized):
 
 
 def test_shutdown(image):
-    model = get_segmentation_model(id="maskformer")
+    model = get_model(model_id="maskformer", disable_cache=True)
     model.shutdown()
 
     with pytest.raises(ValueError):

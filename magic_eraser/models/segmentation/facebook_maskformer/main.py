@@ -12,9 +12,11 @@ from transformers.models.maskformer.modeling_maskformer import (
     MaskFormerForInstanceSegmentationOutput,
 )
 
-from magic_eraser.segmentation.base import SegmentationModel
-from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
-from magic_eraser.segmentation.utils.facebook_maskformer.labels import LABELS
+from magic_eraser.models.segmentation.base import SegmentationModel
+from magic_eraser.models.segmentation.utils.segmentation_output import (
+    SegmentationOutput,
+)
+from magic_eraser.models.segmentation.utils.facebook_maskformer.labels import LABELS
 
 
 class FacebookMaskFormer(SegmentationModel):
@@ -137,7 +139,7 @@ class FacebookMaskFormer(SegmentationModel):
 
 
 # CLI Testing Purpose
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     from magic_eraser.utils.image import load_image
 
     input_path = "/Users/parthrathod/Documents/Projects/MAGIC_ERASER/magic-eraser/sample_data/segmentation/sample_1.jpg"

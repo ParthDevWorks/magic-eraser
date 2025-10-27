@@ -1,11 +1,8 @@
 from abc import ABC, abstractmethod
 
-import torch
-from magic_eraser.ocr.utils.ocr_output import OCRResult
 
-
-class OCRModel(ABC):
-    """Abstract Class for All OCR model."""
+class BaseModel(ABC):
+    """Abstract Class for All Magic Eraser models."""
 
     @abstractmethod
     def get_model_id(self) -> str:
@@ -16,5 +13,5 @@ class OCRModel(ABC):
         pass
 
     @abstractmethod
-    def inference(self, image_tensor: torch.Tensor) -> list[OCRResult]:
+    def inference(self, *args, **kwargs):
         pass

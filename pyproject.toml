@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "magic-eraser"
-version = "0.1.0.dev16"
+version = "0.2.0.dev0"
 description = ""
 authors = ["Parth Rathod <rathodparth02@gmail.com>"]
 readme = "README.md"
@@ -43,14 +43,17 @@ omit = [
         "magic_eraser/utils/plot.py",
 
         # Base Class for all inpainting models, not used directly
-        "magic_eraser/inpainting/base.py",
+        "magic_eraser/models/inpainting/base.py",
 
         # Base Class for all segmentation models, not used directly
-        "magic_eraser/segmentation/base.py",
+        "magic_eraser/models/segmentation/base.py",
+
+        # Base Class for all OCR models, not used directly
+        "magic_eraser/models/ocr/base.py",    
 
         # We are not testing runwayml model since gdown library is not able to download model weights from google drive. 
         # Hence we are skipping and not reporting coverage for it.
-        "magic_eraser/inpainting/models/runwayml/*"
+        "magic_eraser/models/inpainting/runwayml/*"
 ]
 
 skip_empty = true

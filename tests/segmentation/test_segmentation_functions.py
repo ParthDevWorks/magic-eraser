@@ -1,5 +1,5 @@
 import torch
-from magic_eraser.segmentation.utils.helper import get_segmentation_masks
+from magic_eraser.models.segmentation.utils.helper import get_segmentation_masks
 
 
 def test_get_segmentation_masks(maskrcnn_model_initialized):

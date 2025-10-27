@@ -6,8 +6,8 @@ import numpy as np
 from doctr.models import ocr_predictor, fast_base, crnn_vgg16_bn
 from doctr.io import Document, Word, Page
 
-from magic_eraser.ocr.base import OCRModel
-from magic_eraser.ocr.utils.ocr_output import OCRResult, BoundingBox
+from magic_eraser.models.ocr.base import OCRModel
+from magic_eraser.models.ocr.utils.ocr_output import OCRResult, BoundingBox
 
 
 class Doctr(OCRModel):

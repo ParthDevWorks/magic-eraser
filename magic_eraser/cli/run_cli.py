@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 
+from magic_eraser.models import initialize_all_models
 from magic_eraser.core import eraser
 
 logging.basicConfig(level=logging.INFO)
@@ -42,6 +43,8 @@ def main():
 
     input_folder = args.input
     output_folder_dir = args.output
+
+    initialize_all_models()
 
     _, err_cnt = eraser(
         config_dict=config_dict,

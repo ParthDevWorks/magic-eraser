@@ -1,11 +1,10 @@
-from abc import ABC, abstractmethod
-from typing import List
+from abc import abstractmethod
 
-import numpy as np
 import torch
+from magic_eraser.models.base import BaseModel
 
 
-class InpaintingModel(ABC):
+class InpaintingModel(BaseModel):
     """Abstract Class for All Inpainting model."""
 
     @abstractmethod
