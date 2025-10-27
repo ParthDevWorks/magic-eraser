@@ -7,7 +7,7 @@ import onnxruntime as ort
 import torch
 import torchvision.transforms as T
 from PIL import Image
-from magic_eraser.inpainting.base import InpaintingModel
+from magic_eraser.models.inpainting.base import InpaintingModel
 from magic_eraser.utils.image import resize_image
 
 

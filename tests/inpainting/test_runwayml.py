@@ -4,16 +4,16 @@ import pytest
 import torch
 
 import magic_eraser
-from magic_eraser.inpainting.factory import get_inpainitng_model
-from magic_eraser.inpainting.models.runwayml.main import RunWayML
+from magic_eraser.models import get_model
+from magic_eraser.models.inpainting.runwayml.main import RunWayML
 from magic_eraser.utils.image import load_image
 
 data_root = os.path.join(os.path.dirname(magic_eraser.__file__), "../sample_data")
 
 
 @pytest.fixture(scope="module")
-def model_initialized():
-    return get_inpainitng_model(id="runwayml")
+def model_initialized() -> RunWayML:
+    return get_model(model_id="runwayml", disable_cache=True)
 
 
 @pytest.fixture(scope="module")
@@ -32,7 +32,7 @@ def test_correct_factory_initialized(model_initialized):
 
 def test_incorrect_factory():
     with pytest.raises(ValueError):
-        _ = get_inpainitng_model(id="random")
+        _ = get_model(model_id="runwayml", disable_cache=True)
 
 
 def test_check_initialization(model_initialized):
@@ -40,7 +40,7 @@ def test_check_initialization(model_initialized):
 
 
 def test_shutdown(image, mask):
-    model = get_inpainitng_model(id="runwayml")
+    model = get_model(model_id="runwayml", disable_cache=True)
     model.shutdown()
 
     with pytest.raises(ValueError):

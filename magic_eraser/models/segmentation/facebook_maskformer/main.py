@@ -12,9 +12,11 @@ from transformers.models.maskformer.modeling_maskformer import (
     MaskFormerForInstanceSegmentationOutput,
 )
 
-from magic_eraser.segmentation.base import SegmentationModel
-from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
-from magic_eraser.segmentation.utils.facebook_maskformer.labels import LABELS
+from magic_eraser.models.segmentation.base import SegmentationModel
+from magic_eraser.models.segmentation.utils.segmentation_output import (
+    SegmentationOutput,
+)
+from magic_eraser.models.segmentation.utils.facebook_maskformer.labels import LABELS
 
 
 class FacebookMaskFormer(SegmentationModel):

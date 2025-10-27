@@ -5,7 +5,6 @@ import json
 import time
 
 from magic_eraser.config.config import Config
-from magic_eraser.model_initialization.initialize import ModelInitializer
 from magic_eraser.pipeline import Pipeline
 from magic_eraser.utils.image import load_image, save_image
 from magic_eraser.utils.book_keeping import ErrorLogs, SuccessLogs
@@ -36,7 +35,7 @@ def core_process(
             return SuccessLogs(
                 input_path=input_path,
                 output_path=output_image_path,
-                mode=pipeline.global_config["mode"],
+                mode=pipeline.config["mode"],
                 message=SUCCESS_LOG_MESSAGE,
                 inference_time_seconds=end_time_inference,
             )
@@ -44,7 +43,7 @@ def core_process(
     except Exception as e:
         return ErrorLogs(
             input_path=input_path,
-            mode=pipeline.global_config["mode"],
+            mode=pipeline.config["mode"],
             message=str(e),
             traceback=traceback.format_exc(),
         )
@@ -132,10 +131,7 @@ def process(
     err_cnt = 0
     succ_cnt = 0
 
-    model_initializer = ModelInitializer(global_config=config)
-
-    pipeline = Pipeline(model_initializer=model_initializer)
-    pipeline.load_models()
+    pipeline = Pipeline(config=config)
 
     try:
         for path in input_paths:

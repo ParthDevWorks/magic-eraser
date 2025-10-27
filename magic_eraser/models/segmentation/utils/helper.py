@@ -1,6 +1,6 @@
 from typing import List
 import torch
-from magic_eraser.segmentation.utils.segmentation_output import (
+from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
 

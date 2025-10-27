@@ -6,7 +6,7 @@ import torch
 from PIL import Image
 import torchvision.transforms as T
 from magic_eraser.utils.image import resize_image
-from magic_eraser.inpainting.base import InpaintingModel
+from magic_eraser.models.inpainting.base import InpaintingModel
 from diffusers import AutoPipelineForInpainting
 
 

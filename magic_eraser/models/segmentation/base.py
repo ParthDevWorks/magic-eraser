@@ -1,10 +1,13 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 import torch
-from magic_eraser.segmentation.utils.segmentation_output import SegmentationOutput
+from magic_eraser.models.segmentation.utils.segmentation_output import (
+    SegmentationOutput,
+)
+from magic_eraser.models.base import BaseModel
 
 
-class SegmentationModel(ABC):
+class SegmentationModel(BaseModel):
     """Abstract Class for All Segmentation model."""
 
     @abstractmethod
