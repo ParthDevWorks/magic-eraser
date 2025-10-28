@@ -37,6 +37,12 @@
 
             <h2>API Documentation</h2>
                 <ul class="memberlist">
+            <li>
+                    <a class="function" href="#get_model">get_model</a>
+            </li>
+            <li>
+                    <a class="function" href="#initialize_all_models">initialize_all_models</a>
+            </li>
     </ul>
 
 
@@ -117,22 +123,135 @@
 </span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>
 </span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>
 </span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">disable_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>    <span class="k">if</span> <span class="n">disable_cache</span><span class="p">:</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>        <span class="k">return</span> <span class="n">_model_factory</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="sd">    Retrieve or create a model instance based on the given ID.</span>
 </span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>        <span class="k">return</span> <span class="n">_model_cache</span><span class="p">[</span><span class="n">model_id</span><span class="p">]</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>        <span class="n">initialize_all_models</span><span class="p">()</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="k">def</span> <span class="nf">initialize_all_models</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>    <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">VALID_MODEL_IDS</span><span class="p">:</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="n">_model_cache</span><span class="p">[</span><span class="n">model_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model_factory</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="sd">    Args:</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a><span class="sd">        model_id (str): The unique identifier for the model type.</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="sd">        disable_cache (bool): If True, bypasses caching and always creates a new model instance.</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">    Returns:</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="sd">        BaseModel: An instance of the requested model class.</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">    Raises:</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a><span class="sd">        ValueError: If an unsupported model ID is provided.</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>    <span class="k">if</span> <span class="n">disable_cache</span><span class="p">:</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="k">return</span> <span class="n">_model_factory</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>        <span class="k">return</span> <span class="n">_model_cache</span><span class="p">[</span><span class="n">model_id</span><span class="p">]</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>        <span class="n">initialize_all_models</span><span class="p">()</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>
+</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a><span class="k">def</span> <span class="nf">initialize_all_models</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a><span class="sd">    Initialize all supported models in the cache.</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>
+</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a><span class="sd">    This function iterates through the list of valid model IDs and creates instances of each</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a><span class="sd">    supported model type, storing them in the global cache for future use.</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>
+</span><span id="L-91"><a href="#L-91"><span class="linenos">91</span></a>    <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">VALID_MODEL_IDS</span><span class="p">:</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos">92</span></a>        <span class="n">_model_cache</span><span class="p">[</span><span class="n">model_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model_factory</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
 </span></pre></div>
 
 
             </section>
+                <section id="get_model">
+                            <input id="get_model-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">get_model</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span>,</span><span class="param">	<span class="n">disable_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="n"><a href="models/base.html#BaseModel">magic_eraser.models.base.BaseModel</a></span>:</span></span>
+
+                <label class="view-source-button" for="get_model-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#get_model"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="get_model-60"><a href="#get_model-60"><span class="linenos">60</span></a><span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">disable_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
+</span><span id="get_model-61"><a href="#get_model-61"><span class="linenos">61</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="get_model-62"><a href="#get_model-62"><span class="linenos">62</span></a><span class="sd">    Retrieve or create a model instance based on the given ID.</span>
+</span><span id="get_model-63"><a href="#get_model-63"><span class="linenos">63</span></a>
+</span><span id="get_model-64"><a href="#get_model-64"><span class="linenos">64</span></a><span class="sd">    Args:</span>
+</span><span id="get_model-65"><a href="#get_model-65"><span class="linenos">65</span></a><span class="sd">        model_id (str): The unique identifier for the model type.</span>
+</span><span id="get_model-66"><a href="#get_model-66"><span class="linenos">66</span></a><span class="sd">        disable_cache (bool): If True, bypasses caching and always creates a new model instance.</span>
+</span><span id="get_model-67"><a href="#get_model-67"><span class="linenos">67</span></a>
+</span><span id="get_model-68"><a href="#get_model-68"><span class="linenos">68</span></a><span class="sd">    Returns:</span>
+</span><span id="get_model-69"><a href="#get_model-69"><span class="linenos">69</span></a><span class="sd">        BaseModel: An instance of the requested model class.</span>
+</span><span id="get_model-70"><a href="#get_model-70"><span class="linenos">70</span></a>
+</span><span id="get_model-71"><a href="#get_model-71"><span class="linenos">71</span></a><span class="sd">    Raises:</span>
+</span><span id="get_model-72"><a href="#get_model-72"><span class="linenos">72</span></a><span class="sd">        ValueError: If an unsupported model ID is provided.</span>
+</span><span id="get_model-73"><a href="#get_model-73"><span class="linenos">73</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="get_model-74"><a href="#get_model-74"><span class="linenos">74</span></a>
+</span><span id="get_model-75"><a href="#get_model-75"><span class="linenos">75</span></a>    <span class="k">if</span> <span class="n">disable_cache</span><span class="p">:</span>
+</span><span id="get_model-76"><a href="#get_model-76"><span class="linenos">76</span></a>        <span class="k">return</span> <span class="n">_model_factory</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+</span><span id="get_model-77"><a href="#get_model-77"><span class="linenos">77</span></a>
+</span><span id="get_model-78"><a href="#get_model-78"><span class="linenos">78</span></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="get_model-79"><a href="#get_model-79"><span class="linenos">79</span></a>        <span class="k">return</span> <span class="n">_model_cache</span><span class="p">[</span><span class="n">model_id</span><span class="p">]</span>
+</span><span id="get_model-80"><a href="#get_model-80"><span class="linenos">80</span></a>    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span id="get_model-81"><a href="#get_model-81"><span class="linenos">81</span></a>        <span class="n">initialize_all_models</span><span class="p">()</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Retrieve or create a model instance based on the given ID.</p>
+
+<h6 id="arguments">Arguments:</h6>
+
+<ul>
+<li><strong>model_id (str):</strong>  The unique identifier for the model type.</li>
+<li><strong>disable_cache (bool):</strong>  If True, bypasses caching and always creates a new model instance.</li>
+</ul>
+
+<h6 id="returns">Returns:</h6>
+
+<blockquote>
+  <p>BaseModel: An instance of the requested model class.</p>
+</blockquote>
+
+<h6 id="raises">Raises:</h6>
+
+<ul>
+<li><strong>ValueError:</strong>  If an unsupported model ID is provided.</li>
+</ul>
+</div>
+
+
+                </section>
+                <section id="initialize_all_models">
+                            <input id="initialize_all_models-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">initialize_all_models</span><span class="signature pdoc-code condensed">(<span class="return-annotation">) -> <span class="kc">None</span>:</span></span>
+
+                <label class="view-source-button" for="initialize_all_models-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#initialize_all_models"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="initialize_all_models-84"><a href="#initialize_all_models-84"><span class="linenos">84</span></a><span class="k">def</span> <span class="nf">initialize_all_models</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="initialize_all_models-85"><a href="#initialize_all_models-85"><span class="linenos">85</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="initialize_all_models-86"><a href="#initialize_all_models-86"><span class="linenos">86</span></a><span class="sd">    Initialize all supported models in the cache.</span>
+</span><span id="initialize_all_models-87"><a href="#initialize_all_models-87"><span class="linenos">87</span></a>
+</span><span id="initialize_all_models-88"><a href="#initialize_all_models-88"><span class="linenos">88</span></a><span class="sd">    This function iterates through the list of valid model IDs and creates instances of each</span>
+</span><span id="initialize_all_models-89"><a href="#initialize_all_models-89"><span class="linenos">89</span></a><span class="sd">    supported model type, storing them in the global cache for future use.</span>
+</span><span id="initialize_all_models-90"><a href="#initialize_all_models-90"><span class="linenos">90</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="initialize_all_models-91"><a href="#initialize_all_models-91"><span class="linenos">91</span></a>
+</span><span id="initialize_all_models-92"><a href="#initialize_all_models-92"><span class="linenos">92</span></a>    <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">VALID_MODEL_IDS</span><span class="p">:</span>
+</span><span id="initialize_all_models-93"><a href="#initialize_all_models-93"><span class="linenos">93</span></a>        <span class="n">_model_cache</span><span class="p">[</span><span class="n">model_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model_factory</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Initialize all supported models in the cache.</p>
+
+<p>This function iterates through the list of valid model IDs and creates instances of each
+supported model type, storing them in the global cache for future use.</p>
+</div>
+
+
+                </section>
     </main>
 <script>
     function escapeHTML(html) {
