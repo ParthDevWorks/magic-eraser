@@ -57,6 +57,20 @@ def _model_factory(id) -> BaseModel:
 
 
 def get_model(model_id: str, disable_cache: bool = False) -> BaseModel:
+    """
+    Retrieve or create a model instance based on the given ID.
+
+    Args:
+        model_id (str): The unique identifier for the model type.
+        disable_cache (bool): If True, bypasses caching and always creates a new model instance.
+
+    Returns:
+        BaseModel: An instance of the requested model class.
+
+    Raises:
+        ValueError: If an unsupported model ID is provided.
+    """
+
     if disable_cache:
         return _model_factory(model_id)
 
@@ -67,5 +81,12 @@ def get_model(model_id: str, disable_cache: bool = False) -> BaseModel:
 
 
 def initialize_all_models() -> None:
+    """
+    Initialize all supported models in the cache.
+
+    This function iterates through the list of valid model IDs and creates instances of each
+    supported model type, storing them in the global cache for future use.
+    """
+
     for model_id in VALID_MODEL_IDS:
         _model_cache[model_id] = _model_factory(model_id)

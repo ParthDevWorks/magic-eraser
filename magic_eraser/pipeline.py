@@ -24,7 +24,7 @@ class Pipeline:
     A class responsible for orchestrating the image processing pipeline.
 
     Attributes:
-        model_initializer (ModelInitializer): An instance of ModelInitializer for loading models and their config.
+        config (Config): An instance of Config for loading configuration.
     """
 
     def __init__(self, config: Config) -> None:

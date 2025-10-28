@@ -113,7 +113,7 @@ def process(
     output_folder_dir: str,
 ) -> Tuple[int, int]:
     """
-    Process a list of input images using the specified configuration and number of workers.
+    Process a list of input images using the specified configuration.
 
     Args:
         config (Config): Configuration object containing settings for the image processing.

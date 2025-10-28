@@ -39,11 +39,9 @@ def erase(
         torch.Tensor: The processed image tensor with target object removed from the original input.
 
     Raises:
-        AssertionError: If either the segmentation or inpainting model is not properly configured in the ModelInitializer object.
+        AssertionError: If either the segmentation or inpainting model is None.
 
     Notes:
-        - This function assumes that the ModelInitializer object has been properly initialized with valid model paths and parameters.
-        - The function uses the models specified in the ModelInitializer object for both segmentation and inpainting tasks.
         - The output tensor will have the same shape as the input tensor, but with the target object regions replaced by inpainted content.
 
     """
@@ -82,7 +80,7 @@ def color_splash(
         torch.Tensor: The processed image tensor with a color splash effect applied to target object regions.
 
     Raises:
-        AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
+        AssertionError: If the segmentation model is None.
     """
 
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
@@ -124,7 +122,7 @@ def remove_background(
         torch.Tensor: The processed image tensor with target kept and the background removed.
 
     Raises:
-        AssertionError: If the segmentation model is not properly configured in the ModelInitializer object.
+        AssertionError: If the segmentation model is None.
 
     """
 
@@ -159,7 +157,7 @@ def remove_text(image_tensor: torch.Tensor, ocr_model: OCRModel) -> torch.Tensor
         torch.Tensor: The processed image tensor with text removed.
 
     Raises:
-        AssertionError: If the ocr model is not properly configured in the ModelInitializer object.
+        AssertionError: If the ocr model is None.
 
     """
     ocr_output: list[OCRResult] = perform_ocr(image_tensor, ocr_model)
@@ -194,7 +192,7 @@ def fall_color(
     This function performs the following steps:
     1. Performs segmentation on the input image using the provided segmentation model.
     2. Post-processes the segmentation output to obtain masks for tree regions.
-    3. Applies a specific fall color (4, 133, 233) to the identified tree regions.
+    3. Applies a specific hue and saturation to the identified tree regions.
 
     Args:
         image_tensor (torch.Tensor): The input image tensor to process.
@@ -205,12 +203,6 @@ def fall_color(
 
     Raises:
         AssertionError: If the segmentation model is None.
-
-    Notes:
-        - The function uses the provided segmentation model to identify tree regions in the image.
-        - Only tree regions are affected by the fall color application.
-        - The fall color (4, 133, 233) is applied uniformly to all identified tree regions.
-        - If no tree regions are detected, the original image is returned unchanged.
     """
     segmentation_output = perform_segmentation(image_tensor, segmentation_model)
 
