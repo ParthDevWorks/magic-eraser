@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import torch
-from magic_eraser.segmentation.utils.segmentation_output import (
+from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
 from torchvision.utils import draw_bounding_boxes
