@@ -1,5 +1,5 @@
-from typing import List
 import torch
+
 from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
@@ -7,7 +7,7 @@ from magic_eraser.models.segmentation.utils.segmentation_output import (
 
 def get_segmentation_masks(
     og_image: torch.Tensor,
-    segmentation_output: List[SegmentationOutput],
+    segmentation_output: list[SegmentationOutput],
     confidence_threshold: float = 0.85,
 ) -> torch.Tensor:
     """
@@ -37,9 +37,9 @@ def get_segmentation_masks(
 
 
 def filter_mask(
-    segmentation_output: List[SegmentationOutput],
-    filter_labels: List[str] | None = None,
-) -> List[SegmentationOutput]:
+    segmentation_output: list[SegmentationOutput],
+    filter_labels: list[str] | None = None,
+) -> list[SegmentationOutput]:
     """
     Filters out target object regions from the segmentation output if filter_labels is not None
 

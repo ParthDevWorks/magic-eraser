@@ -1,19 +1,18 @@
-import torch
 import scipy
+import torch
 import torchvision.transforms.functional as TVF
 
-from magic_eraser.models.segmentation.base import SegmentationModel
-from magic_eraser.utils.image import rgb_to_grayscale
-
+from magic_eraser.helper import (
+    perform_inpainting,
+    perform_ocr,
+    perform_segmentation,
+    post_process_mask,
+)
 from magic_eraser.models.inpainting.base import InpaintingModel
 from magic_eraser.models.ocr.base import OCRModel
 from magic_eraser.models.ocr.utils.ocr_output import OCRResult
-from magic_eraser.helper import (
-    perform_segmentation,
-    perform_inpainting,
-    perform_ocr,
-    post_process_mask,
-)
+from magic_eraser.models.segmentation.base import SegmentationModel
+from magic_eraser.utils.image import rgb_to_grayscale
 
 
 def erase(

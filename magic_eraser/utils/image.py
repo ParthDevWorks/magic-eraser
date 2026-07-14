@@ -2,11 +2,11 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from scipy.ndimage import binary_dilation
-from torchvision.transforms import ToPILImage, transforms
+import torchvision.transforms as T
 from PIL import Image
 from pillow_heif import register_heif_opener
-import torchvision.transforms as T
+from scipy.ndimage import binary_dilation
+from torchvision.transforms import ToPILImage, transforms
 
 
 def load_image(path: Path) -> torch.Tensor:

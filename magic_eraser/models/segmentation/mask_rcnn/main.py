@@ -2,6 +2,8 @@ import logging
 import os
 
 import torch
+from torchvision.models.detection import maskrcnn_resnet50_fpn
+
 from magic_eraser.models.segmentation.base import SegmentationModel
 from magic_eraser.models.segmentation.utils.mask_rcnn.coco_dataset_classnames import (
     COCO_DATASET_CLASSNAMES,
@@ -9,7 +11,6 @@ from magic_eraser.models.segmentation.utils.mask_rcnn.coco_dataset_classnames im
 from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
-from torchvision.models.detection import maskrcnn_resnet50_fpn
 
 
 class MaskRcnn(SegmentationModel):
@@ -89,6 +90,7 @@ class MaskRcnn(SegmentationModel):
             prediction["labels"].cpu().numpy().tolist(),
             prediction["scores"],
             prediction["masks"],
+            strict=True,
         ):
             output.append(
                 SegmentationOutput(

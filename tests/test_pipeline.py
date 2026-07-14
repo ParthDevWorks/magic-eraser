@@ -1,6 +1,7 @@
 import os
-import pytest
 import tempfile
+
+import pytest
 
 from magic_eraser.core import eraser
 from magic_eraser.models import initialize_all_models
@@ -16,7 +17,6 @@ def test_entire_code(default_config_erase_humans, mode):
     initialize_all_models()
 
     with tempfile.TemporaryDirectory() as output_temp_dir:
-
         success_cnt, error_cnt = eraser(
             config_dict=default_config_erase_humans,
             input_path=os.path.join(data_root, "segmentation", "sample_1.jpg"),

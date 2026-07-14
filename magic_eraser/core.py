@@ -1,13 +1,12 @@
-import os
-from typing import List, Tuple
-import traceback
 import json
+import os
 import time
+import traceback
 
 from magic_eraser.config.config import Config
 from magic_eraser.pipeline import Pipeline
-from magic_eraser.utils.image import load_image, save_image
 from magic_eraser.utils.book_keeping import ErrorLogs, SuccessLogs
+from magic_eraser.utils.image import load_image, save_image
 
 SUPPORTED_FILE_EXTENSIONS = (".jpg", ".png", ".heic", ".jpeg")
 SUCCESS_LOG_MESSAGE = "Image processed successfully"
@@ -53,7 +52,7 @@ def eraser(
     config_dict: dict,
     input_path: str,
     output_folder_dir: str,
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """
     Perform image erasing operations on a folder of images.
 
@@ -109,9 +108,9 @@ def eraser(
 
 def process(
     config: Config,
-    input_paths: List[str],
+    input_paths: list[str],
     output_folder_dir: str,
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """
     Process a list of input images using the specified configuration.
 

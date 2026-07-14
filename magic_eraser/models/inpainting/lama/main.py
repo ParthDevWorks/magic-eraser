@@ -1,12 +1,12 @@
 import logging
 import os
-from typing import List, Tuple
 
 import numpy as np
 import onnxruntime as ort
 import torch
 import torchvision.transforms as T
 from PIL import Image
+
 from magic_eraser.models.inpainting.base import InpaintingModel
 from magic_eraser.utils.image import resize_image
 
@@ -48,7 +48,7 @@ class LamaOnnx(InpaintingModel):
 
     def _pre_process(
         self, image: torch.Tensor, mask: torch.Tensor
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         # Resize the tensors to (512, 512)
         resized_image_tensor = resize_image(image=image, target_size=(512, 512))
         resized_mask_tensor = resize_image(image=mask, target_size=(512, 512))
@@ -74,7 +74,7 @@ class LamaOnnx(InpaintingModel):
 
         return resized_image
 
-    def inference(self, image: torch.Tensor, mask: torch.Tensor) -> List[torch.Tensor]:
+    def inference(self, image: torch.Tensor, mask: torch.Tensor) -> list[torch.Tensor]:
         """
         Args:
             image torch.Tensor: The input image tensor.

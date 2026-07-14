@@ -1,22 +1,21 @@
-import os
 import logging
+import os
 
 import torch
-from transformers.image_processing_utils import BatchFeature
 from transformers import (
-    MaskFormerImageProcessor,
     MaskFormerForInstanceSegmentation,
+    MaskFormerImageProcessor,
 )
-
+from transformers.image_processing_utils import BatchFeature
 from transformers.models.maskformer.modeling_maskformer import (
     MaskFormerForInstanceSegmentationOutput,
 )
 
 from magic_eraser.models.segmentation.base import SegmentationModel
+from magic_eraser.models.segmentation.utils.facebook_maskformer.labels import LABELS
 from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
-from magic_eraser.models.segmentation.utils.facebook_maskformer.labels import LABELS
 
 
 class FacebookMaskFormer(SegmentationModel):
@@ -95,8 +94,9 @@ class FacebookMaskFormer(SegmentationModel):
 
         segmentation_output = []
 
-        for segment_info, mask in zip(result["segments_info"], result["segmentation"]):
-
+        for segment_info, mask in zip(
+            result["segments_info"], result["segmentation"], strict=True
+        ):
             segmentation_output.append(
                 SegmentationOutput(
                     label=LABELS[segment_info["label_id"]],

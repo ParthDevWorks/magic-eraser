@@ -1,13 +1,13 @@
-import os
 import logging
+import os
 
-import torch
 import numpy as np
-from doctr.models import ocr_predictor, fast_base, crnn_vgg16_bn
-from doctr.io import Document, Word, Page
+import torch
+from doctr.io import Document, Page, Word
+from doctr.models import crnn_vgg16_bn, fast_base, ocr_predictor
 
 from magic_eraser.models.ocr.base import OCRModel
-from magic_eraser.models.ocr.utils.ocr_output import OCRResult, BoundingBox
+from magic_eraser.models.ocr.utils.ocr_output import BoundingBox, OCRResult
 
 
 class Doctr(OCRModel):

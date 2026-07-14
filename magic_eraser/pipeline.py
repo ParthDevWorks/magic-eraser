@@ -1,22 +1,22 @@
 import torch
 
 from magic_eraser.config.config import (
-    Config,
-    DEFAULT_SEGMENTATION_MODEL_ID,
     DEFAULT_INPAINTING_MODEL_ID,
     DEFAULT_OCR_MODEL_ID,
+    DEFAULT_SEGMENTATION_MODEL_ID,
+    Config,
 )
-from magic_eraser.models import get_model
-from magic_eraser.models.segmentation.base import SegmentationModel
-from magic_eraser.models.inpainting.base import InpaintingModel
-from magic_eraser.models.ocr.base import OCRModel
 from magic_eraser.image import (
-    erase,
     color_splash,
+    erase,
+    fall_color,
     remove_background,
     remove_text,
-    fall_color,
 )
+from magic_eraser.models import get_model
+from magic_eraser.models.inpainting.base import InpaintingModel
+from magic_eraser.models.ocr.base import OCRModel
+from magic_eraser.models.segmentation.base import SegmentationModel
 
 
 class Pipeline:

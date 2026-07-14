@@ -1,11 +1,11 @@
-from pathlib import Path
-import logging
 import argparse
 import json
+import logging
 import sys
+from pathlib import Path
 
-from magic_eraser.models import initialize_all_models
 from magic_eraser.core import eraser
+from magic_eraser.models import initialize_all_models
 
 logging.basicConfig(level=logging.INFO)
 
@@ -34,11 +34,11 @@ def main():
     if len(config_path.strip()) == 0:
         raise ValueError("Configuration file path cannot be an empty string")
     else:
-        assert Path(
-            config_path
-        ).is_file(), "Invalid configuration file path or File is not Present"
+        assert Path(config_path).is_file(), (
+            "Invalid configuration file path or File is not Present"
+        )
 
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             config_dict = json.load(f)
 
     input_folder = args.input

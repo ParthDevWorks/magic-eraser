@@ -1,6 +1,7 @@
 from abc import abstractmethod
 
 import torch
+
 from magic_eraser.models.base import BaseModel
 
 

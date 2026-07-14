@@ -3,8 +3,6 @@ import os
 import pytest
 
 import magic_eraser
-from magic_eraser.utils.image import load_image
-
 from magic_eraser.models import get_model
 from magic_eraser.models.segmentation.facebook_maskformer.main import (
     FacebookMaskFormer,
@@ -12,6 +10,7 @@ from magic_eraser.models.segmentation.facebook_maskformer.main import (
 from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
+from magic_eraser.utils.image import load_image
 
 data_root = os.path.join(os.path.dirname(magic_eraser.__file__), "../sample_data")
 

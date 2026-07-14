@@ -1,13 +1,13 @@
-from typing import Tuple
 import logging
 import os
 
 import torch
-from PIL import Image
 import torchvision.transforms as T
-from magic_eraser.utils.image import resize_image
-from magic_eraser.models.inpainting.base import InpaintingModel
 from diffusers import AutoPipelineForInpainting
+from PIL import Image
+
+from magic_eraser.models.inpainting.base import InpaintingModel
+from magic_eraser.utils.image import resize_image
 
 
 class RunWayML(InpaintingModel):
@@ -59,7 +59,7 @@ class RunWayML(InpaintingModel):
 
     def _pre_process(
         self, image: torch.Tensor, mask: torch.Tensor
-    ) -> Tuple[Image.Image, Image.Image]:
+    ) -> tuple[Image.Image, Image.Image]:
 
         resized_image_tensor = resize_image(image=image, target_size=(512, 512))
         resized_mask_tensor = resize_image(image=mask, target_size=(512, 512))
