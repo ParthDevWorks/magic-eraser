@@ -15,6 +15,7 @@ env:
   PYTHON_VERSION: "3.12"
   POETRY_VERSION: "2.3.2"
   POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS: download-weights
+  POETRY_SCRIPT_TO_CHECK_WEIGHTS_VERSION: weights-version
   MODEL_WEIGHTS_FOLDER_ID: ${{ secrets.MODEL_WEIGHTS_FOLDER_ID }}
   SEGMENTATION_MODEL_PATH: ${{ github.workspace }}/model_weights/segmentation
   INPAINTING_MODEL_PATH: ${{ github.workspace }}/model_weights/inpainting
@@ -70,7 +71,21 @@ jobs:
         if: ${{ steps.ruff.outcome == 'failure' }}
         run: exit 1
 
+      - name: Get Model Weights Version
+        id: model-version
+        run: |
+          VERSION=$(poetry run ${{env.POETRY_SCRIPT_TO_CHECK_WEIGHTS_VERSION}})
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Cache Model Weights
+        id: cache-model-weights
+        uses: actions/cache@v4
+        with:
+          path: model_weights
+          key: model-weights-${{ runner.os }}-${{ steps.model-version.outputs.version }}
+
       - name: Download Model Weights
+        if: steps.cache-model-weights.outputs.cache-hit != 'true'
         run: poetry run ${{ env.POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS }}
 
       - name: Run tests
