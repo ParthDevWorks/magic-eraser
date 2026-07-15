@@ -17,6 +17,8 @@ env:
   POETRY_SCRIPT_TO_DOWLOAD_WEIGHTS: download-weights
   POETRY_SCRIPT_TO_CHECK_WEIGHTS_VERSION: weights-version
   MODEL_WEIGHTS_FOLDER_ID: ${{ secrets.MODEL_WEIGHTS_FOLDER_ID }}
+  GOOGLE_CLIENT_EMAIL: ${{ secrets.GOOGLE_CLIENT_EMAIL }}
+  GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
   SEGMENTATION_MODEL_PATH: ${{ github.workspace }}/model_weights/segmentation
   INPAINTING_MODEL_PATH: ${{ github.workspace }}/model_weights/inpainting
   OCR_MODEL_PATH: ${{ github.workspace }}/model_weights/ocr
