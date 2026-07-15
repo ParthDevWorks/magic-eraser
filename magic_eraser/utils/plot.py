@@ -98,7 +98,5 @@ def _plot_bounding_boxes(
             labels=labels,
             width=5,
         )
-    jabfhabdsfbasdf = "absfdhabdsfhbasdjhfbhasdbfhsdabfhbsdjhfbsdjhbfhsdbfhjsab  asdfadsfcasdfdfhjbdasfbdsahbfhsdabfhsdbfhjksbdfhbsdhjkfbjkfdhbjhbdfjhbsdjhfbsdjhfb asdfasdfsadfsadfadsz"
 
-    print(jabfhabdsfbasdf)
     return bounding_box_tensor
