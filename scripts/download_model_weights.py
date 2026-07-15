@@ -66,4 +66,4 @@ def get_latest_modified_time(folder_id: str = MODEL_WEIGHTS_FOLDER_ID):
             if child_latest and child_latest > latest:
                 latest = child_latest
 
-    print(latest.isoformat())
+    print(latest.strftime("%Y%m%d%H%M%S"))
