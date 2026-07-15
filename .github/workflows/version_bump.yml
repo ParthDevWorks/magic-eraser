@@ -5,7 +5,11 @@ on:
         types:
             - closed
         branches:
-            - "dev"
+            - dev
+
+permissions:
+    contents: read
+    actions: write
 
 jobs:
     test:
@@ -16,6 +20,8 @@ jobs:
         if: github.event.pull_request.merged == true
         needs: test
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
