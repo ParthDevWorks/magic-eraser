@@ -32,7 +32,19 @@ To install Magic Eraser, follow these steps:
 ## Download Model Weights
 This repository requires downloading pre-trained model weights for different tasks. Follow the instructions below to download the weights and configure your environment.
 
-1. Download the Model Weights
+1. Model Weights Cache in CI
+
+   The repository requires pre-trained model weights for different tasks. Since these weights are large and stored externally, downloading them on every CI run significantly increases workflow execution time.
+   To optimize CI performance, model weights are cached using GitHub Actions cache.
+      
+      a. The workflow queries Google Drive to determine the latest modification time of the model weights.
+      b. This timestamp is used to generate a unique cache key.
+      c. GitHub Actions checks whether model weights for that version already exist in the cache.
+      d. If the cache exists, the workflow restores the weights directly.
+      e. If the cache does not exist, the workflow downloads the weights from Google Drive and stores them in the cache for future runs.
+
+
+2. Download the Model Weights
 
     ```bash
     export MODEL_WEIGHTS_FOLDER_ID=<talk_to_code_owner>
@@ -42,7 +54,7 @@ This repository requires downloading pre-trained model weights for different tas
    This script will fetch the necessary model weights and store them in a specified folder.
 
 
-2. Set Environment Variables
+3. Set Environment Variables
 
    Once the model weights are downloaded, you will need to set the appropriate environment variables to point to the directories containing the weights. (Better to save it in bashrc script)
 
