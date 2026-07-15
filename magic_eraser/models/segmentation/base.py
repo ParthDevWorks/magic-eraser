@@ -1,10 +1,11 @@
 from abc import abstractmethod
 
 import torch
+
+from magic_eraser.models.base import BaseModel
 from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
-from magic_eraser.models.base import BaseModel
 
 
 class SegmentationModel(BaseModel):

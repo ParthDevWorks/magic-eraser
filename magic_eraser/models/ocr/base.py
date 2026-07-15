@@ -1,8 +1,9 @@
 from abc import abstractmethod
 
 import torch
-from magic_eraser.models.ocr.utils.ocr_output import OCRResult
+
 from magic_eraser.models.base import BaseModel
+from magic_eraser.models.ocr.utils.ocr_output import OCRResult
 
 
 class OCRModel(BaseModel):

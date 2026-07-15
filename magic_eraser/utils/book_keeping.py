@@ -1,14 +1,11 @@
-from typing import Union
-
-
 class Logs:
     __slots__ = ["input_path", "mode", "message"]
 
     def __init__(
         self,
-        input_path: Union[str, None] = None,
-        mode: Union[str, None] = None,
-        message: Union[str, None] = None,
+        input_path: str | None = None,
+        mode: str | None = None,
+        message: str | None = None,
     ):
         self.input_path = input_path
         self.mode = mode
@@ -26,10 +23,10 @@ class ErrorLogs(Logs):
 
     def __init__(
         self,
-        input_path: Union[str, None] = None,
-        mode: Union[str, None] = None,
-        message: Union[str, None] = None,
-        traceback: Union[str, None] = None,
+        input_path: str | None = None,
+        mode: str | None = None,
+        message: str | None = None,
+        traceback: str | None = None,
     ):
         super().__init__(input_path=input_path, mode=mode, message=message)
         self.traceback = traceback
@@ -40,11 +37,11 @@ class SuccessLogs(Logs):
 
     def __init__(
         self,
-        input_path: Union[str, None] = None,
-        output_path: Union[str, None] = None,
-        mode: Union[str, None] = None,
-        message: Union[str, None] = None,
-        inference_time_seconds: Union[float, None] = None,
+        input_path: str | None = None,
+        output_path: str | None = None,
+        mode: str | None = None,
+        message: str | None = None,
+        inference_time_seconds: float | None = None,
     ):
         super().__init__(input_path=input_path, mode=mode, message=message)
         self.output_path = output_path

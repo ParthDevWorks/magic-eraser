@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import torch
+from torchvision.utils import draw_bounding_boxes
+
 from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
-from torchvision.utils import draw_bounding_boxes
 
 
 def plot_image(
@@ -79,7 +80,10 @@ def _plot_bounding_boxes(
     labels = []
 
     for box, label, score in zip(
-        output.bounding_box, output.labels, output.confidence_scores
+        output.bounding_box,
+        output.labels,
+        output.confidence_scores,
+        strict=True,
     ):
         if score > confidence_threshold:
             boxes.append(box)

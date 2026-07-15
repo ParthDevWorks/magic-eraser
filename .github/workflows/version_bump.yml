@@ -8,17 +8,19 @@ on:
             - "dev"
 
 jobs:
+    test:
+        uses: ./.github/workflows/test.yml
     bump_version:
         if: github.event.pull_request.merged == true
+        needs: test
         runs-on: ubuntu-latest
         steps:
-          - name: Checkout repository
-            uses: actions/checkout@v4
-            with:
-                token: ${{ secrets.BOT_PAT }}
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  token: ${{ secrets.BOT_PAT }}
 
-          - name: Bump Version Script
-            uses: ParthDevWorks/development-actions/actions/bump-pyproject-version@main
-            with:
-                branch: "dev"
-            
+            - name: Bump Version Script
+              uses: ParthDevWorks/development-actions/actions/bump-pyproject-version@main
+              with:
+                  branch: "dev"

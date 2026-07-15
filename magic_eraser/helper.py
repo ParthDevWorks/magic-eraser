@@ -1,17 +1,17 @@
 import torch
 
+from magic_eraser.models.inpainting.base import InpaintingModel
+from magic_eraser.models.ocr.base import OCRModel
+from magic_eraser.models.ocr.utils.ocr_output import OCRResult
 from magic_eraser.models.segmentation.base import SegmentationModel
+from magic_eraser.models.segmentation.utils.helper import (
+    filter_mask,
+    get_segmentation_masks,
+)
 from magic_eraser.models.segmentation.utils.segmentation_output import (
     SegmentationOutput,
 )
 from magic_eraser.utils.image import dilate_boolean_tensors
-from magic_eraser.models.segmentation.utils.helper import (
-    get_segmentation_masks,
-    filter_mask,
-)
-from magic_eraser.models.inpainting.base import InpaintingModel
-from magic_eraser.models.ocr.base import OCRModel
-from magic_eraser.models.ocr.utils.ocr_output import OCRResult
 
 
 def perform_segmentation(

@@ -1,10 +1,10 @@
 import pytest
 
 from magic_eraser.models import get_model
-from magic_eraser.models.segmentation.mask_rcnn.main import MaskRcnn
 from magic_eraser.models.segmentation.facebook_maskformer.main import (
     FacebookMaskFormer,
 )
+from magic_eraser.models.segmentation.mask_rcnn.main import MaskRcnn
 
 
 @pytest.fixture(scope="session")

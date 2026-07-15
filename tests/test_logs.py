@@ -1,8 +1,9 @@
 import pytest
+
 from magic_eraser.utils.book_keeping import (
+    ErrorLogs,
     Logs,
     SuccessLogs,
-    ErrorLogs,
 )
 
 

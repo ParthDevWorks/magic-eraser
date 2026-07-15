@@ -1,4 +1,4 @@
-from typing import Literal, List
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -22,4 +22,4 @@ class Config(BaseModel):
     mode: Literal[
         "erase", "color_splash", "remove_background", "remove_text", "fall_color"
     ] = "erase"
-    target: List = ["person"]
+    target: list = ["person"]
