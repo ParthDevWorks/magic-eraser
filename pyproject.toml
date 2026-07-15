@@ -35,7 +35,7 @@ generate-docs = "scripts.generate_docs:main"
 test-coverage-local = "run_coverage_tests:local_coverage"
 terminal-coverage = "run_coverage_tests:terminal_coverage"
 download-weights = "scripts.download_model_weights:download_weights"
-weights-version = "scripts.download_model_weights:get_latest_modified_time"
+weights-version = "scripts.download_model_weights:weights_version"
 
 [tool.pytest.ini_options]
 addopts = "-v --show-capture=stdout --cov=magic_eraser --ignore=tests/inpainting/test_runwayml.py"

@@ -24,7 +24,7 @@ def download_weights():
     gdown.download_folder(WEIGHTS_FOLDER_SHAREABLE_URl, output=OUTPUT_FOLDER)
 
 
-def get_latest_modified_time(folder_id: str = MODEL_WEIGHTS_FOLDER_ID):
+def _get_latest_modified_time(folder_id: str):
     service_account_info = {
         "type": "service_account",
         "client_email": GOOGLE_CLIENT_EMAIL,
@@ -61,9 +61,14 @@ def get_latest_modified_time(folder_id: str = MODEL_WEIGHTS_FOLDER_ID):
 
         # recurse into subfolders
         if file["mimeType"] == "application/vnd.google-apps.folder":
-            child_latest = get_latest_modified_time(file["id"])
+            child_latest = _get_latest_modified_time(file["id"])
 
             if child_latest and child_latest > latest:
                 latest = child_latest
 
+    return latest
+
+
+def weights_version():
+    latest = _get_latest_modified_time(MODEL_WEIGHTS_FOLDER_ID)
     print(latest.strftime("%Y%m%d%H%M%S"))
