@@ -10,6 +10,8 @@ on:
 jobs:
     test:
         uses: ./.github/workflows/test.yml
+        secrets: inherit
+
     bump_version:
         if: github.event.pull_request.merged == true
         needs: test
