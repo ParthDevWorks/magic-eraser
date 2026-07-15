@@ -24,7 +24,7 @@ def download_weights():
     gdown.download_folder(WEIGHTS_FOLDER_SHAREABLE_URl, output=OUTPUT_FOLDER)
 
 
-def get_latest_modified_time():
+def get_latest_modified_time(folder_id: str = MODEL_WEIGHTS_FOLDER_ID):
     service_account_info = {
         "type": "service_account",
         "client_email": GOOGLE_CLIENT_EMAIL,
@@ -43,7 +43,7 @@ def get_latest_modified_time():
         credentials=credentials,
     )
 
-    query = f"'{MODEL_WEIGHTS_FOLDER_ID}' in parents and trashed=false"
+    query = f"'{folder_id}' in parents and trashed=false"
 
     response = (
         drive_service.files()
