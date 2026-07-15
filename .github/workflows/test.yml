@@ -8,6 +8,8 @@ on:
     branches:
       - dev
 
+  workflow_call:
+
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PYTHON_VERSION: "3.12"
